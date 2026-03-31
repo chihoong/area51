@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Larder Board — Concepts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --yellow: #F5C530;
+      --black: #111111;
+      --white: #FFFEF5;
+      --red: #E8412A;
+      --green: #2DB34A;
+      --border-w: 3px;
+      --shadow: 5px 5px 0 var(--black);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--yellow);
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23F5C530'/%3E%3Ccircle cx='1' cy='1' r='0.6' fill='%23e0b220' opacity='0.4'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='%23e0b220' opacity='0.4'/%3E%3C/svg%3E");
+      color: var(--black);
+      min-height: 100vh;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* ── Sparkles ─────────────────────────────────── */
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      color: var(--black);
+      opacity: 0.18;
+      animation: float 4s ease-in-out infinite;
+      font-style: normal;
+      line-height: 1;
+      user-select: none;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+      50%       { transform: translateY(-12px) rotate(15deg) scale(1.05); }
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    .header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      position: relative;
+    }
+    .header-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: var(--black);
+      color: var(--yellow);
+      padding: 0.3rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+    .header h1 {
+      font-family: 'Black Han Sans', sans-serif;
+      font-size: clamp(3.5rem, 9vw, 7.5rem);
+      line-height: 0.88;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+    }
+    .header p {
+      margin-top: 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      opacity: 0.55;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ── Cards grid ───────────────────────────────── */
+    .cards {
+      display: flex;
+      gap: 1.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: var(--white);
+      border: var(--border-w) solid var(--black);
+      border-radius: 14px;
+      overflow: hidden;
+      width: 360px;
+      box-shadow: var(--shadow);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      position: relative;
+    }
+    .card:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 8px 8px 0 var(--black);
+    }
+
+    /* ── Preview ──────────────────────────────────── */
+    .preview-link {
+      display: block;
+      text-decoration: none;
+      position: relative;
+    }
+    .preview-wrapper {
+      width: 360px;
+      height: 215px;
+      overflow: hidden;
+      position: relative;
+      border-bottom: var(--border-w) solid var(--black);
+      background: #ddd;
+      cursor: pointer;
+    }
+    .preview-wrapper::after {
+      content: '↗ OPEN';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Black Han Sans', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      background: rgba(17, 17, 17, 0.7);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .preview-link:hover .preview-wrapper::after {
+      opacity: 1;
+    }
+    .preview-iframe {
+      width: 1280px;
+      height: 768px;
+      transform: scale(0.28125);
+      transform-origin: top left;
+      pointer-events: none;
+      border: none;
+      display: block;
+    }
+
+    /* ── Card footer ──────────────────────────────── */
+    .card-footer {
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .card-name {
+      font-family: 'Black Han Sans', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    /* ── Vote buttons ─────────────────────────────── */
+    .vote-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .vote-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: var(--border-w) solid var(--black);
+      border-radius: 50%;
+      background: transparent;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.1s, box-shadow 0.1s;
+      box-shadow: 2px 2px 0 var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+    .vote-btn:hover {
+      transform: scale(1.1) translateY(-1px);
+      box-shadow: 3px 3px 0 var(--black);
+    }
+    .vote-btn:active {
+      transform: scale(0.95) translateY(1px);
+      box-shadow: 1px 1px 0 var(--black);
+    }
+    .vote-btn.up.active {
+      background: var(--green);
+      border-color: var(--green);
+      box-shadow: 2px 2px 0 #1a7a2e;
+    }
+    .vote-btn.down.active {
+      background: var(--red);
+      border-color: var(--red);
+      box-shadow: 2px 2px 0 #a02010;
+    }
+
+    /* ── Bounce animation on vote ─────────────────── */
+    @keyframes pop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.35); }
+      70%  { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+    .vote-btn.popping {
+      animation: pop 0.3s ease forwards;
+    }
+
+    /* ── Status bar ───────────────────────────────── */
+    .status-bar {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.45;
+    }
+    .status-bar span {
+      display: inline-block;
+      margin: 0 0.75rem;
+    }
+    .status-bar .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--black);
+      vertical-align: middle;
+      opacity: 0.3;
+      margin: 0 0.25rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sparkle decorations -->
+  <i class="sparkle" style="top:4%;  left:2%;  font-size:2.5rem; animation-delay:0s">✦</i>
+  <i class="sparkle" style="top:7%;  right:3%; font-size:1.5rem; animation-delay:0.7s">✦</i>
+  <i class="sparkle" style="top:3%;  left:18%; font-size:1rem;   animation-delay:1.2s">✦</i>
+  <i class="sparkle" style="bottom:8%; left:5%;  font-size:2rem;   animation-delay:0.4s">✦</i>
+  <i class="sparkle" style="bottom:12%; right:6%; font-size:1.2rem; animation-delay:1.8s">✦</i>
+  <i class="sparkle" style="bottom:5%; left:40%; font-size:1.8rem; animation-delay:0.9s">✦</i>
+
+  <div class="header">
+    <div class="header-label">Larder Board</div>
+    <h1>Pick a<br>concept</h1>
+    <p>Thumbs up or down — votes saved locally</p>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <a class="preview-link" href="larder-board-landing-palentono.html" target="_blank">
+        <div class="preview-wrapper">
+          <iframe class="preview-iframe" src="larder-board-landing-palentono.html" scrolling="no" loading="lazy" title="Palentono preview"></iframe>
+        </div>
+      </a>
+      <div class="card-footer">
+        <span class="card-name">Palentono</span>
+        <div class="vote-buttons">
+          <button class="vote-btn up"   data-concept="palentono" data-vote="up"   title="Like">👍</button>
+          <button class="vote-btn down" data-concept="palentono" data-vote="down" title="Dislike">👎</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="preview-link" href="larder-board-landing-carrot.html" target="_blank">
+        <div class="preview-wrapper">
+          <iframe class="preview-iframe" src="larder-board-landing-carrot.html" scrolling="no" loading="lazy" title="Carrot preview"></iframe>
+        </div>
+      </a>
+      <div class="card-footer">
+        <span class="card-name">Carrot</span>
+        <div class="vote-buttons">
+          <button class="vote-btn up"   data-concept="carrot" data-vote="up"   title="Like">👍</button>
+          <button class="vote-btn down" data-concept="carrot" data-vote="down" title="Dislike">👎</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="preview-link" href="larder-board-landing-nippori.html" target="_blank">
+        <div class="preview-wrapper">
+          <iframe class="preview-iframe" src="larder-board-landing-nippori.html" scrolling="no" loading="lazy" title="Nippori preview"></iframe>
+        </div>
+      </a>
+      <div class="card-footer">
+        <span class="card-name">Nippori</span>
+        <div class="vote-buttons">
+          <button class="vote-btn up"   data-concept="nippori" data-vote="up"   title="Like">👍</button>
+          <button class="vote-btn down" data-concept="nippori" data-vote="down" title="Dislike">👎</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="status-bar" id="status-bar">
+    <span>Click a concept to open it</span>
+    <span class="dot"></span>
+    <span>Vote to save your preference</span>
+  </div>
+
+  <script>
+    const KEY = 'larder-board-votes-v1';
+
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY)) || {}; }
+      catch { return {}; }
+    }
+
+    function save(data) {
+      localStorage.setItem(KEY, JSON.stringify(data));
+    }
+
+    function render() {
+      const data = load();
+      const voted = [];
+
+      document.querySelectorAll('.vote-btn').forEach(btn => {
+        const concept = btn.dataset.concept;
+        const vote    = btn.dataset.vote;
+        const current = data[concept];
+        btn.classList.toggle('active', current === vote);
+      });
+
+      ['palentono', 'carrot', 'nippori'].forEach(c => {
+        if (data[c] === 'up')   voted.push(`${c} 👍`);
+        if (data[c] === 'down') voted.push(`${c} 👎`);
+      });
+
+      const bar = document.getElementById('status-bar');
+      if (voted.length) {
+        bar.innerHTML = voted.map(v => `<span>${v}</span>`).join('<span class="dot"></span>');
+      } else {
+        bar.innerHTML = `<span>Click a concept to open it</span><span class="dot"></span><span>Vote to save your preference</span>`;
+      }
+    }
+
+    document.querySelectorAll('.vote-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const concept = btn.dataset.concept;
+        const vote    = btn.dataset.vote;
+        const data    = load();
+
+        // toggle: clicking the same vote removes it
+        data[concept] = data[concept] === vote ? null : vote;
+        if (data[concept] === null) delete data[concept];
+        save(data);
+
+        // pop animation
+        btn.classList.remove('popping');
+        void btn.offsetWidth; // reflow
+        btn.classList.add('popping');
+        btn.addEventListener('animationend', () => btn.classList.remove('popping'), { once: true });
+
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>

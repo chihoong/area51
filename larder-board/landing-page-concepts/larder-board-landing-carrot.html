@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Larder Board — Know if it's you or the market</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lime: #E7EB5D;
+    --carrot: #FF8736;
+    --black: #000000;
+    --white: #FFFFFF;
+    --seaweed: #72723B;
+    --beige: #E9D7C9;
+    --gray-1: #F8F1F1;
+    --gray-2: #EEE7E7;
+    --gray-3: #DAD3D3;
+    --gray-4: #B2ABAB;
+    --gray-5: #948D8D;
+    --gray-6: #6F6C6C;
+    --hairline: rgba(0,0,0,0.08);
+    --muted: rgba(0,0,0,0.64);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; border: 0; font: inherit; font-size: 100%; vertical-align: baseline; }
+  html { overflow-x: hidden; width: 100%; font-family: 'DM Sans', Helvetica, sans-serif; font-weight: 400; line-height: 1.4; background: var(--white); color: var(--black); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { line-height: 1.4; }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 56px;
+    border-bottom: 1px solid var(--hairline);
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    z-index: 100;
+  }
+  .nav-logo { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; letter-spacing: -0.3px; }
+  .nav-logo-mark { width: 24px; height: 24px; background: var(--lime); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .nav-center { display: flex; gap: 0; border: 1px solid var(--hairline); border-radius: 4px; overflow: hidden; }
+  .nav-center a { padding: 6px 18px; font-size: 13px; color: var(--black); border-right: 1px solid var(--hairline); transition: background 0.15s; }
+  .nav-center a:last-child { border-right: none; }
+  .nav-center a:hover { background: var(--gray-1); }
+  .nav-right { display: flex; gap: 8px; align-items: center; }
+  .btn-outline { border: 1px solid var(--black); background: transparent; color: var(--black); padding: 6px 16px; font-size: 13px; font-family: inherit; border-radius: 4px; cursor: pointer; transition: background 0.15s; }
+  .btn-outline:hover { background: var(--gray-1); }
+  .btn-primary { background: var(--carrot); color: var(--white); border: none; padding: 7px 18px; font-size: 13px; font-weight: 500; font-family: inherit; border-radius: 4px; cursor: pointer; transition: opacity 0.15s; }
+  .btn-primary:hover { opacity: 0.88; }
+
+  /* HERO */
+  .hero { background: var(--lime); padding: 72px 32px 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; min-height: 440px; }
+  .hero-headline { font-size: clamp(36px, 4.5vw, 56px); font-weight: 700; line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 24px; max-width: 580px; }
+  .hero-sub { font-size: 16px; line-height: 1.6; color: var(--seaweed); max-width: 420px; margin-bottom: 36px; }
+  .hero-cta-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .btn-hero { background: var(--black); color: var(--white); border: none; padding: 12px 28px; font-size: 15px; font-weight: 500; font-family: inherit; border-radius: 4px; cursor: pointer; transition: opacity 0.15s; }
+  .btn-hero:hover { opacity: 0.8; }
+  .hero-disclaimer { font-size: 12px; color: var(--seaweed); }
+  .hero-visual { display: flex; align-items: center; justify-content: center; }
+
+  /* PREVIEW STRIP */
+  .preview-strip { background: var(--black); padding: 48px 32px; }
+  .preview-label { font-size: 11px; color: var(--gray-5); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 24px; text-align: center; }
+  .preview-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 1100px; margin: 0 auto; }
+  .preview-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 28px 24px; }
+  .preview-card-label { font-size: 11px; color: var(--gray-6); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .preview-card-title { font-size: 16px; font-weight: 600; color: var(--white); margin-bottom: 10px; line-height: 1.3; letter-spacing: -0.3px; }
+  .preview-card-desc { font-size: 13px; color: var(--gray-5); line-height: 1.6; }
+  .preview-card-stat { margin-top: 20px; display: flex; align-items: baseline; gap: 8px; }
+  .stat-num { font-size: 32px; font-weight: 700; color: var(--lime); letter-spacing: -1px; }
+  .stat-label { font-size: 13px; color: var(--gray-5); }
+
+  /* SECTIONS */
+  .section { padding: 80px 32px; max-width: 1100px; margin: 0 auto; }
+  .eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-5); margin-bottom: 16px; }
+  .section-headline { font-size: clamp(32px, 3.5vw, 48px); font-weight: 700; line-height: 1.08; letter-spacing: -1.2px; margin-bottom: 20px; max-width: 640px; }
+  .section-sub { font-size: 16px; color: var(--muted); line-height: 1.6; max-width: 520px; margin-bottom: 40px; }
+  .rule { border: none; border-top: 1px solid var(--hairline); }
+
+  /* HOW IT WORKS */
+  .how-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: 8px; overflow: hidden; margin-top: 48px; }
+  .how-card { background: var(--white); padding: 32px 28px; }
+  .how-num { width: 36px; height: 36px; background: var(--lime); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; margin-bottom: 24px; }
+  .how-title { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 10px; }
+  .how-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+  /* QUOTE */
+  .quote-section { background: var(--lime); padding: 80px 32px; }
+  .quote-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 60px; align-items: center; }
+  .quote-text { font-size: clamp(22px, 2.5vw, 32px); font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; max-width: 680px; }
+  .quote-meta { text-align: right; white-space: nowrap; }
+  .quote-before, .quote-after { font-size: 12px; color: var(--seaweed); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .quote-stat { font-size: 28px; font-weight: 700; letter-spacing: -1px; color: var(--black); }
+
+  /* BENEFITS */
+  .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; }
+  .benefit-card { border: 1px solid var(--hairline); border-radius: 8px; padding: 28px 24px; }
+  .benefit-icon { width: 32px; height: 32px; background: var(--carrot); border-radius: 6px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
+  .benefit-title { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; margin-bottom: 10px; line-height: 1.3; }
+  .benefit-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+  /* WAITLIST */
+  .waitlist-section { background: var(--black); padding: 100px 32px; text-align: center; }
+  .waitlist-headline { font-size: clamp(32px, 4vw, 52px); font-weight: 700; color: var(--white); letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 20px; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .waitlist-sub { font-size: 16px; color: var(--gray-5); line-height: 1.6; max-width: 440px; margin: 0 auto 44px; }
+  .waitlist-form { display: flex; gap: 8px; max-width: 440px; margin: 0 auto 12px; }
+  .waitlist-input { flex: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 4px; padding: 12px 16px; font-size: 14px; color: var(--white); font-family: inherit; outline: none; transition: border-color 0.2s; }
+  .waitlist-input::placeholder { color: #555; }
+  .waitlist-input:focus { border-color: var(--lime); }
+  .btn-lime { background: var(--lime); color: var(--black); border: none; border-radius: 4px; padding: 12px 24px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; white-space: nowrap; transition: opacity 0.15s; }
+  .btn-lime:hover { opacity: 0.88; }
+  .waitlist-note { font-size: 11px; color: #555; }
+  .confirm-box { display: none; max-width: 440px; margin: 0 auto; background: #111; border: 1px solid #2a2a2a; border-radius: 8px; padding: 32px; text-align: left; }
+  .confirm-check { width: 40px; height: 40px; border-radius: 50%; background: rgba(231,235,93,0.15); border: 1px solid var(--lime); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .confirm-title { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 8px; letter-spacing: -0.3px; }
+  .confirm-sub { font-size: 13px; color: #666; margin-bottom: 24px; line-height: 1.6; }
+  .confirm-divider { border-top: 1px solid #2a2a2a; padding-top: 20px; }
+  .confirm-q { font-size: 13px; color: #888; margin-bottom: 12px; }
+  .confirm-opts { display: flex; flex-direction: column; gap: 8px; }
+  .confirm-opt { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 4px; padding: 10px 14px; font-size: 13px; color: #888; cursor: pointer; text-align: left; font-family: inherit; transition: all 0.15s; }
+  .confirm-opt:hover { border-color: var(--lime); color: var(--white); }
+  .confirm-opt.picked { border-color: var(--lime); color: var(--lime); background: rgba(231,235,93,0.06); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--hairline); padding: 48px 32px 32px; }
+  .footer-top { display: grid; grid-template-columns: 1fr repeat(4, auto); gap: 60px; margin-bottom: 48px; align-items: start; }
+  .footer-logo { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .footer-tagline { font-size: 13px; color: var(--gray-5); line-height: 1.5; max-width: 220px; }
+  .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; color: var(--black); }
+  .footer-col a { display: block; font-size: 13px; color: var(--gray-6); margin-bottom: 8px; transition: color 0.15s; }
+  .footer-col a:hover { color: var(--black); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--hairline); padding-top: 24px; }
+  .footer-copy { font-size: 12px; color: var(--gray-5); }
+  .newsletter-row { display: flex; gap: 8px; align-items: center; }
+  .newsletter-label { font-size: 12px; color: var(--gray-5); }
+  .newsletter-input { border: 1px solid var(--gray-3); border-radius: 4px; padding: 6px 12px; font-size: 12px; font-family: inherit; color: var(--black); outline: none; width: 180px; }
+  .newsletter-input:focus { border-color: var(--carrot); }
+  .btn-sub { background: var(--carrot); color: var(--white); border: none; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 500; font-family: inherit; cursor: pointer; transition: opacity 0.15s; }
+  .btn-sub:hover { opacity: 0.85; }
+
+  /* MOBILE */
+  @media (max-width: 860px) {
+    nav { padding: 0 16px; }
+    .nav-center { display: none; }
+    .hero { grid-template-columns: 1fr; gap: 40px; padding: 48px 20px; }
+    .preview-cards { grid-template-columns: 1fr; }
+    .section { padding: 60px 20px; }
+    .how-grid { grid-template-columns: 1fr 1fr; }
+    .benefits-grid { grid-template-columns: 1fr 1fr; }
+    .quote-inner { grid-template-columns: 1fr; gap: 32px; }
+    .quote-meta { text-align: left; }
+    .waitlist-form { flex-direction: column; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">🥘</div>
+    Larder Board
+  </div>
+  <div class="nav-center">
+    <a href="#how">How it works</a>
+    <a href="#waitlist">Early access</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-outline">Sign in</button>
+    <button class="btn-primary" onclick="scrollToWaitlist()">Join waitlist</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <h1 class="hero-headline">Closing the benchmarking gap by rewarding data-sharing behaviour.</h1>
+    <p class="hero-sub">Our platform collects Square POS data on a restaurant level, giving operators the market context they've never had — a bit like a Carrot.</p>
+    <div class="hero-cta-row">
+      <button class="btn-hero" onclick="scrollToWaitlist()">Join waitlist</button>
+      <span class="hero-disclaimer">Square restaurants only · No build yet</span>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:360px;">
+      <rect x="20" y="20" width="280" height="240" rx="10" fill="rgba(0,0,0,0.08)"/>
+      <rect x="28" y="28" width="264" height="224" rx="8" fill="white"/>
+      <rect x="28" y="28" width="264" height="32" rx="8" fill="#f8f1f1"/>
+      <rect x="28" y="52" width="264" height="8" fill="#f8f1f1"/>
+      <circle cx="44" cy="44" r="6" fill="#DAD3D3"/>
+      <circle cx="58" cy="44" r="6" fill="#DAD3D3"/>
+      <circle cx="72" cy="44" r="6" fill="#DAD3D3"/>
+      <rect x="48" y="130" width="20" height="80" rx="3" fill="#E7EB5D"/>
+      <rect x="76" y="100" width="20" height="110" rx="3" fill="#E7EB5D"/>
+      <rect x="104" y="115" width="20" height="95" rx="3" fill="#E7EB5D"/>
+      <rect x="132" y="85" width="20" height="125" rx="3" fill="#FF8736"/>
+      <rect x="160" y="105" width="20" height="105" rx="3" fill="#E7EB5D"/>
+      <rect x="188" y="90" width="20" height="120" rx="3" fill="#E7EB5D"/>
+      <rect x="216" y="110" width="20" height="100" rx="3" fill="#E7EB5D"/>
+      <rect x="244" y="75" width="20" height="135" rx="3" fill="#E7EB5D"/>
+      <rect x="120" y="72" width="44" height="14" rx="4" fill="#FF8736"/>
+      <text x="142" y="83" fill="white" font-size="8" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700">YOU</text>
+      <line x1="40" y1="175" x2="272" y2="175" stroke="#DAD3D3" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="46" y="171" fill="#948D8D" font-size="8" font-family="DM Sans, sans-serif">Market avg</text>
+      <rect x="40" y="220" width="60" height="20" rx="4" fill="#f8f1f1"/>
+      <rect x="110" y="220" width="60" height="20" rx="4" fill="#f8f1f1"/>
+      <rect x="180" y="220" width="76" height="20" rx="4" fill="#f8f1f1"/>
+    </svg>
+  </div>
+</div>
+
+<!-- PREVIEW STRIP -->
+<div class="preview-strip">
+  <p class="preview-label">What you get</p>
+  <div class="preview-cards">
+    <div class="preview-card">
+      <div class="preview-card-label">Market position</div>
+      <div class="preview-card-title">Sales vs. similar restaurants nearby</div>
+      <p class="preview-card-desc">Know whether your Tuesday slump is your problem or the market's — benchmarked against operators with matching cuisine, location, and size.</p>
+      <div class="preview-card-stat">
+        <span class="stat-num">+12%</span>
+        <span class="stat-label">above local market avg</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <div class="preview-card-label">Order volume</div>
+      <div class="preview-card-title">Day-by-day volume against the benchmark pool</div>
+      <p class="preview-card-desc">Compare order counts by meal period and day of week — so you know whether extending hours or repricing would actually move the needle.</p>
+      <div class="preview-card-stat">
+        <span class="stat-num">340</span>
+        <span class="stat-label">covers Sat vs. 290 market median</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <div class="preview-card-label">Anonymous by design</div>
+      <div class="preview-card-title">Your data in, benchmark context out</div>
+      <p class="preview-card-desc">No operator sees another's individual numbers. Anonymized before entering the pool. You contribute, you receive — trust built in from day one.</p>
+      <div class="preview-card-stat">
+        <span class="stat-num">0</span>
+        <span class="stat-label">individual records ever exposed</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section" id="how">
+  <p class="eyebrow">How it works</p>
+  <h2 class="section-headline">Three steps. Zero dashboards to build.</h2>
+  <p class="section-sub">You run the restaurant. We surface the context you've been missing.</p>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-num">1</div>
+      <div class="how-title">Connect Square</div>
+      <p class="how-desc">Link your Square account in one click. We read your POS data automatically — no exports, no spreadsheets. Anonymized before it enters the pool.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">2</div>
+      <div class="how-title">Join the pool</div>
+      <p class="how-desc">Your data contributes to an anonymous aggregate. Filtered by cuisine type, size, and local market. The more operators join, the sharper the benchmarks.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">3</div>
+      <div class="how-title">Get context</div>
+      <p class="how-desc">See how your sales, order volume, and average ticket compare against similar restaurants — updated in real time, without any manual work.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">4</div>
+      <div class="how-title">Make decisions</div>
+      <p class="how-desc">Reprice. Extend hours. Stay the course. Make decisions with actual market context — not gut feel and a slow Monday.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="rule">
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <div class="quote-inner">
+    <div>
+      <p class="quote-text">"Most operators have no way to know if a slow month is their problem or everyone's problem. Larder Board gives you that context — anonymously."</p>
+    </div>
+    <div class="quote-meta">
+      <p class="quote-before">Before</p>
+      <p class="quote-stat">0%</p>
+      <p style="font-size:12px;color:var(--seaweed);margin-bottom:20px;">market visibility</p>
+      <p class="quote-after">After</p>
+      <p class="quote-stat">Real signal</p>
+      <p style="font-size:12px;color:var(--seaweed);">on every slow week</p>
+    </div>
+  </div>
+</div>
+
+<!-- WAITLIST -->
+<div class="waitlist-section" id="waitlist">
+  <h2 class="waitlist-headline">Get early access.</h2>
+  <p class="waitlist-sub">We're validating demand before we build. Join the waitlist and we'll be in touch when a spot opens for Square restaurant operators.</p>
+  <div id="form-wrap">
+    <div class="waitlist-form">
+      <input type="email" id="email-in" class="waitlist-input" placeholder="your@restaurant.com" />
+      <button class="btn-lime" onclick="handleJoin()">Join waitlist</button>
+    </div>
+    <p class="waitlist-note">Square restaurants only. No product exists yet — early access only.</p>
+  </div>
+  <div class="confirm-box" id="confirm-box">
+    <div class="confirm-check">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9l4 4 6-7" stroke="#E7EB5D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="confirm-title">You're on the list.</div>
+    <p class="confirm-sub">We'll reach out when early access opens. One quick question while we have you —</p>
+    <div class="confirm-divider">
+      <p class="confirm-q">What would you most want to benchmark?</p>
+      <div class="confirm-opts">
+        <button class="confirm-opt" onclick="pick(this)">Sales vs. similar restaurants in my market</button>
+        <button class="confirm-opt" onclick="pick(this)">Order volume by day of week or meal period</button>
+        <button class="confirm-opt" onclick="pick(this)">Average ticket size and pricing trends</button>
+        <button class="confirm-opt" onclick="pick(this)">Something else entirely</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">
+        <div class="nav-logo-mark">🥘</div>
+        Larder Board
+      </div>
+      <p class="footer-tagline">Anonymous benchmarking for Square restaurants. Know if it's you or the market.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Product</div>
+      <a href="#">How it works</a>
+      <a href="#">Benefits</a>
+      <a href="#">Early access</a>
+      <a href="#">For operators</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <a href="#">About</a>
+      <a href="#">Lumina</a>
+      <a href="#">Blog</a>
+      <a href="#">Privacy policy</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Follow us</div>
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Larder AI</div>
+      <a href="#">Square integration</a>
+      <a href="#">Data security</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">Larder Board · A Lumina project · Confidential</p>
+    <div class="newsletter-row">
+      <span class="newsletter-label">Newsletter</span>
+      <input type="email" class="newsletter-input" placeholder="your@email.com" />
+      <button class="btn-sub">Sign up</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function scrollToWaitlist() {
+    document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => document.getElementById('email-in').focus(), 500);
+  }
+  function handleJoin() {
+    const email = document.getElementById('email-in').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('email-in').style.borderColor = 'var(--carrot)';
+      document.getElementById('email-in').focus();
+      return;
+    }
+    document.getElementById('form-wrap').style.display = 'none';
+    const box = document.getElementById('confirm-box');
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function pick(btn) {
+    document.querySelectorAll('.confirm-opt').forEach(b => b.classList.remove('picked'));
+    btn.classList.add('picked');
+  }
+</script>
+</body>
+</html>

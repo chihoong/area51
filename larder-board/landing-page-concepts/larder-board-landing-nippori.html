@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Larder Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #000;
+    --white: #fff;
+    --yellow: #E8E84A;
+    --yellow-pale: #F5F5A0;
+    --gray-light: #f5f5f5;
+    --gray-mid: #ccc;
+    --gray-text: #555;
+    --border: 1px solid #000;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border: 0; }
+  html { overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+  body {
+    font-family: 'Noto Serif JP', 'kozuka-mincho-pro', Georgia, serif;
+    font-size: clamp(14px, calc(16 / 1440 * 100vw), 16px);
+    background: var(--white);
+    color: var(--black);
+    line-height: 1.4;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ── NAV ── */
+  nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 12px 24px;
+    border-bottom: var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    z-index: 200;
+    gap: 16px;
+  }
+
+  .nav-left { display: flex; gap: 20px; align-items: center; }
+  .nav-left a { font-family: 'Noto Sans JP', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-align: center; }
+  .nav-logo span { display: block; font-size: 9px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-text); margin-top: 2px; }
+  .nav-right { display: flex; gap: 12px; align-items: center; justify-content: flex-end; }
+
+  .btn-nav {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 6px 14px;
+    border: 1px solid var(--black);
+    background: transparent;
+    cursor: pointer;
+    font-weight: 400;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-nav:hover { background: var(--black); color: var(--white); }
+  .btn-nav.filled { background: var(--black); color: var(--white); }
+  .btn-nav.filled:hover { background: #333; }
+
+  /* ── HERO MASTHEAD ── */
+  .masthead {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: var(--border);
+    min-height: 72vh;
+  }
+
+  .masthead-left {
+    padding: 48px 40px;
+    border-right: var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .masthead-overline {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    margin-bottom: 32px;
+  }
+
+  .masthead-headline {
+    font-size: clamp(52px, 7vw, 96px);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -3px;
+    text-transform: uppercase;
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 16px;
+  }
+
+  .masthead-headline em {
+    display: block;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.52em;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    color: var(--gray-text);
+    margin-top: 8px;
+    text-transform: none;
+  }
+
+  .masthead-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: 32px;
+  }
+
+  .masthead-sub {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--gray-text);
+    max-width: 280px;
+  }
+
+  .masthead-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .btn-masthead {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 10px 24px;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.15s;
+  }
+  .btn-masthead:hover { background: #333; }
+
+  .masthead-note {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--gray-text);
+    text-transform: uppercase;
+  }
+
+  /* Right panel — Japanese text + editorial grid */
+  .masthead-right {
+    background: var(--black);
+    color: var(--white);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .jp-headline {
+    font-size: clamp(28px, 3vw, 44px);
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    writing-mode: horizontal-tb;
+    text-align: right;
+  }
+
+  .jp-sub {
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: #aaa;
+    text-align: right;
+    margin-top: 12px;
+    line-height: 1.8;
+  }
+
+  .masthead-right-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #333;
+    margin-top: 32px;
+  }
+
+  .right-stat {
+    background: var(--black);
+    padding: 20px;
+  }
+
+  .right-stat-num {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    color: var(--yellow);
+    line-height: 1;
+  }
+
+  .right-stat-label {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  /* Diagonal decoration */
+  .masthead-right::before {
+    content: 'LARDER BOARD';
+    position: absolute;
+    bottom: 120px;
+    left: -20px;
+    font-size: 100px;
+    font-weight: 900;
+    letter-spacing: -4px;
+    color: rgba(255,255,255,0.04);
+    white-space: nowrap;
+    transform: rotate(-8deg);
+    pointer-events: none;
+  }
+
+  /* ── TICKER STRIP ── */
+  .ticker {
+    border-bottom: var(--border);
+    overflow: hidden;
+    background: var(--yellow);
+    padding: 9px 0;
+  }
+
+  .ticker-inner {
+    display: inline-flex;
+    gap: 48px;
+    white-space: nowrap;
+    animation: ticker 25s linear infinite;
+  }
+
+  .ticker-item {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .ticker-sep { opacity: 0.4; }
+
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── SECTION: WHAT IS IT ── */
+  .what-section {
+    display: grid;
+    grid-template-columns: 260px 1fr 260px;
+    border-bottom: var(--border);
+    min-height: 60vh;
+  }
+
+  .what-left {
+    border-right: var(--border);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .sidebar-label {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    border-bottom: 1px solid var(--gray-mid);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+
+  .sidebar-text {
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--gray-text);
+  }
+
+  .sidebar-link {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--black);
+    padding-bottom: 2px;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .what-center {
+    padding: 48px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .what-number {
+    font-size: 120px;
+    font-weight: 900;
+    letter-spacing: -6px;
+    line-height: 1;
+    color: var(--gray-light);
+    margin-left: -8px;
+    user-select: none;
+  }
+
+  .what-headline {
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -1.2px;
+    margin-top: -24px;
+    margin-bottom: 24px;
+  }
+
+  .what-body {
+    font-size: 14px;
+    line-height: 1.9;
+    color: #333;
+    max-width: 520px;
+    columns: 2;
+    column-gap: 32px;
+  }
+
+  .what-right {
+    border-left: var(--border);
+    padding: 32px 24px;
+    background: var(--gray-light);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── HOW IT WORKS — Episode card style ── */
+  .how-section { border-bottom: var(--border); }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 24px 40px 20px;
+    border-bottom: var(--border);
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-family: 'Noto Sans JP', sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-text);
+  }
+
+  .section-title-big {
+    font-size: clamp(20px, 2.5vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.8px;
+  }
+
+  /* Episode cards */
+  .episode-list { }
+
+  .episode-card {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    border-bottom: var(--border);
+    align-items: stretch;
+    transition: background 0.15s;
+    cursor: default;
+  }
+
+  .episode-card:hover { background: var(--gray-light); }
+  .episode-card:nth-child(odd) .episode-num-col { background: var(--yellow); }
+  .episode-card:nth-child(even) .episode-num-col { background: var(--black); color: var(--white); }
+
+  .episode-num-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    border-right: var(--border);
+    font-weight: 900;
+    font-size: clamp(48px, 5vw, 80px);
+    letter-spacing: -4px;
+    line-height: 1;
+  }
+
+  .episode-body {
+    padding: 28px 36px;
+    border-right: var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .episode-overline {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-text);
+  }
+
+  .episode-title {
+    font-size: clamp(20px, 2.5vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.8px;
+    line-height: 1.15;
+  }
+
+  .episode-jp {
+    font-size: 12px;
+    color: var(--gray-text);
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .episode-meta {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    min-width: 220px;
+    text-align: right;
+  }
+
+  .meta-label {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gray-text);
+  }
+
+  .meta-val {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  /* ── QUOTE BAND ── */
+  .quote-band {
+    background: var(--black);
+    color: var(--white);
+    padding: 64px 40px;
+    border-bottom: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quote-band::before {
+    content: '""';
+    position: absolute;
+    top: -40px;
+    left: 20px;
+    font-size: 300px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .quote-text {
+    font-size: clamp(24px, 3vw, 44px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    max-width: 860px;
+    position: relative;
+  }
+
+  .quote-text em { font-style: italic; font-weight: 300; color: var(--yellow); }
+
+  .quote-attr {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #777;
+    margin-top: 24px;
+  }
+
+  /* ── WAITLIST ── */
+  .waitlist-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: var(--border);
+    min-height: 50vh;
+  }
+
+  .waitlist-left {
+    padding: 56px 48px;
+    border-right: var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .waitlist-headline {
+    font-size: clamp(36px, 4.5vw, 64px);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    text-transform: uppercase;
+  }
+
+  .waitlist-headline span {
+    display: block;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 0.6em;
+    letter-spacing: -1px;
+    text-transform: none;
+    color: var(--gray-text);
+    margin-top: 8px;
+  }
+
+  .waitlist-body {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--gray-text);
+    max-width: 380px;
+    margin-top: 24px;
+  }
+
+  .waitlist-right {
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    background: var(--gray-light);
+  }
+
+  .form-label {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    margin-bottom: 6px;
+  }
+
+  .form-input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid var(--black);
+    background: transparent;
+    padding: 10px 0;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    color: var(--black);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: #666; }
+  .form-input::placeholder { color: var(--gray-mid); font-size: 14px; }
+
+  .btn-submit {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    margin-top: 8px;
+    align-self: flex-start;
+    transition: background 0.15s;
+  }
+  .btn-submit:hover { background: #333; }
+
+  .form-note {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--gray-text);
+    line-height: 1.6;
+  }
+
+  /* Confirm */
+  .confirm-panel {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .confirm-mark {
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--yellow);
+    letter-spacing: -3px;
+    line-height: 1;
+  }
+
+  .confirm-head {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .confirm-sub { font-size: 12px; color: var(--gray-text); line-height: 1.7; }
+
+  .confirm-q-label {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    margin-top: 16px;
+    margin-bottom: 10px;
+    border-top: 1px solid var(--gray-mid);
+    padding-top: 16px;
+  }
+
+  .confirm-opts { display: flex; flex-direction: column; gap: 6px; }
+
+  .confirm-opt {
+    background: transparent;
+    border: 1px solid var(--gray-mid);
+    padding: 9px 14px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    color: var(--gray-text);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+  }
+  .confirm-opt:hover { border-color: var(--black); color: var(--black); }
+  .confirm-opt.chosen { border-color: var(--black); color: var(--black); background: var(--yellow-pale); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    border-bottom: var(--border);
+  }
+
+  .footer-col {
+    padding: 32px 28px;
+    border-right: var(--border);
+  }
+  .footer-col:last-child { border-right: none; }
+
+  .footer-col-title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--gray-mid);
+    padding-bottom: 8px;
+  }
+
+  .footer-col a {
+    display: block;
+    font-size: 12px;
+    color: #444;
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+    transition: color 0.15s;
+  }
+  .footer-col a:hover { color: var(--black); }
+
+  .footer-brand {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+  }
+
+  .footer-tagline {
+    font-size: 11px;
+    color: var(--gray-text);
+    line-height: 1.7;
+  }
+
+  .footer-bottom {
+    padding: 16px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--gray-text);
+    text-transform: uppercase;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { grid-template-columns: 1fr auto; }
+    .nav-left { display: none; }
+    .masthead { grid-template-columns: 1fr; }
+    .masthead-right { min-height: 50vw; }
+    .what-section { grid-template-columns: 1fr; }
+    .what-left, .what-right { display: none; }
+    .what-body { columns: 1; }
+    .episode-card { grid-template-columns: 80px 1fr; }
+    .episode-meta { display: none; }
+    .waitlist-section { grid-template-columns: 1fr; }
+    .waitlist-left { border-right: none; border-bottom: var(--border); }
+    footer { grid-template-columns: 1fr 1fr; }
+    .section-header { padding: 20px 20px 16px; }
+    .episode-body { padding: 20px; }
+    .episode-num-col { font-size: 48px; min-width: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="#how">How it works</a>
+    <a href="#waitlist">Early access</a>
+    <a href="#">About</a>
+  </div>
+  <div class="nav-logo">
+    LARDER BOARD
+    <span>Restaurant Intelligence</span>
+  </div>
+  <div class="nav-right">
+    <button class="btn-nav">Sign in</button>
+    <button class="btn-nav filled" onclick="scrollToWaitlist()">Join Waitlist</button>
+  </div>
+</nav>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-left">
+    <div class="masthead-overline">Market Validation · Square Restaurants · 2026</div>
+    <div class="masthead-headline">
+      OFF<br>BENCH.<br>ON<br>TRACK.
+      <em>Know if it's you<br>or the market.</em>
+    </div>
+    <div class="masthead-bottom">
+      <p class="masthead-sub">Our platform collects Square POS data on a restaurant level, giving operators the benchmarking context they've never had — anonymously pooled across your market.</p>
+      <div class="masthead-cta">
+        <button class="btn-masthead" onclick="scrollToWaitlist()">Join the waitlist →</button>
+        <span class="masthead-note">Square restaurants only</span>
+      </div>
+    </div>
+  </div>
+  <div class="masthead-right">
+    <div>
+      <div class="jp-headline">
+        遅れても道はある<br>
+        レストラン経営者に<br>
+        「文脈」を。
+      </div>
+      <div class="jp-sub">
+        Closing the benchmarking gap<br>
+        by rewarding data-sharing behaviour.
+      </div>
+    </div>
+    <div class="masthead-right-bottom">
+      <div class="right-stat">
+        <div class="right-stat-num">0%</div>
+        <div class="right-stat-label">Market visibility<br>before Larder Board</div>
+      </div>
+      <div class="right-stat">
+        <div class="right-stat-num">↑</div>
+        <div class="right-stat-label">Real signal on<br>every slow week</div>
+      </div>
+      <div class="right-stat">
+        <div class="right-stat-num">0</div>
+        <div class="right-stat-label">Individual records<br>ever exposed</div>
+      </div>
+      <div class="right-stat">
+        <div class="right-stat-num" style="color:var(--white);">Anon.</div>
+        <div class="right-stat-label">Data pool design<br>from day one</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Anonymous data pooling <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">Square-native benchmarks <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">Real market context <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">Operator-first design <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">No dashboards to build <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">Know your market position <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">匿名データ共有 <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">Anonymous data pooling <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">Square-native benchmarks <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">Real market context <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">Operator-first design <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">No dashboards to build <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">Know your market position <span class="ticker-sep">●</span></span>
+    <span class="ticker-item">匿名データ共有 <span class="ticker-sep">●</span></span>
+  </div>
+</div>
+
+<!-- WHAT IS IT -->
+<div class="what-section">
+  <div class="what-left">
+    <div>
+      <div class="sidebar-label">The problem</div>
+      <p class="sidebar-text">Every operator feels a slow week. Almost none know whether that's their problem or the whole market's. A competitor opened. A local event fell through. You'd make entirely different decisions if you knew.</p>
+    </div>
+    <div>
+      <div class="sidebar-label">The approach</div>
+      <p class="sidebar-text">Anonymous aggregation of Square POS data across restaurants in your local market. You contribute, you receive — trust built in from day one.</p>
+      <br>
+      <span class="sidebar-link" onclick="scrollToWaitlist()">Request early access</span>
+    </div>
+  </div>
+
+  <div class="what-center">
+    <div class="what-number">01</div>
+    <h2 class="what-headline">Closing the<br>benchmarking gap.</h2>
+    <p class="what-body">Restaurant operators on Square lack context to distinguish between their own underperformance and broader market conditions. Larder Board solves this by anonymously pooling Square data across restaurants — giving operators the benchmarking context they currently have no reliable way to get.<br><br>Better data allows for more targeted decisions. We help you determine whether to change how you manage and optimize your restaurant, or whether market-wide perspectives give you more insight into the entire waste and collection process.</p>
+  </div>
+
+  <div class="what-right">
+    <div class="sidebar-label">What you get</div>
+    <div style="border-bottom:1px solid var(--gray-mid); padding-bottom:16px; margin-bottom:16px;">
+      <div style="font-size:28px; font-weight:900; letter-spacing:-1px; color:var(--black);">+12%</div>
+      <div style="font-family:'Noto Sans JP',sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gray-text); margin-top:4px;">Above local market avg</div>
+      <div style="font-size:11px; color:#555; margin-top:8px; line-height:1.6;">Know when your sales are outpacing the market — not just when they drop.</div>
+    </div>
+    <div style="border-bottom:1px solid var(--gray-mid); padding-bottom:16px; margin-bottom:16px;">
+      <div style="font-size:28px; font-weight:900; letter-spacing:-1px;">340</div>
+      <div style="font-family:'Noto Sans JP',sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gray-text); margin-top:4px;">Covers Sat vs. 290 median</div>
+      <div style="font-size:11px; color:#555; margin-top:8px; line-height:1.6;">Order volume by meal period and day of week, benchmarked against your local pool.</div>
+    </div>
+    <div>
+      <div style="font-size:28px; font-weight:900; letter-spacing:-1px;">0</div>
+      <div style="font-family:'Noto Sans JP',sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gray-text); margin-top:4px;">Records ever exposed</div>
+      <div style="font-size:11px; color:#555; margin-top:8px; line-height:1.6;">Anonymized before it enters the pool. No operator sees another's individual numbers.</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-section" id="how">
+  <div class="section-header">
+    <div class="section-title">How it works</div>
+    <div class="section-title-big">Three steps. Zero dashboards.</div>
+  </div>
+  <div class="episode-list">
+
+    <div class="episode-card">
+      <div class="episode-num-col">#1</div>
+      <div class="episode-body">
+        <div class="episode-overline">Step one</div>
+        <div class="episode-title">Connect Square</div>
+        <div class="episode-jp">スクエアを接続する — Link your POS in one click. No exports.</div>
+      </div>
+      <div class="episode-meta">
+        <div class="meta-label">What happens</div>
+        <div class="meta-val">Auto data read</div>
+        <div class="meta-label" style="margin-top:10px;">Effort required</div>
+        <div class="meta-val">One click</div>
+      </div>
+    </div>
+
+    <div class="episode-card">
+      <div class="episode-num-col">#2</div>
+      <div class="episode-body">
+        <div class="episode-overline">Step two</div>
+        <div class="episode-title">Join the Pool</div>
+        <div class="episode-jp">プールに参加する — Your data, anonymized, joins the benchmark.</div>
+      </div>
+      <div class="episode-meta">
+        <div class="meta-label">Privacy model</div>
+        <div class="meta-val">Fully anonymous</div>
+        <div class="meta-label" style="margin-top:10px;">Your data visible</div>
+        <div class="meta-val">Never individually</div>
+      </div>
+    </div>
+
+    <div class="episode-card">
+      <div class="episode-num-col">#3</div>
+      <div class="episode-body">
+        <div class="episode-overline">Step three</div>
+        <div class="episode-title">Get Context</div>
+        <div class="episode-jp">文脈を得る — See your position against the market, in real time.</div>
+      </div>
+      <div class="episode-meta">
+        <div class="meta-label">Update frequency</div>
+        <div class="meta-val">Real time</div>
+        <div class="meta-label" style="margin-top:10px;">Manual work</div>
+        <div class="meta-val">Zero</div>
+      </div>
+    </div>
+
+    <div class="episode-card">
+      <div class="episode-num-col">#4</div>
+      <div class="episode-body">
+        <div class="episode-overline">Step four</div>
+        <div class="episode-title">Make Decisions</div>
+        <div class="episode-jp">決断する — Reprice. Extend hours. Stay the course. With real signal.</div>
+      </div>
+      <div class="episode-meta">
+        <div class="meta-label">Outcome</div>
+        <div class="meta-val">Confident action</div>
+        <div class="meta-label" style="margin-top:10px;">Guesswork</div>
+        <div class="meta-val">Eliminated</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- QUOTE BAND -->
+<div class="quote-band">
+  <div class="quote-text">
+    "Most operators have no way to know if a slow month is <em>their problem</em> or everyone's problem. Larder Board gives you that context — anonymously."
+  </div>
+  <div class="quote-attr">Larder Board · A Lumina Project · Square Restaurants Only</div>
+</div>
+
+<!-- WAITLIST -->
+<div class="waitlist-section" id="waitlist">
+  <div class="waitlist-left">
+    <div>
+      <div class="waitlist-headline">
+        GET<br>EARLY<br>ACCESS.
+        <span>We're validating before we build.</span>
+      </div>
+      <p class="waitlist-body">Join the waitlist and we'll be in touch when a spot opens for Square restaurant operators. No product exists yet — this is early access only. Square restaurants only.</p>
+    </div>
+    <div style="font-family:'Noto Sans JP',sans-serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gray-text); border-top:1px solid var(--gray-mid); padding-top:16px;">
+      Larder Board · Lumina · Confidential
+    </div>
+  </div>
+
+  <div class="waitlist-right">
+
+    <div id="form-panel">
+      <div class="form-label">Your email address</div>
+      <input type="email" id="email-in" class="form-input" placeholder="your@restaurant.com" />
+      <br><br>
+      <button class="btn-submit" onclick="handleJoin()">Request early access →</button>
+      <br><br>
+      <p class="form-note">Square restaurants only. No build yet. We will not share your address with third parties.</p>
+    </div>
+
+    <div class="confirm-panel" id="confirm-panel">
+      <div class="confirm-mark">✓</div>
+      <div class="confirm-head">You're on the list.</div>
+      <p class="confirm-sub">We'll reach out when early access opens. One optional question while we have you —</p>
+      <div class="confirm-q-label">What would you most want to benchmark?</div>
+      <div class="confirm-opts">
+        <button class="confirm-opt" onclick="pick(this)">Sales vs. similar restaurants in my market</button>
+        <button class="confirm-opt" onclick="pick(this)">Order volume by day of week or meal period</button>
+        <button class="confirm-opt" onclick="pick(this)">Average ticket size and pricing trends</button>
+        <button class="confirm-opt" onclick="pick(this)">Something else entirely</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-col">
+    <div class="footer-brand">🥘 Larder Board</div>
+    <p class="footer-tagline">Anonymous benchmarking for Square restaurants. Know if it's you or the market.</p>
+  </div>
+  <div class="footer-col">
+    <div class="footer-col-title">Product</div>
+    <a href="#">How it works</a>
+    <a href="#">Early access</a>
+    <a href="#">For operators</a>
+  </div>
+  <div class="footer-col">
+    <div class="footer-col-title">Company</div>
+    <a href="#">About</a>
+    <a href="#">Lumina</a>
+    <a href="#">Privacy policy</a>
+  </div>
+  <div class="footer-col">
+    <div class="footer-col-title">Follow</div>
+    <a href="#">Instagram</a>
+    <a href="#">LinkedIn</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span class="footer-copy">© 2026 Larder Board · A Lumina Project · Confidential</span>
+  <span class="footer-copy">Square Restaurants Only</span>
+</div>
+
+<script>
+  function scrollToWaitlist() {
+    document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => document.getElementById('email-in') && document.getElementById('email-in').focus(), 500);
+  }
+
+  function handleJoin() {
+    const email = document.getElementById('email-in').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('email-in').style.borderBottomColor = 'red';
+      document.getElementById('email-in').focus();
+      return;
+    }
+    document.getElementById('form-panel').style.display = 'none';
+    const cp = document.getElementById('confirm-panel');
+    cp.style.display = 'flex';
+    cp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function pick(btn) {
+    document.querySelectorAll('.confirm-opt').forEach(b => b.classList.remove('chosen'));
+    btn.classList.add('chosen');
+  }
+</script>
+</body>
+</html>
