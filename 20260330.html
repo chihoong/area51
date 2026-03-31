@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Macro Summary — 30 March 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-grey: #9e9e9e;
+      --color-dark-grey: #cbcbcb;
+      --color-black: #000;
+      --color-white: #fff;
+      --color-blue: #344dbb;
+      --color-green: #59e7ca;
+      --color-dark: #121212;
+      --color-surface: #1a1a1a;
+      --color-border: #2a2a2a;
+      --font-main: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      --f-light: 300;
+      --f-normal: 400;
+      --f-medium: 500;
+      --f-semi-bold: 600;
+      --f-bold: 700;
+      --f-extra-bold: 800;
+      --grid-margin: 24px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border: 0 solid;
+    }
+
+    html {
+      background: var(--color-dark);
+      color: var(--color-white);
+      font-family: var(--font-main);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--color-dark);
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 48px var(--grid-margin) 40px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .header-label {
+      font-size: 11px;
+      font-weight: var(--f-medium);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      margin-bottom: 8px;
+    }
+
+    .header-date {
+      font-size: clamp(48px, 7svw, 96px);
+      font-weight: var(--f-extra-bold);
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      color: var(--color-white);
+    }
+
+    .header-status {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .header-status .cal-count {
+      font-size: clamp(32px, 4svw, 56px);
+      font-weight: var(--f-extra-bold);
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      color: var(--color-green);
+    }
+
+    .header-status .cal-label {
+      font-size: 11px;
+      font-weight: var(--f-medium);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      margin-top: 8px;
+    }
+
+    /* ── MACRO OVERVIEW STRIP ── */
+    .macro-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .macro-cell {
+      padding: 28px var(--grid-margin);
+      border-right: 1px solid var(--color-border);
+      position: relative;
+    }
+
+    .macro-cell:last-child {
+      border-right: none;
+    }
+
+    .macro-cell-label {
+      font-size: 10px;
+      font-weight: var(--f-medium);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      margin-bottom: 10px;
+    }
+
+    .macro-cell-value {
+      font-size: clamp(22px, 2.5svw, 36px);
+      font-weight: var(--f-extra-bold);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--color-white);
+    }
+
+    .macro-cell-value.over {
+      color: #ff6b6b;
+    }
+
+    .macro-cell-sub {
+      font-size: 11px;
+      color: var(--color-grey);
+      margin-top: 4px;
+      font-weight: var(--f-normal);
+    }
+
+    .macro-bar-track {
+      height: 3px;
+      background: var(--color-border);
+      border-radius: 2px;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .macro-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--color-green);
+      transition: width 0.6s ease;
+    }
+
+    .macro-bar-fill.over {
+      background: #ff6b6b;
+    }
+
+    /* ── SPLIT ── */
+    .split-section {
+      padding: 40px var(--grid-margin);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .split-label-block {
+      flex-shrink: 0;
+    }
+
+    .split-label-block .section-eyebrow {
+      font-size: 10px;
+      font-weight: var(--f-medium);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      margin-bottom: 4px;
+    }
+
+    .split-label-block .section-title {
+      font-size: clamp(18px, 2svw, 28px);
+      font-weight: var(--f-bold);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .split-bar-container {
+      flex: 1;
+    }
+
+    .split-bar {
+      display: flex;
+      height: 40px;
+      border-radius: 4px;
+      overflow: hidden;
+      gap: 2px;
+    }
+
+    .split-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: var(--f-semi-bold);
+      letter-spacing: 0.05em;
+      transition: flex 0.6s ease;
+    }
+
+    .split-seg.protein { background: var(--color-blue); }
+    .split-seg.carbs   { background: #7c5cbf; }
+    .split-seg.fat     { background: #e07b39; }
+
+    .split-legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 12px;
+    }
+
+    .split-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--color-grey);
+      font-weight: var(--f-medium);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── MEALS ── */
+    .meals-section {
+      padding: 0 var(--grid-margin);
+    }
+
+    .meal-block {
+      border-bottom: 1px solid var(--color-border);
+      padding: 40px 0;
+    }
+
+    .meal-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      gap: 16px;
+    }
+
+    .meal-eyebrow {
+      font-size: 10px;
+      font-weight: var(--f-medium);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      margin-bottom: 4px;
+    }
+
+    .meal-name {
+      font-size: clamp(20px, 2.5svw, 32px);
+      font-weight: var(--f-bold);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+
+    .meal-total-cal {
+      font-size: clamp(18px, 2svw, 26px);
+      font-weight: var(--f-extra-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-green);
+      flex-shrink: 0;
+    }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead tr {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    th {
+      padding: 0 12px 10px 0;
+      text-align: left;
+      font-size: 10px;
+      font-weight: var(--f-medium);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+    }
+
+    th:not(:first-child) {
+      text-align: right;
+    }
+
+    td {
+      padding: 10px 12px 10px 0;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-dark-grey);
+      font-weight: var(--f-normal);
+    }
+
+    td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+      padding-top: 14px;
+      font-weight: var(--f-semi-bold);
+      color: var(--color-white);
+    }
+
+    /* ── DAY TOTAL ── */
+    .day-total-section {
+      padding: 48px var(--grid-margin) 64px;
+    }
+
+    .day-total-eyebrow {
+      font-size: 10px;
+      font-weight: var(--f-medium);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      margin-bottom: 20px;
+    }
+
+    .day-total-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2px;
+    }
+
+    .day-total-card {
+      background: var(--color-surface);
+      padding: 24px 20px;
+      border-radius: 4px;
+    }
+
+    .dtc-label {
+      font-size: 10px;
+      font-weight: var(--f-medium);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      margin-bottom: 12px;
+    }
+
+    .dtc-value {
+      font-size: clamp(22px, 2.2svw, 34px);
+      font-weight: var(--f-extra-bold);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--color-white);
+    }
+
+    .dtc-value.over { color: #ff6b6b; }
+
+    .dtc-remaining {
+      font-size: 11px;
+      margin-top: 6px;
+      font-weight: var(--f-medium);
+      color: var(--color-grey);
+    }
+
+    .dtc-remaining.positive { color: var(--color-green); }
+    .dtc-remaining.negative { color: #ff6b6b; }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer {
+      padding: 0 var(--grid-margin) 48px;
+      font-size: 11px;
+      color: var(--color-grey);
+      font-weight: var(--f-normal);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .macro-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .macro-cell:nth-child(2) {
+        border-right: none;
+      }
+
+      .macro-cell:nth-child(3) {
+        border-top: 1px solid var(--color-border);
+      }
+
+      .split-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+      }
+
+      .split-bar-container {
+        width: 100%;
+      }
+
+      .day-total-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .header-status {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div>
+      <div class="header-label">Daily Macro Summary</div>
+      <div class="header-date">30 March<br>2026</div>
+    </div>
+    <div class="header-status">
+      <div class="cal-count">1,597</div>
+      <div class="cal-label">kcal consumed</div>
+    </div>
+  </header>
+
+  <!-- MACRO OVERVIEW STRIP -->
+  <div class="macro-strip">
+    <div class="macro-cell">
+      <div class="macro-cell-label">Protein</div>
+      <div class="macro-cell-value">83.8g</div>
+      <div class="macro-cell-sub">of 100g target</div>
+      <div class="macro-bar-track">
+        <div class="macro-bar-fill" style="width: 83.8%"></div>
+      </div>
+    </div>
+    <div class="macro-cell">
+      <div class="macro-cell-label">Carbs</div>
+      <div class="macro-cell-value">152.3g</div>
+      <div class="macro-cell-sub">of 190g target</div>
+      <div class="macro-bar-track">
+        <div class="macro-bar-fill" style="width: 80.2%"></div>
+      </div>
+    </div>
+    <div class="macro-cell">
+      <div class="macro-cell-label">Fat</div>
+      <div class="macro-cell-value over">74.1g</div>
+      <div class="macro-cell-sub">of 63g target</div>
+      <div class="macro-bar-track">
+        <div class="macro-bar-fill over" style="width: 100%"></div>
+      </div>
+    </div>
+    <div class="macro-cell">
+      <div class="macro-cell-label">Fiber</div>
+      <div class="macro-cell-value">20.8g</div>
+      <div class="macro-cell-sub">of 30g target</div>
+      <div class="macro-bar-track">
+        <div class="macro-bar-fill" style="width: 69.3%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MACRO SPLIT -->
+  <div class="split-section">
+    <div class="split-label-block">
+      <div class="section-eyebrow">Calorie</div>
+      <div class="section-title">Macro<br>Split</div>
+    </div>
+    <div class="split-bar-container">
+      <div class="split-bar">
+        <div class="split-seg protein" style="flex: 21.0">21%</div>
+        <div class="split-seg carbs"   style="flex: 38.1">38%</div>
+        <div class="split-seg fat"     style="flex: 41.8">42%</div>
+      </div>
+      <div class="split-legend">
+        <div class="split-legend-item">
+          <div class="legend-dot" style="background:#344dbb"></div>
+          Protein — 21.0%
+        </div>
+        <div class="split-legend-item">
+          <div class="legend-dot" style="background:#7c5cbf"></div>
+          Carbs — 38.1%
+        </div>
+        <div class="split-legend-item">
+          <div class="legend-dot" style="background:#e07b39"></div>
+          Fat — 41.8%
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEALS -->
+  <div class="meals-section">
+
+    <!-- BREAKFAST -->
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">07:00 — Breakfast</div>
+          <div class="meal-name">Oats &<br>Black Coffee</div>
+        </div>
+        <div class="meal-total-cal">622 kcal</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Cal</th>
+            <th>Protein</th>
+            <th>Carbs</th>
+            <th>Fat</th>
+            <th>Fiber</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Cooked oatmeal (150g)</td><td>107</td><td>3.8g</td><td>18.0g</td><td>1.8g</td><td>2.9g</td></tr>
+          <tr><td>0% milk (75g)</td><td>27</td><td>2.7g</td><td>3.7g</td><td>0.1g</td><td>0.0g</td></tr>
+          <tr><td>Medjool dates, 2 (~36g)</td><td>99</td><td>0.6g</td><td>26.0g</td><td>0.1g</td><td>2.5g</td></tr>
+          <tr><td>Mixed berries (75g)</td><td>38</td><td>0.7g</td><td>9.0g</td><td>0.3g</td><td>1.8g</td></tr>
+          <tr><td>Hemp seeds (15g)</td><td>83</td><td>4.7g</td><td>1.3g</td><td>7.3g</td><td>0.5g</td></tr>
+          <tr><td>Ground black sesame (15g)</td><td>86</td><td>2.7g</td><td>3.5g</td><td>7.2g</td><td>1.7g</td></tr>
+          <tr><td>Almond-hazelnut butter (30g)</td><td>180</td><td>6.0g</td><td>4.2g</td><td>15.9g</td><td>1.5g</td></tr>
+          <tr><td>Black coffee</td><td>2</td><td>0.3g</td><td>0.0g</td><td>0.0g</td><td>0.0g</td></tr>
+          <tr><td>Total</td><td>622</td><td>21.5g</td><td>65.7g</td><td>32.7g</td><td>10.9g</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- LUNCH -->
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">12:00 — Lunch</div>
+          <div class="meal-name">Eggs, Guac &<br>Rye Bread</div>
+        </div>
+        <div class="meal-total-cal">387 kcal</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Cal</th>
+            <th>Protein</th>
+            <th>Carbs</th>
+            <th>Fat</th>
+            <th>Fiber</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Eggs, large, 2 (~100g)</td><td>143</td><td>12.6g</td><td>0.7g</td><td>9.5g</td><td>0.0g</td></tr>
+          <tr><td>Avocado (~50g)</td><td>80</td><td>1.0g</td><td>4.3g</td><td>7.3g</td><td>3.4g</td></tr>
+          <tr><td>Tomato (~40g)</td><td>7</td><td>0.4g</td><td>1.5g</td><td>0.1g</td><td>0.5g</td></tr>
+          <tr><td>Rye bread, 2 slices (~60g)</td><td>155</td><td>5.1g</td><td>28.8g</td><td>2.0g</td><td>3.2g</td></tr>
+          <tr><td>Black coffee</td><td>2</td><td>0.3g</td><td>0.0g</td><td>0.0g</td><td>0.0g</td></tr>
+          <tr><td>Total</td><td>387</td><td>19.4g</td><td>35.3g</td><td>18.9g</td><td>7.1g</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DINNER -->
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">18:07 — Dinner</div>
+          <div class="meal-name">Pad<br>See Ew</div>
+        </div>
+        <div class="meal-total-cal">588 kcal</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Cal</th>
+            <th>Protein</th>
+            <th>Carbs</th>
+            <th>Fat</th>
+            <th>Fiber</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Wide rice noodles (150g)</td><td>162.0</td><td>2.7g</td><td>37.4g</td><td>0.3g</td><td>1.4g</td></tr>
+          <tr><td>Chicken breast (100g)</td><td>165.0</td><td>31.0g</td><td>0.0g</td><td>3.6g</td><td>0.0g</td></tr>
+          <tr><td>Egg, large (50g)</td><td>72.0</td><td>6.3g</td><td>0.4g</td><td>4.8g</td><td>0.0g</td></tr>
+          <tr><td>Chinese broccoli (60g)</td><td>13.2</td><td>0.9g</td><td>2.1g</td><td>0.1g</td><td>1.2g</td></tr>
+          <tr><td>Garlic (10g)</td><td>14.9</td><td>0.6g</td><td>3.3g</td><td>0.1g</td><td>0.2g</td></tr>
+          <tr><td>Dark soy sauce (15ml)</td><td>9.0</td><td>0.9g</td><td>0.8g</td><td>0.0g</td><td>0.0g</td></tr>
+          <tr><td>Oyster sauce (15ml)</td><td>12.0</td><td>0.5g</td><td>2.3g</td><td>0.0g</td><td>0.0g</td></tr>
+          <tr><td>Sugar (5g)</td><td>20.0</td><td>0.0g</td><td>5.0g</td><td>0.0g</td><td>0.0g</td></tr>
+          <tr><td>Vegetable oil (15ml)</td><td>120.0</td><td>0.0g</td><td>0.0g</td><td>13.6g</td><td>0.0g</td></tr>
+          <tr><td>Total</td><td>588.1</td><td>42.9g</td><td>51.3g</td><td>22.5g</td><td>2.8g</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- DAY TOTAL -->
+  <div class="day-total-section">
+    <div class="day-total-eyebrow">Day Total vs. Target</div>
+    <div class="day-total-grid">
+      <div class="day-total-card">
+        <div class="dtc-label">Calories</div>
+        <div class="dtc-value">1,597</div>
+        <div class="dtc-remaining positive">303 kcal remaining</div>
+      </div>
+      <div class="day-total-card">
+        <div class="dtc-label">Protein</div>
+        <div class="dtc-value">83.8g</div>
+        <div class="dtc-remaining positive">16.2g remaining</div>
+      </div>
+      <div class="day-total-card">
+        <div class="dtc-label">Carbs</div>
+        <div class="dtc-value">152.3g</div>
+        <div class="dtc-remaining positive">37.7g remaining</div>
+      </div>
+      <div class="day-total-card">
+        <div class="dtc-label">Fat</div>
+        <div class="dtc-value over">74.1g</div>
+        <div class="dtc-remaining negative">11.1g over target</div>
+      </div>
+      <div class="day-total-card">
+        <div class="dtc-label">Fiber</div>
+        <div class="dtc-value">20.8g</div>
+        <div class="dtc-remaining positive">9.2g remaining</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    ⚠ All values are estimates based on USDA nutritional data. Dinner macros derived from recipe file.
+  </div>
+
+</body>
+</html>
