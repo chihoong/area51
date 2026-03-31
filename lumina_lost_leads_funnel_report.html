@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lost Leads Campaign Report — Lumina</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0d;
+    --ink-soft: #5a5750;
+    --ink-ghost: #a09c96;
+    --paper: #faf8f4;
+    --paper-warm: #f2ede4;
+    --paper-mid: #e8e2d8;
+    --accent: #c84b2f;
+    --accent-soft: #f0d9d3;
+    --green: #2a7a4b;
+    --green-soft: #d3ead e;
+    --amber: #b06020;
+    --amber-soft: #f5e8d5;
+    --blue: #1a5c8a;
+    --blue-soft: #d5e8f5;
+    --border: rgba(15,14,13,0.12);
+    --radius: 3px;
+  }
+
+  html { font-size: 15px; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* — Header — */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 4rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  .header-left .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-ghost);
+    margin-bottom: 0.5rem;
+  }
+
+  .header-left h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 2.4rem;
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .header-left h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .header-meta {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-ghost);
+    line-height: 1.8;
+  }
+
+  /* — Layout — */
+  .page { max-width: 1100px; margin: 0 auto; padding: 0 4rem 5rem; }
+
+  section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-ghost);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* — KPI Row — */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .kpi {
+    background: var(--paper);
+    padding: 1.25rem 1.5rem;
+    position: relative;
+  }
+
+  .kpi.accent-red { background: var(--accent-soft); }
+  .kpi.accent-green { background: #d8ede3; }
+
+  .kpi-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-ghost);
+    margin-bottom: 0.5rem;
+  }
+
+  .kpi-value {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .kpi.accent-red .kpi-value { color: var(--accent); }
+  .kpi.accent-green .kpi-value { color: var(--green); }
+
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--ink-ghost);
+    margin-top: 0.35rem;
+  }
+
+  /* — Funnel — */
+  .funnel-container { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+
+  .funnel-col-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-ghost);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .source-badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+
+  .badge-cio { background: #dceeff; color: #1a5c8a; }
+  .badge-mp { background: #d8ede3; color: #2a7a4b; }
+
+  .funnel-step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 4px;
+  }
+
+  .step-name {
+    font-size: 12px;
+    color: var(--ink-soft);
+    width: 110px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .step-track {
+    flex: 1;
+    height: 30px;
+    background: var(--paper-warm);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .step-fill {
+    height: 100%;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    transition: width 0.8s ease;
+  }
+
+  .step-fill span {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .step-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-ghost);
+    width: 48px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .drop-indicator {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2px 0 6px;
+  }
+
+  .drop-spacer { width: 110px; flex-shrink: 0; }
+
+  .drop-text {
+    font-size: 11px;
+    color: var(--ink-ghost);
+    padding-left: 10px;
+    flex: 1;
+  }
+
+  .drop-val { color: var(--accent); font-weight: 500; }
+  .pass-val { color: var(--green); font-weight: 500; }
+
+  /* — Conversion summary bar — */
+  .conv-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 2.5rem;
+  }
+
+  .conv-cell {
+    background: var(--paper);
+    padding: 1rem 1.25rem;
+    position: relative;
+  }
+
+  .conv-cell::after {
+    content: '→';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--ink-ghost);
+    z-index: 1;
+  }
+
+  .conv-cell:last-child::after { display: none; }
+
+  .conv-stage {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-ghost);
+    margin-bottom: 0.4rem;
+  }
+
+  .conv-rate {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .conv-rate.bad { color: var(--accent); }
+  .conv-rate.ok { color: var(--amber); }
+  .conv-rate.good { color: var(--green); }
+
+  .conv-note {
+    font-size: 11px;
+    color: var(--ink-ghost);
+    margin-top: 0.3rem;
+  }
+
+  /* — Action Plan — */
+  .actions-grid { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+
+  .action-item {
+    background: var(--paper);
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: start;
+    gap: 0;
+  }
+
+  .action-num {
+    padding: 1.5rem 1.25rem;
+    border-right: 1px solid var(--border);
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink-ghost);
+    line-height: 1;
+    text-align: center;
+  }
+
+  .action-body {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .action-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .action-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  .action-desc code {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--paper-warm);
+    padding: 1px 5px;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+
+  .action-tag {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .priority-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .p1 { background: #fbe8e4; color: #9c2a14; }
+  .p2 { background: var(--amber-soft); color: #7a4010; }
+  .p3 { background: var(--blue-soft); color: #0e3d5e; }
+
+  /* — Email copy preview — */
+  .copy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; }
+
+  .copy-box {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .copy-box-header {
+    background: var(--paper-warm);
+    padding: 0.6rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .copy-box-header.current { background: #fbeae7; color: var(--accent); }
+  .copy-box-header.proposed { background: #d8ede3; color: var(--green); }
+
+  .copy-box-body {
+    padding: 1.25rem;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  .copy-box-body .subj {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--paper-warm);
+    padding: 0.4rem 0.75rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    color: var(--ink-soft);
+  }
+
+  .copy-box-body .subj strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .copy-box-body p { margin-bottom: 0.6rem; }
+  .copy-box-body p:last-child { margin-bottom: 0; }
+
+  .strike { text-decoration: line-through; color: var(--ink-ghost); }
+
+  /* — Footer — */
+  .report-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-ghost);
+  }
+
+  /* — Anomaly callout — */
+  .callout {
+    background: var(--amber-soft);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 0.85rem 1.25rem;
+    font-size: 12.5px;
+    color: var(--ink);
+    margin-top: 1.5rem;
+    line-height: 1.55;
+  }
+
+  .callout strong { font-weight: 500; color: var(--amber); }
+
+  @media (max-width: 800px) {
+    .header, .page { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .funnel-container { grid-template-columns: 1fr; gap: 2.5rem; }
+    .conv-summary { grid-template-columns: repeat(2, 1fr); }
+    .copy-grid { grid-template-columns: 1fr; }
+    .action-item { grid-template-columns: 48px 1fr; }
+    .action-tag { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <p class="eyebrow">Campaign Analysis — Lumina</p>
+    <h1>"Pricing just got easier"<br><em>Lost Leads</em> Broadcast #129</h1>
+  </div>
+  <div class="header-meta">
+    <div>Sent: Mar 19, 2026</div>
+    <div>Period: Mar 19 – Mar 30, 2026</div>
+    <div>Segment: lost_leads</div>
+    <div>UTM: npa2603</div>
+    <div>Generated: Mar 30, 2026</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- KPIs -->
+  <section>
+    <p class="section-eyebrow">Top-line metrics</p>
+    <div class="kpi-grid">
+      <div class="kpi">
+        <p class="kpi-label">Sent</p>
+        <p class="kpi-value">469</p>
+        <p class="kpi-sub">Lost leads segment</p>
+      </div>
+      <div class="kpi">
+        <p class="kpi-label">Delivered</p>
+        <p class="kpi-value">437</p>
+        <p class="kpi-sub">93.2% delivery rate</p>
+      </div>
+      <div class="kpi accent-red">
+        <p class="kpi-label">Open rate</p>
+        <p class="kpi-value">10.1%</p>
+        <p class="kpi-sub">44 human opens</p>
+      </div>
+      <div class="kpi">
+        <p class="kpi-label">Click-to-open</p>
+        <p class="kpi-value">22.7%</p>
+        <p class="kpi-sub">10 of 44 openers clicked</p>
+      </div>
+      <div class="kpi accent-red">
+        <p class="kpi-label">Converted</p>
+        <p class="kpi-value">0</p>
+        <p class="kpi-sub">No tracked conversions</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full funnel -->
+  <section>
+    <p class="section-eyebrow">End-to-end funnel</p>
+    <div class="funnel-container">
+
+      <!-- Email funnel -->
+      <div>
+        <p class="funnel-col-label">Email <span class="source-badge badge-cio">Customer.io</span></p>
+
+        <div class="funnel-step">
+          <span class="step-name">Sent</span>
+          <div class="step-track"><div class="step-fill" style="width:100%; background:#1a5c8a;"><span>469</span></div></div>
+          <span class="step-pct">100%</span>
+        </div>
+        <div class="drop-indicator">
+          <div class="drop-spacer"></div>
+          <span class="drop-text"><span class="drop-val">−32 bounced</span> (6.8%)</span>
+        </div>
+
+        <div class="funnel-step">
+          <span class="step-name">Delivered</span>
+          <div class="step-track"><div class="step-fill" style="width:93.2%; background:#2878c0;"><span>437</span></div></div>
+          <span class="step-pct">93.2%</span>
+        </div>
+        <div class="drop-indicator">
+          <div class="drop-spacer"></div>
+          <span class="drop-text"><span class="drop-val">−393 did not open</span> (89.9%)</span>
+        </div>
+
+        <div class="funnel-step">
+          <span class="step-name">Opened</span>
+          <div class="step-track"><div class="step-fill" style="width:10.1%; background:#c84b2f;"><span>44</span></div></div>
+          <span class="step-pct">10.1%</span>
+        </div>
+        <div class="drop-indicator">
+          <div class="drop-spacer"></div>
+          <span class="drop-text"><span class="drop-val">−34 did not click</span> (77.3%)</span>
+        </div>
+
+        <div class="funnel-step">
+          <span class="step-name">Clicked</span>
+          <div class="step-track"><div class="step-fill" style="width:2.3%; background:#2a7a4b;"><span>10</span></div></div>
+          <span class="step-pct">2.3%</span>
+        </div>
+      </div>
+
+      <!-- Web funnel -->
+      <div>
+        <p class="funnel-col-label">Website <span class="source-badge badge-mp">Mixpanel · utm_campaign=npa2603</span></p>
+
+        <div class="funnel-step">
+          <span class="step-name">Page view</span>
+          <div class="step-track"><div class="step-fill" style="width:100%; background:#2a7a4b;"><span>21 visitors</span></div></div>
+          <span class="step-pct">100%</span>
+        </div>
+        <div class="drop-indicator">
+          <div class="drop-spacer"></div>
+          <span class="drop-text"><span class="drop-val">−19 left without clicking</span> (90.5%)</span>
+        </div>
+
+        <div class="funnel-step">
+          <span class="step-name">Element click</span>
+          <div class="step-track"><div class="step-fill" style="width:9.5%; background:#c84b2f;"><span>2</span></div></div>
+          <span class="step-pct">9.5%</span>
+        </div>
+
+        <div class="callout">
+          <strong>Anomaly:</strong> 10 email clicks generated 21 UTM-tagged web visits. Likely multi-page browsing counted separately, link forwarding, or a tracking gap between Customer.io and Mixpanel. Average time to on-site click was <strong>~23 seconds</strong> — not a considered action.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Conversion rate summary -->
+    <div class="conv-summary">
+      <div class="conv-cell">
+        <p class="conv-stage">Delivery rate</p>
+        <p class="conv-rate ok">93.2%</p>
+        <p class="conv-note">6.8% bounce — above 2% threshold</p>
+      </div>
+      <div class="conv-cell">
+        <p class="conv-stage">Open rate</p>
+        <p class="conv-rate bad">10.1%</p>
+        <p class="conv-note">Biggest drop-off point</p>
+      </div>
+      <div class="conv-cell">
+        <p class="conv-stage">Click-to-open</p>
+        <p class="conv-rate good">22.7%</p>
+        <p class="conv-note">Healthy — body copy works</p>
+      </div>
+      <div class="conv-cell">
+        <p class="conv-stage">Post-click engagement</p>
+        <p class="conv-rate bad">9.5%</p>
+        <p class="conv-note">Landing page not converting</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Action plan -->
+  <section>
+    <p class="section-eyebrow">Action plan</p>
+    <div class="actions-grid">
+
+      <div class="action-item">
+        <div class="action-num">1</div>
+        <div class="action-body">
+          <p class="action-title">Fix subject line — this is the #1 lever</p>
+          <p class="action-desc">"Lumina's pricing just got easier" is self-referential and low urgency. Lost leads don't remember Lumina and don't care that pricing changed. The subject needs to answer why they should open right now. Test: <code>$29/month per kiosk — no setup fees</code> or <code>Still thinking about kiosk ordering?</code> or <code>We made it cheaper. Here's what changed.</code></p>
+        </div>
+        <div class="action-tag"><span class="priority-badge p1">Priority 1</span></div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num">2</div>
+        <div class="action-body">
+          <p class="action-title">Clean the list before the next send</p>
+          <p class="action-desc">6.8% bounce rate is 3× the acceptable threshold. Left unaddressed this will damage sender reputation and compound open rate problems. Run the lost leads list through ZeroBounce or NeverBounce and suppress all invalid addresses before sending again. Also check: cold leads list has 10.6% bounce — needs the same treatment.</p>
+        </div>
+        <div class="action-tag"><span class="priority-badge p1">Priority 1</span></div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num">3</div>
+        <div class="action-body">
+          <p class="action-title">Audit the landing page CTA</p>
+          <p class="action-desc">21 UTM visitors, 2 clicked, avg 23s on page. The post-click experience is not working. Check <code>onlumina.com/pricing</code> — is there a single, obvious CTA above the fold? The flow should be: see price → one button → talk to someone or start. Remove any decision paralysis (multiple plans with no recommended default, no social proof, no urgency).</p>
+        </div>
+        <div class="action-tag"><span class="priority-badge p1">Priority 1</span></div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num">4</div>
+        <div class="action-body">
+          <p class="action-title">Strengthen the email body copy</p>
+          <p class="action-desc">The current email is 4 sentences with no social proof, no concrete value statement, and no reason to believe $29/month is competitive. Add: what $29/month gets them specifically, a one-line social proof (e.g. "Used by Ichiran across their NYC locations"), and a single clear CTA button instead of a plain text link.</p>
+        </div>
+        <div class="action-tag"><span class="priority-badge p2">Priority 2</span></div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num">5</div>
+        <div class="action-body">
+          <p class="action-title">Separate lost leads and cold leads messaging</p>
+          <p class="action-desc">Both segments are receiving near-identical pricing broadcasts. Lost leads need a re-engagement angle — acknowledge the gap, lead with what changed. Cold leads need a credibility-first intro — they don't know Lumina at all. These are fundamentally different audiences and should have different sequences, not the same one-shot blast.</p>
+        </div>
+        <div class="action-tag"><span class="priority-badge p2">Priority 2</span></div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num">6</div>
+        <div class="action-body">
+          <p class="action-title">Replace one-shot broadcasts with a 3-email nurture sequence</p>
+          <p class="action-desc">One-touch cold re-engagement rarely converts. Build a 3-email automated campaign for lost leads: Email 1 — re-introduction + what changed (pricing). Email 2 (3 days later) — social proof + customer story. Email 3 (7 days later) — direct ask with a time-bound offer. Measure conversion at each step and kill what doesn't work.</p>
+        </div>
+        <div class="action-tag"><span class="priority-badge p3">Priority 3</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Subject line copy comparison -->
+  <section>
+    <p class="section-eyebrow">Email copy — current vs proposed</p>
+    <div class="copy-grid">
+      <div class="copy-box">
+        <div class="copy-box-header current">Current (broadcast #129)</div>
+        <div class="copy-box-body">
+          <div class="subj">Subject: <strong class="strike">Lumina's pricing just got easier</strong></div>
+          <p>Hi [First Name],</p>
+          <p>Since we last spoke, we've changed how we charge.</p>
+          <p>We've added monthly plans starting at $29/kiosk per month - and do even more with Remy, our included remote management app.</p>
+          <p>Learn more at onlumina.com/pricing.</p>
+          <p>Questions? Text us at 877-689-5467 or reply to this email.</p>
+          <p>Ready when you are.</p>
+        </div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header proposed">Proposed revision</div>
+        <div class="copy-box-body">
+          <div class="subj">Subject: <strong>$29/month per kiosk — no setup fees</strong></div>
+          <p>Hi [First Name],</p>
+          <p>We've simplified how Lumina works — and made it a lot cheaper to get started.</p>
+          <p>Monthly plans from $29/kiosk, with no hardware lock-in. Includes Remy, our remote management app used by Ichiran across their NYC locations.</p>
+          <p>If you looked at us before and the pricing was a hurdle — it's worth another look.</p>
+          <p style="margin-top: 1rem;"><strong>→ See pricing at onlumina.com/pricing</strong></p>
+          <p style="margin-top: 0.75rem; font-size: 12px; color: #a09c96;">Questions? Text 877-689-5467 or reply here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="report-footer">
+    <span>Lumina · Lost Leads Campaign Analysis</span>
+    <span>Data: Customer.io + Mixpanel (Misen project) · Mar 19–30, 2026</span>
+  </div>
+
+</div>
+</body>
+</html>
