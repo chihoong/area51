@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIOS — Q1 2026 Business Review · Lumina</title>
+<style>
+  @font-face {
+    font-family: 'TomatoGrotesk';
+    src: url('TomatoGrotesk-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'TomatoGrotesk';
+    src: url('TomatoGrotesk-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'MonumentGrotesk';
+    src: url('ABCMonumentGrotesk-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'MonumentGrotesk';
+    src: url('ABCMonumentGrotesk-RegularItalic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'MonumentGrotesk';
+    src: url('ABCMonumentGrotesk-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'MonumentGrotesk';
+    src: url('ABCMonumentGrotesk-MediumItalic.woff2') format('woff2');
+    font-weight: 500;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'MonumentGrotesk';
+    src: url('ABCMonumentGrotesk-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'MonumentGrotesk';
+    src: url('ABCMonumentGrotesk-BoldItalic.woff2') format('woff2');
+    font-weight: 700;
+    font-style: italic;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --blue:        #0027F5;
+    --blue-dark:   #001AC0;
+    --yellow:      #E6FF4F;
+    --yellow-dim:  #EEFF84;
+    --yellow-faint:#FAFFDC;
+    --green:       #17E785;
+    --aqua:        #1BE7FF;
+    --helium:      #EF5100;
+    --pink:        #F12699;
+    --white:       #ffffff;
+    --kale:        #113114;
+    --tamarind:    #601100;
+    --bg:          #ffffff;
+    --surface:     #f5f5f3;
+    --surface2:    #ebebea;
+    --text:        #0a0a0a;
+    --muted:       #555551;
+    --border:      rgba(0,0,0,0.08);
+    --border2:     rgba(0,0,0,0.15);
+    --font-head:   'TomatoGrotesk', sans-serif;
+    --font-body:   'MonumentGrotesk', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; line-height: 1.5; }
+
+  /* HERO */
+  .hero { background: var(--blue); padding: 52px 56px 48px; position: relative; overflow: hidden; }
+  .hero::after {
+    content: '{○}';
+    position: absolute; right: -30px; top: -40px;
+    font-family: var(--font-head); font-weight: 900; font-size: 280px; line-height: 1;
+    color: rgba(230,255,79,0.06); letter-spacing: -8px;
+    pointer-events: none; user-select: none;
+  }
+  .hero-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 36px; }
+  .logo-mark { font-family: var(--font-head); font-weight: 900; font-size: 16px; color: var(--yellow); letter-spacing: -0.01em; display: flex; align-items: center; gap: 7px; }
+  .hero-meta { text-align: right; font-size: 12px; color: rgba(230,255,79,0.55); line-height: 1.9; }
+  .hero-meta strong { color: var(--yellow); font-weight: 500; }
+  .hero h1 {
+    font-family: var(--font-head); font-weight: 900;
+    font-size: clamp(60px, 8vw, 104px); line-height: 0.88;
+    letter-spacing: -0.04em; color: var(--yellow);
+    text-transform: uppercase; max-width: 860px; position: relative; z-index: 1;
+  }
+  .hero h1 .wh { color: var(--white); }
+  .hero-sub { margin-top: 22px; font-size: 14px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .pill { background: var(--yellow); color: var(--blue); font-weight: 700; font-size: 10px; padding: 4px 12px; border-radius: 99px; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* LAYOUT */
+  .page { max-width: 1200px; margin: 0 auto; padding: 0 40px 80px; }
+  .section { margin-top: 56px; }
+
+  /* SECTION LABELS */
+  .section-label {
+    font-family: var(--font-head); font-weight: 800; font-size: 10px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue);
+    margin-bottom: 18px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::before { content: ''; width: 12px; height: 12px; background: var(--yellow); border-radius: 50%; flex-shrink: 0; border: 2px solid var(--blue); }
+  .section-label::after  { content: ''; flex: 1; height: 1px; background: var(--border2); }
+
+  /* KPI GRID */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 3px; }
+  .kpi-card { padding: 22px 20px 18px; position: relative; overflow: hidden; }
+  .kpi-card.c-blue   { background: var(--blue); }
+  .kpi-card.c-yellow { background: var(--yellow); }
+  .kpi-card.c-green  { background: var(--green); }
+  .kpi-card.c-aqua   { background: var(--aqua); }
+  .kpi-card.c-light  { background: var(--surface); }
+  .kpi-card.c-helium { background: var(--helium); }
+  .kpi-label { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 10px; }
+  .c-blue .kpi-label   { color: rgba(230,255,79,0.55); }
+  .c-yellow .kpi-label { color: rgba(0,39,245,0.5); }
+  .c-green .kpi-label  { color: rgba(0,0,0,0.45); }
+  .c-aqua .kpi-label   { color: rgba(0,0,0,0.45); }
+  .c-light .kpi-label  { color: var(--muted); }
+  .c-helium .kpi-label { color: rgba(230,255,79,0.65); }
+  .kpi-value { font-family: var(--font-head); font-weight: 900; font-size: 34px; line-height: 1; letter-spacing: -0.03em; }
+  .c-blue .kpi-value   { color: var(--yellow); }
+  .c-yellow .kpi-value { color: var(--blue); }
+  .c-green .kpi-value  { color: var(--kale); }
+  .c-aqua .kpi-value   { color: #002833; }
+  .c-light .kpi-value  { color: var(--text); }
+  .c-helium .kpi-value { color: var(--yellow); }
+  .kpi-delta { margin-top: 8px; font-size: 11px; font-weight: 500; }
+  .c-blue .kpi-delta   { color: rgba(230,255,79,0.45); }
+  .c-yellow .kpi-delta { color: rgba(0,39,245,0.45); }
+  .c-green .kpi-delta  { color: rgba(0,0,0,0.4); }
+  .c-light .kpi-delta  { color: var(--muted); }
+  .c-helium .kpi-delta { color: rgba(230,255,79,0.55); }
+  .delta-up   { color: var(--green) !important; }
+  .delta-down { color: rgba(255,90,70,0.95) !important; }
+  .c-light .delta-up   { color: #0a8040 !important; }
+  .c-light .delta-down { color: #b81c1c !important; }
+  .c-yellow .delta-up  { color: var(--kale) !important; }
+  .c-yellow .delta-down{ color: var(--tamarind) !important; }
+
+  /* LUMINA BANNER */
+  .lum-banner { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; margin-top: 3px; }
+  .lum-stat { padding: 22px 20px; border-right: 2px solid rgba(0,39,245,0.1); }
+  .lum-stat:last-child { border-right: none; }
+  .lum-stat-label { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(0,39,245,0.45); margin-bottom: 8px; }
+  .lum-stat-value { font-family: var(--font-head); font-weight: 900; font-size: 30px; letter-spacing: -0.03em; color: var(--blue); line-height: 1; }
+  .lum-stat-sub   { font-size: 11px; color: rgba(0,39,245,0.4); margin-top: 5px; }
+  .lum-stat { background: var(--yellow); }
+  .lum-stat.hero-stat { background: var(--blue); border-right: 2px solid rgba(230,255,79,0.15); }
+  .lum-stat.hero-stat .lum-stat-label { color: rgba(230,255,79,0.55); }
+  .lum-stat.hero-stat .lum-stat-value { color: var(--yellow); }
+  .lum-stat.hero-stat .lum-stat-sub   { color: rgba(230,255,79,0.45); }
+
+  /* CHARTS */
+  .charts-row { display: grid; gap: 3px; }
+  .c2 { grid-template-columns: 1fr 1fr; }
+  .c64{ grid-template-columns: 1.5fr 1fr; }
+  .chart-card { padding: 26px 22px 20px; }
+  .chart-card.bg-blue   { background: var(--blue); }
+  .chart-card.bg-light  { background: var(--surface); }
+  .chart-card.bg-yellow { background: var(--yellow); }
+  .chart-title { font-family: var(--font-head); font-weight: 800; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+  .bg-blue .chart-title   { color: var(--yellow); }
+  .bg-light .chart-title  { color: var(--text); }
+  .bg-yellow .chart-title { color: var(--blue); }
+  .chart-wrap { position: relative; width: 100%; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; }
+  .bg-blue .legend-item   { color: rgba(230,255,79,0.65); }
+  .bg-light .legend-item  { color: var(--muted); }
+  .bg-yellow .legend-item { color: rgba(0,39,245,0.6); }
+  .ldot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* TABLES */
+  .table-wrap { overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: var(--blue); color: var(--yellow); font-family: var(--font-head); font-weight: 800; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 14px; text-align: left; }
+  thead th.r { text-align: right; }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:nth-child(even) td { background: rgba(0,0,0,0.018); }
+  tbody tr:hover td { background: var(--yellow-faint); }
+  td.r { text-align: right; font-family: var(--font-head); font-size: 13px; font-weight: 700; }
+  td.mu { color: var(--muted); font-size: 12px; }
+  tfoot td { padding: 12px 14px; border-top: 2px solid var(--blue); font-family: var(--font-head); font-weight: 800; font-size: 13px; background: var(--yellow); color: var(--blue); }
+  tfoot td.r { text-align: right; }
+
+  /* BADGES */
+  .badge { display: inline-block; font-family: var(--font-head); font-weight: 800; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; }
+  .b-sub    { background: var(--blue);    color: var(--yellow); }
+  .b-custom { background: var(--helium);  color: var(--yellow); }
+  .b-std    { background: var(--surface2);color: var(--muted); }
+
+  /* OBSERVATIONS */
+  .obs-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; }
+  .obs-card { background: var(--surface); padding: 24px 20px; border-top: 4px solid var(--blue); }
+  .obs-card.ot-yellow { border-top-color: var(--yellow); background: var(--blue); }
+  .obs-card.ot-green  { border-top-color: var(--green); }
+  .obs-card.ot-helium { border-top-color: var(--helium); }
+  .obs-card.ot-pink   { border-top-color: var(--pink); }
+  .obs-card.ot-aqua   { border-top-color: var(--aqua); }
+  .obs-num { font-family: var(--font-head); font-weight: 900; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
+  .obs-card.ot-yellow .obs-num { color: var(--yellow); }
+  .obs-card h4 { font-family: var(--font-head); font-weight: 800; font-size: 15px; line-height: 1.2; margin-bottom: 8px; color: var(--text); }
+  .obs-card.ot-yellow h4 { color: var(--yellow); }
+  .obs-card p  { font-size: 12px; color: var(--muted); line-height: 1.65; }
+  .obs-card.ot-yellow p { color: rgba(255,255,255,0.6); }
+
+  /* INLINE BAR */
+  .bar-cell { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .ibar { height: 5px; background: var(--blue); border-radius: 1px; flex-shrink: 0; }
+
+  /* RANK */
+  .rn { font-family: var(--font-head); font-weight: 900; font-size: 11px; color: var(--blue); min-width: 24px; }
+
+  /* FOOTER */
+  .footer { background: var(--blue); margin-top: 56px; padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-logo { font-family: var(--font-head); font-weight: 900; font-size: 18px; color: var(--yellow); letter-spacing: -0.01em; }
+  .footer-meta { font-size: 11px; color: rgba(230,255,79,0.45); text-align: right; line-height: 1.9; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .fade { animation: fadeUp 0.45s ease both; }
+  .fade2 { animation: fadeUp 0.45s 0.1s ease both; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-top">
+    <div class="logo-mark">{○} LUMINA</div>
+    <div class="hero-meta">
+      <div><strong>Period</strong> Jan 1 – Mar 31, 2026</div>
+      <div><strong>Source</strong> source_name = KIOS</div>
+      <div><strong>Comparison</strong> Q1 2025 YoY</div>
+    </div>
+  </div>
+  <h1>KIOS<br><span class="wh">Q1 '26</span><br>Review.</h1>
+  <div class="hero-sub">
+    <span class="pill">Business Review</span>
+    <span>569,930 orders &nbsp;·&nbsp; ~155 active locations &nbsp;·&nbsp; $237K Lumina revenue</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- KPIs -->
+  <div class="section fade">
+    <div class="section-label">Key Performance Indicators</div>
+    <div class="kpi-grid">
+      <div class="kpi-card c-blue">
+        <div class="kpi-label">Gross Sales</div>
+        <div class="kpi-value">$11.96M</div>
+        <div class="kpi-delta delta-down">▼ 16% vs Q1 '25 ($14.24M)</div>
+      </div>
+      <div class="kpi-card c-blue">
+        <div class="kpi-label">Net Sales</div>
+        <div class="kpi-value">$13.24M</div>
+        <div class="kpi-delta delta-down">▼ 16% vs Q1 '25 ($15.75M)</div>
+      </div>
+      <div class="kpi-card c-yellow">
+        <div class="kpi-label">Total Orders</div>
+        <div class="kpi-value">569,930</div>
+        <div class="kpi-delta delta-down">▼ 28% vs Q1 '25 (792,595)</div>
+      </div>
+      <div class="kpi-card c-green">
+        <div class="kpi-label">Avg Order Value</div>
+        <div class="kpi-value">$23.24</div>
+        <div class="kpi-delta delta-up">▲ 17% vs Q1 '25 ($19.88)</div>
+      </div>
+    </div>
+    <div class="kpi-grid fade2" style="margin-top:3px;">
+      <div class="kpi-card c-light">
+        <div class="kpi-label">Total Tips</div>
+        <div class="kpi-value" style="font-size:26px;">$400K</div>
+        <div class="kpi-delta delta-down">▼ 34% vs Q1 '25 ($606K)</div>
+      </div>
+      <div class="kpi-card c-light">
+        <div class="kpi-label">Total Taxes</div>
+        <div class="kpi-value" style="font-size:26px;">$922K</div>
+        <div class="kpi-delta delta-down">▼ 4% vs Q1 '25 ($956K)</div>
+      </div>
+      <div class="kpi-card c-light">
+        <div class="kpi-label">Total Discounts</div>
+        <div class="kpi-value" style="font-size:26px;">$43K</div>
+        <div class="kpi-delta">0.36% of gross sales</div>
+      </div>
+      <div class="kpi-card c-light">
+        <div class="kpi-label">Active Locations</div>
+        <div class="kpi-value" style="font-size:26px;">~155</div>
+        <div class="kpi-delta delta-down">▼ 36% vs Q1 '25 (242)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LUMINA REVENUE -->
+  <div class="section fade">
+    <div class="section-label">Lumina Revenue</div>
+    <div class="lum-banner">
+      <div class="lum-stat hero-stat">
+        <div class="lum-stat-label">Total Lumina Revenue</div>
+        <div class="lum-stat-value">$237K</div>
+        <div class="lum-stat-sub">2.0% blended take rate</div>
+      </div>
+      <div class="lum-stat">
+        <div class="lum-stat-label">Subscription</div>
+        <div class="lum-stat-value">$41.4K</div>
+        <div class="lum-stat-sub">Ichiran · Zareen's · Ooink</div>
+      </div>
+      <div class="lum-stat">
+        <div class="lum-stat-label">Custom 1.25%</div>
+        <div class="lum-stat-value">$16.1K</div>
+        <div class="lum-stat-sub">Boba Tea Company</div>
+      </div>
+      <div class="lum-stat">
+        <div class="lum-stat-label">Standard 1.5%</div>
+        <div class="lum-stat-value">$179K</div>
+        <div class="lum-stat-sub">~80 businesses</div>
+      </div>
+    </div>
+    <div class="charts-row c64" style="margin-top:3px;">
+      <div class="chart-card bg-blue">
+        <div class="chart-title">Lumina Revenue by Business — Top 10</div>
+        <div class="chart-wrap" style="height:230px;"><canvas id="luminaByBiz"></canvas></div>
+        <div class="legend">
+          <div class="legend-item"><div class="ldot" style="background:#E6FF4F;"></div>Subscription</div>
+          <div class="legend-item"><div class="ldot" style="background:#EF5100;"></div>Custom 1.25%</div>
+          <div class="legend-item"><div class="ldot" style="background:rgba(230,255,79,0.3);"></div>Standard 1.5%</div>
+        </div>
+      </div>
+      <div class="chart-card bg-light">
+        <div class="chart-title">Revenue Mix by Tier</div>
+        <div class="chart-wrap" style="height:180px;"><canvas id="tierDonut"></canvas></div>
+        <div class="legend" style="margin-top:10px;">
+          <div class="legend-item"><div class="ldot" style="background:#0027F5;"></div>Subscription 17%</div>
+          <div class="legend-item"><div class="ldot" style="background:#EF5100;"></div>Custom 7%</div>
+          <div class="legend-item"><div class="ldot" style="background:#17E785;"></div>Standard 76%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTHLY TREND -->
+  <div class="section fade">
+    <div class="section-label">Monthly Trend — Q1 2026</div>
+    <div class="charts-row c2">
+      <div class="chart-card bg-blue">
+        <div class="chart-title">Net Sales &amp; Gross Sales</div>
+        <div class="chart-wrap" style="height:200px;"><canvas id="salesChart"></canvas></div>
+        <div class="legend">
+          <div class="legend-item"><div class="ldot" style="background:#E6FF4F;"></div>Net Sales</div>
+          <div class="legend-item"><div class="ldot" style="background:rgba(230,255,79,0.3);"></div>Gross Sales</div>
+        </div>
+      </div>
+      <div class="chart-card bg-light">
+        <div class="chart-title">Orders &amp; Avg Order Value</div>
+        <div class="chart-wrap" style="height:200px;"><canvas id="ordersChart"></canvas></div>
+        <div class="legend">
+          <div class="legend-item"><div class="ldot" style="background:#0027F5;"></div>Orders</div>
+          <div class="legend-item"><div class="ldot" style="background:#EF5100;"></div>AOV ($)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATE BREAKDOWN -->
+  <div class="section fade">
+    <div class="section-label">Net Sales by State — Top 10</div>
+    <div class="charts-row c64">
+      <div class="chart-card bg-light">
+        <div class="chart-title">Net Sales Distribution</div>
+        <div class="chart-wrap" style="height:260px;"><canvas id="stateChart"></canvas></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>State</th><th>Locs</th><th class="r">Net Sales</th><th class="r">Orders</th></tr></thead>
+          <tbody id="stateTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- LUMINA TABLE -->
+  <div class="section fade">
+    <div class="section-label">Lumina Revenue by Business</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Business</th><th>Tier</th><th class="r">Gross Sales</th><th class="r">Lumina Revenue</th><th class="r">Locs</th><th class="r">Orders</th></tr></thead>
+        <tbody id="luminaTbody"></tbody>
+        <tfoot><tr><td colspan="2">Total</td><td class="r">$11,964,996</td><td class="r">$236,588</td><td class="r">155</td><td class="r">569,930</td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- TOP LOCATIONS -->
+  <div class="section fade">
+    <div class="section-label">Top 15 Locations by Net Sales</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Location</th><th>Business</th><th>City</th><th>ST</th><th class="r">Net Sales</th><th class="r">Orders</th><th class="r">AOV</th></tr></thead>
+        <tbody id="locTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- OBSERVATIONS -->
+  <div class="section fade">
+    <div class="section-label">Key Observations</div>
+    <div class="obs-grid">
+      <div class="obs-card ot-yellow">
+        <div class="obs-num">01 — Volume</div>
+        <h4>Significant order &amp; location decline</h4>
+        <p>Orders fell 28% YoY and active locations dropped 36% (242 → ~155). A third of KIOS locations churned or went inactive between Q1 '25 and Q1 '26.</p>
+      </div>
+      <div class="obs-card ot-green">
+        <div class="obs-num">02 — AOV</div>
+        <h4>Average order value up 17%</h4>
+        <p>AOV rose from $19.88 to $23.24 — the standout positive metric. Shift toward higher-ticket concepts like Ichiran is likely the driver.</p>
+      </div>
+      <div class="obs-card ot-helium">
+        <div class="obs-num">03 — Concentration</div>
+        <h4>40% of revenue from 3 locations</h4>
+        <p>Ichiran's 3 NYC locations account for ~$5.3M of $13.2M net sales. Extreme concentration risk for the channel.</p>
+      </div>
+      <div class="obs-card">
+        <div class="obs-num">04 — Trend</div>
+        <h4>March recovery is real</h4>
+        <p>March was the strongest month at $4.87M net, 213K orders. February dip appears seasonal — no structural deterioration within Q1.</p>
+      </div>
+      <div class="obs-card ot-pink">
+        <div class="obs-num">05 — Pricing</div>
+        <h4>Ichiran subscription underpriced</h4>
+        <p>Ichiran pays $39K/quarter flat on $4.87M gross. At standard 1.5% they'd owe ~$73K — a $34K/quarter discount relative to volume.</p>
+      </div>
+      <div class="obs-card ot-aqua">
+        <div class="obs-num">06 — Take Rate</div>
+        <h4>2.0% blended Lumina take rate</h4>
+        <p>$237K on $11.96M gross. Above standard 1.5% due to subscription revenue on lower-volume accounts. Room to improve through repricing.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-logo">{○} LUMINA</div>
+  <div class="footer-meta">
+    <div>KIOS · Q1 2026 Business Review</div>
+    <div>Data: orderdata.s4 · Jan 1 – Mar 31, 2026</div>
+  </div>
+</div>
+
+<script>
+const fmtK = n => n>=1e6?'$'+(n/1e6).toFixed(2)+'M':'$'+(n/1000).toFixed(1)+'K';
+const fmt  = n => '$'+Math.round(n).toLocaleString('en-US');
+Chart.defaults.font.family = "'MonumentGrotesk', sans-serif";
+Chart.defaults.color = '#555551';
+
+// Lumina by Biz
+const bizData = [
+  {name:'Ichiran USA',rev:39000,tier:'sub'},{name:'Boba Tea Co.',rev:16094,tier:'custom'},
+  {name:"Chill Since '93",rev:8522,tier:'std'},{name:'Little Sweet',rev:5174,tier:'std'},
+  {name:'Pochi Bubble Tea',rev:4411,tier:'std'},{name:'Teahut',rev:3784,tier:'std'},
+  {name:'KREATION',rev:3550,tier:'std'},{name:'Soupa Saiyan',rev:3318,tier:'std'},
+  {name:'Plentea',rev:2981,tier:'std'},{name:'Wise Sons Deli',rev:2748,tier:'std'},
+];
+const bizColors = bizData.map(b=>b.tier==='sub'?'#E6FF4F':b.tier==='custom'?'#EF5100':'rgba(230,255,79,0.3)');
+new Chart(document.getElementById('luminaByBiz'),{type:'bar',
+  data:{labels:bizData.map(b=>b.name),datasets:[{data:bizData.map(b=>b.rev),backgroundColor:bizColors,borderRadius:2,borderSkipped:false}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+fmt(ctx.raw)}}},
+    scales:{
+      x:{ticks:{callback:v=>fmtK(v),font:{size:10},color:'rgba(230,255,79,0.55)'},grid:{color:'rgba(230,255,79,0.07)'},border:{color:'rgba(230,255,79,0.12)'}},
+      y:{ticks:{font:{size:11},color:'rgba(230,255,79,0.8)'},grid:{display:false}}
+    }
+  }
+});
+
+// Tier Donut
+new Chart(document.getElementById('tierDonut'),{type:'doughnut',
+  data:{labels:['Subscription','Custom 1.25%','Standard 1.5%'],
+    datasets:[{data:[41400,16094,179094],backgroundColor:['#0027F5','#EF5100','#17E785'],borderWidth:0,hoverOffset:4}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${fmt(ctx.raw)} (${Math.round(ctx.raw/236588*100)}%)`}}}
+  }
+});
+
+// Sales Chart
+new Chart(document.getElementById('salesChart'),{type:'bar',
+  data:{labels:['Jan','Feb','Mar'],datasets:[
+    {label:'Net Sales',data:[4433334,3936883,4873368],backgroundColor:'#E6FF4F',borderRadius:2,borderSkipped:false},
+    {label:'Gross Sales',data:[4007926,3554347,4402723],backgroundColor:'rgba(230,255,79,0.28)',borderRadius:2,borderSkipped:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmtK(ctx.raw)}`}}},
+    scales:{
+      x:{ticks:{font:{size:12},color:'rgba(230,255,79,0.8)'},grid:{color:'rgba(230,255,79,0.07)'},border:{color:'rgba(230,255,79,0.12)'}},
+      y:{ticks:{callback:v=>fmtK(v),font:{size:10},color:'rgba(230,255,79,0.55)'},grid:{color:'rgba(230,255,79,0.07)'},border:{color:'rgba(230,255,79,0.12)'}}
+    }
+  }
+});
+
+// Orders + AOV
+new Chart(document.getElementById('ordersChart'),{type:'bar',
+  data:{labels:['Jan','Feb','Mar'],datasets:[
+    {label:'Orders',data:[185335,171406,213189],backgroundColor:'#0027F5',borderRadius:2,borderSkipped:false,yAxisID:'y'},
+    {label:'AOV ($)',data:[23.92,22.97,22.86],type:'line',borderColor:'#EF5100',backgroundColor:'transparent',
+     pointBackgroundColor:'#EF5100',pointRadius:6,yAxisID:'y2',tension:0.4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{font:{size:12}},grid:{color:'rgba(0,0,0,0.05)'}},
+      y:{ticks:{callback:v=>v.toLocaleString(),font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},
+      y2:{position:'right',ticks:{callback:v=>'$'+v.toFixed(2),font:{size:10}},grid:{display:false}}
+    }
+  }
+});
+
+// State Chart
+const states=[['NY',14,5328494,107537],['CA',84,3956074,241935],['AZ',9,885252,62308],
+  ['WA',8,781457,32520],['FL',6,704066,21645],['NM',6,480008,29141],
+  ['DC',1,196930,18655],['IL',5,170373,10762],['TX',5,137244,9198],['PA',4,100090,8825]];
+new Chart(document.getElementById('stateChart'),{type:'bar',
+  data:{labels:states.map(s=>s[0]),datasets:[{data:states.map(s=>s[2]),backgroundColor:'#0027F5',hoverBackgroundColor:'#E6FF4F',borderRadius:2,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${fmtK(ctx.raw)} · ${states[ctx.dataIndex][1]} locs`}}},
+    scales:{x:{ticks:{font:{size:12}},grid:{color:'rgba(0,0,0,0.05)'}},y:{ticks:{callback:v=>fmtK(v),font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}}
+  }
+});
+
+// State Table
+const stb=document.getElementById('stateTbody');
+const maxNet=states[0][2];
+states.forEach(([st,locs,net,orders])=>{
+  const pct=Math.round(net/maxNet*60);
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td style="font-family:var(--font-head);font-weight:800;font-size:14px;">${st}</td><td class="mu">${locs}</td><td class="r"><div class="bar-cell"><div class="ibar" style="width:${pct}px;"></div><span>${fmtK(net)}</span></div></td><td class="r mu">${orders.toLocaleString()}</td>`;
+  stb.appendChild(tr);
+});
+
+// Lumina Table
+const ldata=[
+  ['Ichiran USA','sub',4869136.3,39000,3,105197],['Boba Tea Company','custom',1287538.67,16094,14,96672],
+  ["Chill Since '93",'std',568164.5,8522,1,33968],['Little Sweet','std',344930.97,5174,7,31192],
+  ['Ooink','sub',309862.25,1800,2,8862],['Pochi Bubble Tea','std',294089.13,4411,3,19509],
+  ['Teahut','std',252270.38,3784,5,23330],['KREATION ORGANIC','std',236667.1,3550,14,12577],
+  ['Soupa Saiyan','std',221217.03,3318,1,5732],['Plentea','std',198746.01,2981,3,19191],
+  ['Wise Sons Deli','std',183190.5,2748,5,11061],["Zareen's",'sub',176547.65,600,1,6679],
+  ['Spot of Tea','std',165619.7,2484,1,18655],['The Bao Spot','std',162542.1,2438,1,6654],
+  ['HMart','std',139253.56,2089,2,4620],['Teo Chow Noodle','std',135263.11,2029,1,4409],
+  ['Fresh Roll','std',132605.87,1989,3,8570],['Rooster and Rice','std',129007,1935,3,6310],
+  ['Uji Time','std',112132.39,1682,1,9303],['Bento Sushi + Poke','std',111225.34,1668,1,4986],
+  ['Other (~65 biz)','std',479155.97,7187,45,24775],
+];
+const tb={sub:'<span class="badge b-sub">Subscription</span>',custom:'<span class="badge b-custom">Custom 1.25%</span>',std:'<span class="badge b-std">Standard 1.5%</span>'};
+const ltb=document.getElementById('luminaTbody');
+ldata.forEach(([name,tier,gross,rev,locs,orders])=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td style="font-weight:500;">${name}</td><td>${tb[tier]}</td><td class="r">${fmtK(gross)}</td><td class="r" style="color:var(--blue);">${fmt(rev)}</td><td class="r mu">${locs}</td><td class="r mu">${orders.toLocaleString()}</td>`;
+  ltb.appendChild(tr);
+});
+
+// Top Locations
+const topLocs=[
+  ['Ichiran - Times Square','Ichiran USA','New York','NY',2467660,46910,52.60],
+  ['Ichiran - Midtown','Ichiran USA','New York','NY',1939214,40667,47.69],
+  ['Ichiran - Brooklyn','Ichiran USA','New York','NY',868993,17620,49.32],
+  ["Chill Since '93 - The Grove","Chill Since '93",'Los Angeles','CA',636560,33968,18.74],
+  ['Soupa Saiyan - Vineland Rd','Soupa Saiyan','Orlando','FL',256929,5732,44.82],
+  ['BTC #07 - Scottsdale','Boba Tea Co.','Scottsdale','AZ',248962,18495,13.46],
+  ['BTC #02 - Albuquerque','Boba Tea Co.','Albuquerque','NM',213430,13140,16.24],
+  ["Zareen's - Mountain View","Zareen's",'Mountain View','CA',203535,6679,30.47],
+  ['Pochi Bubble Tea - Lynnwood','Pochi Bubble','Lynnwood','WA',203468,11254,18.08],
+  ['Spot of Tea - Union Market','Spot of Tea','Washington','DC',196930,18655,10.56],
+  ['Ooink - Capitol Hill','Ooink','Seattle','WA',188249,5035,37.39],
+  ['The Bao Spot','The Bao Spot','Orlando','FL',186471,6654,28.02],
+  ['BTC #09 - Glendale','Boba Tea Co.','Glendale','AZ',169611,11645,14.57],
+  ['BTC #06 - Chandler','Boba Tea Co.','Chandler','AZ',169118,12235,13.82],
+  ['Teo Chow - Fremont','Teo Chow','Fremont','CA',158238,4409,35.89],
+];
+const locTb=document.getElementById('locTbody');
+topLocs.forEach(([loc,biz,city,st,net,orders,aov],i)=>{
+  const n=String(i+1).padStart(2,'0');
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="rn">${n}</td><td style="font-weight:500;">${loc}</td><td class="mu">${biz}</td><td class="mu">${city}</td><td style="font-family:var(--font-head);font-weight:800;font-size:12px;">${st}</td><td class="r">${fmt(net)}</td><td class="r mu">${orders.toLocaleString()}</td><td class="r" style="color:var(--helium);font-family:var(--font-head);font-weight:800;">$${aov.toFixed(2)}</td>`;
+  locTb.appendChild(tr);
+});
+</script>
+</body>
+</html>
