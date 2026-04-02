@@ -10,14 +10,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border: 0 solid; }
     html, button, input, select, textarea, a { color: #000; }
-    body {
-      -webkit-font-smoothing: antialiased;
-      background-color: #ffffe7;
-      font-family: Manrope, sans-serif;
-      font-size: 16px;
-      line-height: 1.5;
-      min-height: 100vh;
-    }
+    body { -webkit-font-smoothing: antialiased; background-color: #ffffe7; font-family: Manrope, sans-serif; font-size: 16px; line-height: 1.5; min-height: 100vh; }
     header { padding: 56px 32px 48px; border-bottom: 1.5px solid #000; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
     .header-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.4; margin-bottom: 10px; }
     .header-date { font-size: clamp(44px, 6.5vw, 88px); font-weight: 800; line-height: 0.92; letter-spacing: -0.03em; }
@@ -57,7 +50,6 @@
     .meal-photo { margin: 20px 0 0; }
     .meal-photo img { width: 88px; height: 88px; object-fit: cover; border-radius: 6px; cursor: zoom-in; display: block; }
     .sub-meal { margin-top: 28px; }
-    .sub-meal-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.35; margin-bottom: 12px; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     thead tr { border-bottom: 1.5px solid rgba(0,0,0,0.15); }
     th { padding: 0 12px 10px 0; text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.4; }
@@ -105,7 +97,7 @@
       <div class="header-date">2 April<br>2026</div>
     </div>
     <div class="header-right">
-      <div class="header-kcal">1,307</div>
+      <div class="header-kcal">1,243</div>
       <div class="header-kcal-label">kcal consumed</div>
     </div>
   </header>
@@ -113,15 +105,15 @@
   <div class="macro-strip">
     <div class="macro-cell">
       <div class="macro-cell-label">Protein</div>
-      <div class="macro-cell-value">63g</div>
-      <div class="macro-cell-sub">of 130g (67g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:48.5%"></div></div>
+      <div class="macro-cell-value">62g</div>
+      <div class="macro-cell-sub">of 130g (68g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:47.7%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Carbs</div>
-      <div class="macro-cell-value">159g</div>
-      <div class="macro-cell-sub">of 205g (46g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:77.6%"></div></div>
+      <div class="macro-cell-value">142g</div>
+      <div class="macro-cell-sub">of 205g (63g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:69.3%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fat</div>
@@ -131,9 +123,9 @@
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fiber</div>
-      <div class="macro-cell-value">17g</div>
-      <div class="macro-cell-sub">of 30g (13g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:56.7%"></div></div>
+      <div class="macro-cell-value">16g</div>
+      <div class="macro-cell-sub">of 30g (14g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:53.3%"></div></div>
     </div>
   </div>
 
@@ -144,14 +136,14 @@
     </div>
     <div class="split-bar-wrap">
       <div class="split-bar">
-        <div class="seg protein" style="flex:19">19%</div>
-        <div class="seg carbs"   style="flex:49">49%</div>
-        <div class="seg fat"     style="flex:35">35%</div>
+        <div class="seg protein" style="flex:20">20%</div>
+        <div class="seg carbs"   style="flex:46">46%</div>
+        <div class="seg fat"     style="flex:37">37%</div>
       </div>
       <div class="split-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 19%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 49%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 35%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 20%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 46%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 37%</div>
       </div>
     </div>
   </div>
@@ -164,7 +156,7 @@
           <div class="meal-eyebrow">Breakfast</div>
           <div class="meal-name">Breakfast<br>Oats</div>
         </div>
-        <div class="meal-kcal">546 kcal</div>
+        <div class="meal-kcal">482 kcal</div>
       </div>
       <div class="sub-meal">
         <table>
@@ -172,12 +164,12 @@
           <tbody>
             <tr><td>150g steel cut oatmeal, cooked</td><td>107</td><td>4g</td><td>19g</td><td>2g</td><td>3g</td></tr>
             <tr><td>75g 0% Strauss milk</td><td>26</td><td>3g</td><td>4g</td><td>0g</td><td>0g</td></tr>
-            <tr><td>2 Medjool dates (~48g) &#9873;</td><td>133</td><td>1g</td><td>36g</td><td>0g</td><td>3g</td></tr>
+            <tr><td>25g dates &#9873;</td><td>69</td><td>0g</td><td>19g</td><td>0g</td><td>2g</td></tr>
             <tr><td>80g mixed berries &#9873;</td><td>35</td><td>1g</td><td>9g</td><td>0g</td><td>2g</td></tr>
             <tr><td>8g hemp seeds</td><td>44</td><td>3g</td><td>1g</td><td>4g</td><td>0g</td></tr>
             <tr><td>8g ground black sesame</td><td>46</td><td>1g</td><td>2g</td><td>4g</td><td>1g</td></tr>
             <tr><td>25g nut butter (almond/hazelnut) &#9873;</td><td>155</td><td>5g</td><td>5g</td><td>15g</td><td>3g</td></tr>
-            <tr><td>Subtotal</td><td>546</td><td>18g</td><td>76g</td><td>25g</td><td>12g</td></tr>
+            <tr><td>Subtotal</td><td>482</td><td>17g</td><td>59g</td><td>25g</td><td>11g</td></tr>
           </tbody>
         </table>
       </div>
@@ -216,18 +208,18 @@
     <div class="day-total-grid">
       <div class="dtc">
         <div class="dtc-label">Calories</div>
-        <div class="dtc-value">1,307</div>
-        <div class="dtc-rem pos">+693 remaining</div>
+        <div class="dtc-value">1,243</div>
+        <div class="dtc-rem pos">+757 remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Protein</div>
-        <div class="dtc-value">63g</div>
-        <div class="dtc-rem pos">+67g remaining</div>
+        <div class="dtc-value">62g</div>
+        <div class="dtc-rem pos">+68g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Carbs</div>
-        <div class="dtc-value">159g</div>
-        <div class="dtc-rem pos">+46g remaining</div>
+        <div class="dtc-value">142g</div>
+        <div class="dtc-rem pos">+63g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fat</div>
@@ -236,8 +228,8 @@
       </div>
       <div class="dtc">
         <div class="dtc-label">Fiber</div>
-        <div class="dtc-value">17g</div>
-        <div class="dtc-rem pos">+13g remaining</div>
+        <div class="dtc-value">16g</div>
+        <div class="dtc-rem pos">+14g remaining</div>
       </div>
     </div>
   </div>
