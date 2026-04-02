@@ -54,6 +54,8 @@
     .meal-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.4; margin-bottom: 5px; }
     .meal-name { font-size: clamp(22px, 2.8vw, 36px); font-weight: 800; line-height: 0.95; letter-spacing: -0.025em; }
     .meal-kcal { font-size: clamp(18px, 2vw, 28px); font-weight: 800; letter-spacing: -0.02em; flex-shrink: 0; opacity: 0.5; }
+    .meal-photo { margin: 20px 0 0; }
+    .meal-photo img { width: 88px; height: 88px; object-fit: cover; border-radius: 6px; cursor: zoom-in; display: block; }
     .sub-meal { margin-top: 28px; }
     .sub-meal-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.35; margin-bottom: 12px; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
@@ -74,8 +76,10 @@
     .dtc-rem.pos { color: #1a7a40; opacity: 1; }
     .dtc-rem.neg { color: #c0392b; opacity: 1; }
     .disclaimer { padding: 0 32px 48px; font-size: 11px; font-weight: 500; opacity: 0.4; letter-spacing: 0.02em; line-height: 1.7; }
-    .back-link { display: inline-block; padding: 12px 32px; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; opacity: 0.35; }
-    .back-link:hover { opacity: 0.7; }
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 999; align-items: center; justify-content: center; cursor: zoom-out; }
+    .lightbox.active { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 4px; }
+    .lightbox-close { position: fixed; top: 20px; right: 24px; font-size: 28px; color: #fff; cursor: pointer; opacity: 0.7; line-height: 1; font-weight: 300; }
     @media (max-width: 768px) {
       header { flex-direction: column; align-items: flex-start; }
       .header-right { text-align: left; }
@@ -90,7 +94,10 @@
 </head>
 <body>
 
-  <a class="back-link" href="index.html">&larr; All Days</a>
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close" onclick="event.stopPropagation();closeLightbox()">&#10005;</div>
+    <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()" />
+  </div>
 
   <header>
     <div>
@@ -98,7 +105,7 @@
       <div class="header-date">2 April<br>2026</div>
     </div>
     <div class="header-right">
-      <div class="header-kcal">545.7</div>
+      <div class="header-kcal">1,307</div>
       <div class="header-kcal-label">kcal consumed</div>
     </div>
   </header>
@@ -106,27 +113,27 @@
   <div class="macro-strip">
     <div class="macro-cell">
       <div class="macro-cell-label">Protein</div>
-      <div class="macro-cell-value">16.3g</div>
-      <div class="macro-cell-sub">of 130g (113.7g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:12.5%"></div></div>
+      <div class="macro-cell-value">63g</div>
+      <div class="macro-cell-sub">of 130g (67g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:48.5%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Carbs</div>
-      <div class="macro-cell-value">74.0g</div>
-      <div class="macro-cell-sub">of 205g (131.0g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:36.1%"></div></div>
+      <div class="macro-cell-value">159g</div>
+      <div class="macro-cell-sub">of 205g (46g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:77.6%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fat</div>
-      <div class="macro-cell-value">25.0g</div>
-      <div class="macro-cell-sub">of 74g (49.0g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:33.8%"></div></div>
+      <div class="macro-cell-value">51g</div>
+      <div class="macro-cell-sub">of 74g (23g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:68.9%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fiber</div>
-      <div class="macro-cell-value">11.8g</div>
-      <div class="macro-cell-sub">of 30g (18.2g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:39.3%"></div></div>
+      <div class="macro-cell-value">17g</div>
+      <div class="macro-cell-sub">of 30g (13g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:56.7%"></div></div>
     </div>
   </div>
 
@@ -137,14 +144,14 @@
     </div>
     <div class="split-bar-wrap">
       <div class="split-bar">
-        <div class="seg protein" style="flex:65.2">12%</div>
-        <div class="seg carbs"   style="flex:296.0">51%</div>
-        <div class="seg fat"     style="flex:225.0">38%</div>
+        <div class="seg protein" style="flex:19">19%</div>
+        <div class="seg carbs"   style="flex:49">49%</div>
+        <div class="seg fat"     style="flex:35">35%</div>
       </div>
       <div class="split-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 11.9%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 54.2%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 41.2%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 19%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 49%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 35%</div>
       </div>
     </div>
   </div>
@@ -157,20 +164,46 @@
           <div class="meal-eyebrow">Breakfast</div>
           <div class="meal-name">Breakfast<br>Oats</div>
         </div>
-        <div class="meal-kcal">545.7 kcal</div>
+        <div class="meal-kcal">546 kcal</div>
       </div>
       <div class="sub-meal">
         <table>
           <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
           <tbody>
-            <tr><td>150g steel cut oatmeal, cooked (water) &#9873;</td><td>106.5</td><td>3.8g</td><td>18.6g</td><td>2.1g</td><td>2.6g</td></tr>
-            <tr><td>75g 0% Strauss milk &#9873;</td><td>25.5</td><td>2.5g</td><td>3.7g</td><td>0.1g</td><td>0.0g</td></tr>
-            <tr><td>2 Medjool dates (~48g) &#9873;</td><td>133.0</td><td>0.9g</td><td>36.0g</td><td>0.1g</td><td>3.2g</td></tr>
-            <tr><td>80g mixed berries (blueberries, strawberries, blackberries) &#9873;</td><td>35.4</td><td>0.7g</td><td>8.6g</td><td>0.3g</td><td>2.3g</td></tr>
-            <tr><td>8g hemp seeds &#9873;</td><td>44.2</td><td>2.5g</td><td>0.7g</td><td>3.9g</td><td>0.3g</td></tr>
-            <tr><td>8g ground black sesame &#9873;</td><td>45.8</td><td>1.4g</td><td>1.9g</td><td>4.0g</td><td>0.9g</td></tr>
-            <tr><td>25g nut butter (almond/hazelnut, no sugar) &#9873;</td><td>155.3</td><td>4.5g</td><td>4.5g</td><td>14.5g</td><td>2.5g</td></tr>
-            <tr><td>Subtotal</td><td>545.7</td><td>16.3g</td><td>74.0g</td><td>25.0g</td><td>11.8g</td></tr>
+            <tr><td>150g steel cut oatmeal, cooked</td><td>107</td><td>4g</td><td>19g</td><td>2g</td><td>3g</td></tr>
+            <tr><td>75g 0% Strauss milk</td><td>26</td><td>3g</td><td>4g</td><td>0g</td><td>0g</td></tr>
+            <tr><td>2 Medjool dates (~48g) &#9873;</td><td>133</td><td>1g</td><td>36g</td><td>0g</td><td>3g</td></tr>
+            <tr><td>80g mixed berries &#9873;</td><td>35</td><td>1g</td><td>9g</td><td>0g</td><td>2g</td></tr>
+            <tr><td>8g hemp seeds</td><td>44</td><td>3g</td><td>1g</td><td>4g</td><td>0g</td></tr>
+            <tr><td>8g ground black sesame</td><td>46</td><td>1g</td><td>2g</td><td>4g</td><td>1g</td></tr>
+            <tr><td>25g nut butter (almond/hazelnut) &#9873;</td><td>155</td><td>5g</td><td>5g</td><td>15g</td><td>3g</td></tr>
+            <tr><td>Subtotal</td><td>546</td><td>18g</td><td>76g</td><td>25g</td><td>12g</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">Lunch</div>
+          <div class="meal-name">Jamaican<br>Oxtail Plate</div>
+        </div>
+        <div class="meal-kcal">761 kcal</div>
+      </div>
+      <div class="meal-photo">
+        <img src="meal_pics/20260402 - Lunch.jpeg" alt="Lunch" onclick="openLightbox(this.src)" />
+      </div>
+      <div class="sub-meal">
+        <table>
+          <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
+          <tbody>
+            <tr><td>Braised oxtail meat (120g) &#9873;</td><td>350</td><td>37g</td><td>0g</td><td>22g</td><td>0g</td></tr>
+            <tr><td>Oxtail gravy (40g) &#9873;</td><td>28</td><td>1g</td><td>2g</td><td>1g</td><td>0g</td></tr>
+            <tr><td>White rice, cooked (180g) &#9873;</td><td>234</td><td>5g</td><td>51g</td><td>0g</td><td>1g</td></tr>
+            <tr><td>Fried sweet plantains (70g) &#9873;</td><td>127</td><td>1g</td><td>25g</td><td>3g</td><td>2g</td></tr>
+            <tr><td>Cabbage &amp; carrot salad (60g) &#9873;</td><td>22</td><td>1g</td><td>5g</td><td>0g</td><td>2g</td></tr>
+            <tr><td>Subtotal</td><td>761</td><td>45g</td><td>83g</td><td>26g</td><td>5g</td></tr>
           </tbody>
         </table>
       </div>
@@ -183,36 +216,46 @@
     <div class="day-total-grid">
       <div class="dtc">
         <div class="dtc-label">Calories</div>
-        <div class="dtc-value">545.7</div>
-        <div class="dtc-rem pos">+1,454.3 remaining</div>
+        <div class="dtc-value">1,307</div>
+        <div class="dtc-rem pos">+693 remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Protein</div>
-        <div class="dtc-value">16.3g</div>
-        <div class="dtc-rem pos">+113.7g remaining</div>
+        <div class="dtc-value">63g</div>
+        <div class="dtc-rem pos">+67g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Carbs</div>
-        <div class="dtc-value">74.0g</div>
-        <div class="dtc-rem pos">+131.0g remaining</div>
+        <div class="dtc-value">159g</div>
+        <div class="dtc-rem pos">+46g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fat</div>
-        <div class="dtc-value">25.0g</div>
-        <div class="dtc-rem pos">+49.0g remaining</div>
+        <div class="dtc-value">51g</div>
+        <div class="dtc-rem pos">+23g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fiber</div>
-        <div class="dtc-value">11.8g</div>
-        <div class="dtc-rem pos">+18.2g remaining</div>
+        <div class="dtc-value">17g</div>
+        <div class="dtc-rem pos">+13g remaining</div>
       </div>
     </div>
   </div>
 
   <div class="disclaimer">
-    &#9873; USDA estimates &mdash; date variety assumed Medjool; berry macros averaged across three varieties; nut butter based on 50/50 almond/hazelnut blend. Actual values may vary.<br>
-    Protein is very early in the day at 12.5% of target &mdash; prioritise protein in remaining meals.
+    &#9873; USDA estimates &mdash; portions estimated visually from photo. Actual values may vary.<br>
+    All figures rounded to nearest whole number.
   </div>
 
+  <script>
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+  </script>
 </body>
 </html>
