@@ -48,6 +48,7 @@
     .meal-name { font-size: clamp(22px, 2.8vw, 36px); font-weight: 800; line-height: 0.95; letter-spacing: -0.025em; }
     .meal-kcal { font-size: clamp(18px, 2vw, 28px); font-weight: 800; letter-spacing: -0.02em; flex-shrink: 0; opacity: 0.5; }
     .sub-meal { margin-top: 28px; }
+    .sub-meal-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.35; margin-bottom: 12px; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     thead tr { border-bottom: 1.5px solid rgba(0,0,0,0.15); }
     th { padding: 0 12px 10px 0; text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.4; }
@@ -90,7 +91,7 @@
       <div class="header-date">2 April<br>2026</div>
     </div>
     <div class="header-right">
-      <div class="header-kcal">902</div>
+      <div class="header-kcal">1,491</div>
       <div class="header-kcal-label">kcal consumed</div>
     </div>
   </header>
@@ -98,21 +99,21 @@
   <div class="macro-strip">
     <div class="macro-cell">
       <div class="macro-cell-label">Protein</div>
-      <div class="macro-cell-value">48g</div>
-      <div class="macro-cell-sub">of 80g (32g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:60.0%"></div></div>
+      <div class="macro-cell-value">76g</div>
+      <div class="macro-cell-sub">of 80g (4g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:95.0%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Carbs</div>
-      <div class="macro-cell-value">97g</div>
-      <div class="macro-cell-sub">of 231g (134g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:42.0%"></div></div>
+      <div class="macro-cell-value">158g</div>
+      <div class="macro-cell-sub">of 231g (73g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:68.4%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fat</div>
-      <div class="macro-cell-value">41g</div>
-      <div class="macro-cell-sub">of 59g (18g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:69.5%"></div></div>
+      <div class="macro-cell-value over">66g</div>
+      <div class="macro-cell-sub over">&#8593; 7g over target</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill over" style="width:100%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fiber</div>
@@ -129,14 +130,14 @@
     </div>
     <div class="split-bar-wrap">
       <div class="split-bar">
-        <div class="seg protein" style="flex:21">21%</div>
-        <div class="seg carbs"   style="flex:43">43%</div>
-        <div class="seg fat"     style="flex:41">41%</div>
+        <div class="seg protein" style="flex:20">20%</div>
+        <div class="seg carbs"   style="flex:42">42%</div>
+        <div class="seg fat"     style="flex:40">40%</div>
       </div>
       <div class="split-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 21%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 43%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 41%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 20%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 42%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 40%</div>
       </div>
     </div>
   </div>
@@ -171,12 +172,13 @@
     <div class="meal-block">
       <div class="meal-header">
         <div>
-          <div class="meal-eyebrow">Lunch &mdash; Pad See Ew (300g)</div>
-          <div class="meal-name">Pad See Ew</div>
+          <div class="meal-eyebrow">Lunch</div>
+          <div class="meal-name">Pad See Ew<br>+ BBQ Chicken</div>
         </div>
-        <div class="meal-kcal">420 kcal</div>
+        <div class="meal-kcal">679 kcal</div>
       </div>
       <div class="sub-meal">
+        <div class="sub-meal-label">Pad See Ew (300g) &mdash; 420 kcal</div>
         <table>
           <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
           <tbody>
@@ -193,6 +195,36 @@
           </tbody>
         </table>
       </div>
+      <div class="sub-meal">
+        <div class="sub-meal-label">BBQ Chicken Thigh &mdash; 259 kcal</div>
+        <table>
+          <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
+          <tbody>
+            <tr><td>Chicken thigh, BBQ'd, meat + skin (100g) &#9873;</td><td>229</td><td>25g</td><td>0g</td><td>14g</td><td>0g</td></tr>
+            <tr><td>BBQ sauce, light glaze (15g) &#9873;</td><td>30</td><td>0g</td><td>7g</td><td>0g</td><td>0g</td></tr>
+            <tr><td>Subtotal</td><td>259</td><td>25g</td><td>7g</td><td>14g</td><td>0g</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">Snack</div>
+          <div class="meal-name">TJ&rsquo;s Chocolate<br>Gummy Bears</div>
+        </div>
+        <div class="meal-kcal">330 kcal</div>
+      </div>
+      <div class="sub-meal">
+        <table>
+          <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
+          <tbody>
+            <tr><td>Chocolate-coated gummy bears, 20 pieces (~80g) &#9873;</td><td>330</td><td>3g</td><td>54g</td><td>11g</td><td>0g</td></tr>
+            <tr><td>Subtotal</td><td>330</td><td>3g</td><td>54g</td><td>11g</td><td>0g</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </div>
@@ -202,23 +234,23 @@
     <div class="day-total-grid">
       <div class="dtc">
         <div class="dtc-label">Calories</div>
-        <div class="dtc-value">902</div>
-        <div class="dtc-rem pos">+871 remaining</div>
+        <div class="dtc-value">1,491</div>
+        <div class="dtc-rem pos">+282 remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Protein</div>
-        <div class="dtc-value">48g</div>
-        <div class="dtc-rem pos">+32g remaining</div>
+        <div class="dtc-value">76g</div>
+        <div class="dtc-rem pos">+4g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Carbs</div>
-        <div class="dtc-value">97g</div>
-        <div class="dtc-rem pos">+134g remaining</div>
+        <div class="dtc-value">158g</div>
+        <div class="dtc-rem pos">+73g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fat</div>
-        <div class="dtc-value">41g</div>
-        <div class="dtc-rem pos">+18g remaining</div>
+        <div class="dtc-value over">66g</div>
+        <div class="dtc-rem neg">&#8593; 7g over target</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fiber</div>
@@ -229,8 +261,8 @@
   </div>
 
   <div class="disclaimer">
-    &#9873; USDA estimates. Date variety assumed Medjool; berry macros averaged; nut butter based on 50/50 almond/hazelnut.<br>
-    Pad See Ew scaled to 300g portion (5/7 of 1 serving). All figures rounded to nearest whole number.
+    &#9873; USDA estimates. Pad See Ew scaled to 300g (5/7 of 1 serving). Gummy bears estimated at ~2 TJ&rsquo;s servings (~41g/9 pieces each).<br>
+    Fat over target by 7g &mdash; chicken thigh skin + chocolate coating. All figures rounded to nearest whole number.
   </div>
 
 </body>
