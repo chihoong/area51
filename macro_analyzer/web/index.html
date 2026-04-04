@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TK Macros Log</title>
+  <meta property="og:title" content="TK Macros Log" />
+  <meta property="og:description" content="Daily macro nutrition tracking for Chi-Hoong &amp; JT — calories, protein, carbs, fat &amp; fiber, every meal." />
+  <meta property="og:image" content="https://area51-chi.vercel.app/macro_analyzer/og-image.png" />
+  <meta property="og:url" content="https://area51-chi.vercel.app/macro_analyzer/index.html" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TK Macros Log" />
+  <meta name="twitter:description" content="Daily macro nutrition tracking — calories, protein, carbs, fat &amp; fiber." />
+  <meta name="twitter:image" content="https://area51-chi.vercel.app/macro_analyzer/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-grey: #9e9e9e;
+      --color-dark-grey: #cbcbcb;
+      --color-black: #000;
+      --color-white: #fff;
+      --color-blue: #344dbb;
+      --color-green: #59e7ca;
+      --color-dark: #121212;
+      --color-surface: #1a1a1a;
+      --color-border: #2a2a2a;
+      --font-main: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border: 0 solid;
+    }
+
+    html, body {
+      background: var(--color-dark);
+      color: var(--color-white);
+      font-family: var(--font-main);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 48px 24px 40px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .header-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      margin-bottom: 8px;
+    }
+
+    .header-title {
+      font-size: clamp(48px, 7svw, 96px);
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+    }
+
+    /* Toggle */
+    .user-toggle {
+      display: flex;
+      align-items: center;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 100px;
+      padding: 4px;
+      gap: 2px;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: var(--color-grey);
+      font-family: var(--font-main);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .toggle-btn.active {
+      background: var(--color-white);
+      color: var(--color-dark);
+    }
+
+    .toggle-btn:not(.active):hover {
+      color: var(--color-white);
+    }
+
+    .log-list {
+      padding: 0 24px;
+    }
+
+    .log-entry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--color-border);
+      text-decoration: none;
+      color: inherit;
+      gap: 24px;
+      transition: background 0.15s ease;
+    }
+
+    .log-entry:hover .entry-date {
+      color: var(--color-green);
+    }
+
+    .entry-left {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+    }
+
+    .entry-date {
+      font-size: clamp(18px, 2.4svw, 32px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      transition: color 0.15s ease;
+    }
+
+    .entry-meals {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+    }
+
+    .entry-right {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex-shrink: 0;
+    }
+
+    .entry-macro {
+      text-align: right;
+    }
+
+    .entry-macro-value {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .entry-macro-value.over { color: #ff6b6b; }
+    .entry-macro-value.good { color: var(--color-green); }
+    .entry-macro-value.warn { color: #c0392b; }
+
+    .entry-macro-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      margin-top: 3px;
+    }
+
+    .entry-arrow {
+      font-size: 20px;
+      color: var(--color-grey);
+      font-weight: 300;
+    }
+
+    .empty-state {
+      padding: 80px 0;
+      text-align: center;
+      color: var(--color-grey);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .user-section { display: none; }
+    .user-section.active { display: block; }
+
+    @media (max-width: 600px) {
+      .entry-right {
+        gap: 16px;
+      }
+      .entry-macro:not(:last-of-type):not(.always-show) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-top">
+      <div>
+        <div class="header-label" id="header-label">CH — Nutrition Tracker</div>
+        <div class="header-title">Macro<br>Log</div>
+      </div>
+      <div class="user-toggle">
+        <button class="toggle-btn active" data-user="ch" onclick="switchUser('ch')">CH</button>
+        <button class="toggle-btn" data-user="jt" onclick="switchUser('jt')">JT</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CH entries -->
+  <div class="log-list user-section active" id="section-ch">
+
+    <a class="log-entry" href="ch/20260403.html">
+      <div class="entry-left">
+        <div class="entry-date">Fri, Apr 3, 2026</div>
+        <div class="entry-meals">Breakfast &middot; Lunch &middot; Snack</div>
+      </div>
+      <div class="entry-right">
+        <div class="entry-macro always-show">
+          <div class="entry-macro-value good">1,373</div>
+          <div class="entry-macro-label">kcal</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value">93.2g</div>
+          <div class="entry-macro-label">Protein</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value">62.3g</div>
+          <div class="entry-macro-label">Fat</div>
+        </div>
+        <div class="entry-arrow">&rarr;</div>
+      </div>
+    </a>
+
+    <a class="log-entry" href="ch/20260402.html">
+      <div class="entry-left">
+        <div class="entry-date">Thu, Apr 2, 2026</div>
+        <div class="entry-meals">Breakfast &middot; Lunch &middot; Dinner</div>
+      </div>
+      <div class="entry-right">
+        <div class="entry-macro always-show">
+          <div class="entry-macro-value warn">2,013</div>
+          <div class="entry-macro-label">kcal</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value">104g</div>
+          <div class="entry-macro-label">Protein</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value warn">81g</div>
+          <div class="entry-macro-label">Fat ⚠</div>
+        </div>
+        <div class="entry-arrow">&rarr;</div>
+      </div>
+    </a>
+
+    <a class="log-entry" href="ch/20260401.html">
+      <div class="entry-left">
+        <div class="entry-date">Wed, Apr 1, 2026</div>
+        <div class="entry-meals">Lunch &middot; Dinner &middot; Snack &middot; Dessert</div>
+      </div>
+      <div class="entry-right">
+        <div class="entry-macro always-show">
+          <div class="entry-macro-value good">1,836.0</div>
+          <div class="entry-macro-label">kcal</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value">107.1g</div>
+          <div class="entry-macro-label">Protein</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value over">86.5g &#9888;</div>
+          <div class="entry-macro-label">Fat &#9888;</div>
+        </div>
+        <div class="entry-arrow">&rarr;</div>
+      </div>
+    </a>
+
+    <a class="log-entry" href="ch/20260331.html">
+      <div class="entry-left">
+        <div class="entry-date">Tue, Mar 31, 2026</div>
+        <div class="entry-meals">Breakfast · Lunch · Snack · Dinner</div>
+      </div>
+      <div class="entry-right">
+        <div class="entry-macro always-show">
+          <div class="entry-macro-value over">2,087.9</div>
+          <div class="entry-macro-label">kcal</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value over">109.2g</div>
+          <div class="entry-macro-label">Protein</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value over">83.5g</div>
+          <div class="entry-macro-label">Fat ⚠</div>
+        </div>
+        <div class="entry-arrow">→</div>
+      </div>
+    </a>
+
+    <a class="log-entry" href="ch/20260330.html">
+      <div class="entry-left">
+        <div class="entry-date">Mon, Mar 30, 2026</div>
+        <div class="entry-meals">Breakfast · Lunch · Dinner</div>
+      </div>
+      <div class="entry-right">
+        <div class="entry-macro always-show">
+          <div class="entry-macro-value good">1,597.1</div>
+          <div class="entry-macro-label">kcal</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value">83.8g</div>
+          <div class="entry-macro-label">Protein</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value over">74.1g</div>
+          <div class="entry-macro-label">Fat ⚠</div>
+        </div>
+        <div class="entry-arrow">→</div>
+      </div>
+    </a>
+
+    <a class="log-entry" href="ch/20251118.html">
+      <div class="entry-left">
+        <div class="entry-date">Tue, Nov 18, 2025</div>
+        <div class="entry-meals">Lunch</div>
+      </div>
+      <div class="entry-right">
+        <div class="entry-macro always-show">
+          <div class="entry-macro-value good">553.0</div>
+          <div class="entry-macro-label">kcal</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value">27.0g</div>
+          <div class="entry-macro-label">Protein</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value good">19.2g</div>
+          <div class="entry-macro-label">Fat</div>
+        </div>
+        <div class="entry-arrow">→</div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- JT entries -->
+  <div class="log-list user-section" id="section-jt">
+
+    <a class="log-entry" href="jt/20260403.html">
+      <div class="entry-left">
+        <div class="entry-date">Fri, Apr 3, 2026</div>
+        <div class="entry-meals">Breakfast &middot; Lunch</div>
+      </div>
+      <div class="entry-right">
+        <div class="entry-macro always-show">
+          <div class="entry-macro-value good">1,264</div>
+          <div class="entry-macro-label">kcal</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value" style="color:#c0392b">89.9g</div>
+          <div class="entry-macro-label">Protein</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value" style="color:#c0392b">59.7g</div>
+          <div class="entry-macro-label">Fat ⚠</div>
+        </div>
+        <div class="entry-arrow">&rarr;</div>
+      </div>
+    </a>
+
+    <a class="log-entry" href="jt/20260402.html">
+      <div class="entry-left">
+        <div class="entry-date">Thu, Apr 2, 2026</div>
+        <div class="entry-meals">Breakfast &middot; Lunch &middot; Snack &middot; Dinner</div>
+      </div>
+      <div class="entry-right">
+        <div class="entry-macro always-show">
+          <div class="entry-macro-value over">2,293 &#9888;</div>
+          <div class="entry-macro-label">kcal</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value over">119g &#9888;</div>
+          <div class="entry-macro-label">Protein</div>
+        </div>
+        <div class="entry-macro">
+          <div class="entry-macro-value over">97g &#9888;</div>
+          <div class="entry-macro-label">Fat &#9888;</div>
+        </div>
+        <div class="entry-arrow">&rarr;</div>
+      </div>
+    </a>
+
+  </div>
+
+  <script>
+    const LABELS = {
+      ch: 'CH — Nutrition Tracker',
+      jt: 'JT — Nutrition Tracker',
+    };
+
+    function switchUser(user) {
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.user === user);
+      });
+      document.querySelectorAll('.user-section').forEach(sec => {
+        sec.classList.toggle('active', sec.id === 'section-' + user);
+      });
+      document.getElementById('header-label').textContent = LABELS[user];
+      localStorage.setItem('macro-user', user);
+    }
+
+    // Restore last selected user
+    const saved = localStorage.getItem('macro-user');
+    if (saved && saved !== 'ch') switchUser(saved);
+  </script>
+
+</body>
+</html>
