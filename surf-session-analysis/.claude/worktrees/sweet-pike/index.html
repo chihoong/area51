@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Surf Session Analyser</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     background:#0a1628;color:#e0e8f0;min-height:100vh}
+
+/* ── pages ── */
+.page{display:none;min-height:100vh}
+.page.active{display:flex}
+#page-landing{flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+#page-loading{flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#page-report{flex-direction:column}
+
+/* ── landing ── */
+#page-landing h1{font-size:2rem;font-weight:800;color:#7dd3fc;margin-bottom:8px}
+#page-landing>p{color:#64748b;font-size:.95rem;margin-bottom:36px}
+#dropzone{width:100%;max-width:480px;border:2px dashed #1e3a5f;border-radius:20px;
+          padding:52px 32px;background:#0f2340;transition:border-color .2s,background .2s}
+#dropzone.over{border-color:#7dd3fc;background:#0f2d50}
+#dropzone svg{width:52px;height:52px;stroke:#334155;display:block;margin:0 auto 16px;
+              transition:stroke .2s}
+#dropzone.over svg{stroke:#7dd3fc}
+#dropzone p.main{font-size:1rem;color:#94a3b8;margin-bottom:6px}
+#dropzone p.sub{font-size:.78rem;color:#475569;margin-bottom:16px}
+#browse-btn{display:inline-block;padding:8px 22px;background:#1e3a5f;
+            border:1px solid #2d4f7c;border-radius:8px;color:#7dd3fc;
+            font-size:.82rem;cursor:pointer;transition:background .2s}
+#browse-btn:hover{background:#2d4f7c}
+#file-input{display:none}
+#error-msg{margin-top:14px;color:#f87171;font-size:.82rem;min-height:1.2em}
+
+/* ── settings panel ── */
+#settings-toggle{margin-top:24px;background:none;border:none;color:#64748b;font-size:.82rem;
+  cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .2s}
+#settings-toggle:hover{color:#7dd3fc}
+#settings-toggle svg{width:14px;height:14px;transition:transform .2s}
+#settings-toggle.open svg{transform:rotate(90deg)}
+#settings-panel{max-width:480px;width:100%;overflow:hidden;max-height:0;transition:max-height .3s ease,opacity .3s;opacity:0;margin-top:8px}
+#settings-panel.open{max-height:500px;opacity:1}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;padding:18px 22px;
+  background:#0f2340;border:1px solid #1e3a5f;border-radius:14px}
+.s-field{display:flex;flex-direction:column;gap:4px}
+.s-field label{font-size:.7rem;color:#7dd3fc;text-transform:uppercase;letter-spacing:.06em}
+.s-field input{background:#0a1628;border:1px solid #1e3a5f;border-radius:6px;padding:7px 10px;
+  color:#e0e8f0;font-size:.85rem;width:100%;text-align:center;outline:none;transition:border-color .2s}
+.s-field input:focus{border-color:#7dd3fc}
+.s-field .unit{font-size:.65rem;color:#475569;text-align:center}
+#reset-defaults{grid-column:1/-1;background:none;border:1px solid #1e3a5f;border-radius:8px;
+  padding:6px;color:#64748b;font-size:.75rem;cursor:pointer;transition:color .2s,border-color .2s;margin-top:4px}
+#reset-defaults:hover{color:#7dd3fc;border-color:#2d4f7c}
+
+/* ── loading ── */
+.spinner{width:44px;height:44px;border:3px solid #1e3a5f;border-top-color:#7dd3fc;
+         border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#page-loading p{color:#64748b;font-size:.9rem}
+
+/* ── report ── */
+header{padding:20px 28px 16px;border-bottom:1px solid #1e3a5f;
+       display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+header div h1{font-size:1.35rem;color:#7dd3fc;font-weight:700}
+header div p{font-size:.82rem;color:#64748b;margin-top:3px}
+#new-session-btn{padding:8px 18px;background:#0f2340;border:1px solid #1e3a5f;
+                 border-radius:8px;color:#7dd3fc;font-size:.82rem;cursor:pointer;
+                 transition:background .2s;white-space:nowrap}
+#new-session-btn:hover{background:#1e3a5f}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:18px 28px}
+@media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{background:#0f2340;border:1px solid #1e3a5f;border-radius:12px;padding:16px 20px}
+.card .lbl{font-size:.68rem;color:#7dd3fc;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.card .val{font-size:1.8rem;font-weight:800;color:#f0f8ff;line-height:1.1}
+.card .val span{font-size:.95rem;font-weight:400;color:#94a3b8}
+.card .sub{font-size:.75rem;color:#64748b;margin-top:5px}
+#map{height:500px;margin:0 28px 20px;border-radius:14px;border:1px solid #1e3a5f;overflow:hidden}
+.legend{display:flex;gap:24px;padding:0 28px 14px;font-size:.78rem;color:#94a3b8;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:7px}
+.dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.sec-title{padding:0 28px 12px;font-size:.78rem;color:#7dd3fc;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.table-wrap{overflow-x:auto;margin:0 28px 32px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#0f2340;color:#7dd3fc;padding:10px 14px;text-align:left;border-bottom:2px solid #1e3a5f;
+   font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid #111f36;color:#c8d8e8;white-space:nowrap}
+tr:nth-child(even) td{background:#0c1e38}
+.right{color:#34d399;font-weight:700}
+.left{color:#f472b6;font-weight:700}
+.straight{color:#fbbf24;font-weight:700}
+.best{color:#fbbf24;font-weight:700}
+
+/* ── session summary ── */
+#session-summary{margin:0 28px 20px;padding:18px 22px;background:#0f2340;
+  border:1px solid #1e3a5f;border-radius:12px;font-size:.88rem;color:#c8d8e8;line-height:1.55}
+</style>
+</head>
+<body>
+
+<div id="page-landing" class="page active">
+  <h1>Surf Session Analyser</h1>
+  <p>Drop a GPX file from your surf session to get a wave-by-wave breakdown and map.</p>
+  <div id="dropzone">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.632-8.683
+           1.5 1.5 0 0 0-.08-.175A5.25 5.25 0 0 1 12 3a5.25 5.25 0 0 1 5.25
+           5.088.75.75 0 0 0 .364.173A4.5 4.5 0 0 1 17.25 19.5H6.75Z"/>
+    </svg>
+    <p class="main">Drop your GPX file here</p>
+    <p class="sub">or</p>
+    <button id="browse-btn">Browse file</button>
+    <input type="file" id="file-input" accept=".gpx">
+  </div>
+  <p id="error-msg"></p>
+
+  <button id="settings-toggle" onclick="this.classList.toggle('open');document.getElementById('settings-panel').classList.toggle('open')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+    Wave Detection Settings
+  </button>
+  <div id="settings-panel">
+    <div class="settings-grid">
+      <div class="s-field"><label>Min Speed</label><input type="number" id="s-sustain" value="10" step="0.5" min="1" max="30"><div class="unit">km/h</div></div>
+      <div class="s-field"><label>Peak Speed</label><input type="number" id="s-peak" value="15" step="0.5" min="1" max="40"><div class="unit">km/h</div></div>
+      <div class="s-field"><label>Min Duration</label><input type="number" id="s-dur" value="7" step="1" min="1" max="30"><div class="unit">seconds</div></div>
+      <div class="s-field"><label>Min Distance</label><input type="number" id="s-dist" value="35" step="5" min="5" max="200"><div class="unit">metres</div></div>
+      <div class="s-field"><label>Gap Tolerance</label><input type="number" id="s-gap" value="3" step="0.5" min="0.5" max="10"><div class="unit">seconds</div></div>
+      <button id="reset-defaults" onclick="document.getElementById('s-sustain').value=10;document.getElementById('s-peak').value=15;document.getElementById('s-dur').value=7;document.getElementById('s-dist').value=35;document.getElementById('s-gap').value=3;">Reset to defaults</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-loading" class="page">
+  <div class="spinner"></div>
+  <p>Analysing your session…</p>
+</div>
+
+<div id="page-report" class="page">
+  <header>
+    <div><h1 id="r-title"></h1><p id="r-sub"></p></div>
+    <button id="new-session-btn">+ New session</button>
+  </header>
+  <div class="cards">
+    <div class="card"><div class="lbl">Total Waves</div>
+      <div class="val" id="r-waves"></div><div class="sub" id="r-rl"></div></div>
+    <div class="card"><div class="lbl">Session Duration</div>
+      <div class="val" id="r-dur"></div><div class="sub">min : sec</div></div>
+    <div class="card"><div class="lbl">Longest Wave</div>
+      <div class="val" id="r-long"></div><div class="sub" id="r-long-sub"></div></div>
+    <div class="card"><div class="lbl">Top Speed</div>
+      <div class="val" id="r-spd"></div><div class="sub" id="r-spd-sub"></div></div>
+  </div>
+  <div id="session-summary"></div>
+  <div id="map"></div>
+  <div class="legend">
+    <div class="leg"><div class="dot" style="background:#34d399"></div>Right</div>
+    <div class="leg"><div class="dot" style="background:#f472b6"></div>Left</div>
+    <div class="leg"><div class="dot" style="background:#fbbf24"></div>Straight</div>
+    <div class="leg"><div class="dot" style="background:#1e3a5f;border:1px solid #334155"></div>Paddle / wait</div>
+  </div>
+  <div class="sec-title">Wave-by-Wave Breakdown</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Time</th><th>Direction</th>
+        <th>Duration</th><th>Distance</th><th>Top Speed</th><th>Avg Speed</th>
+      </tr></thead>
+      <tbody id="r-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ── page navigation ───────────────────────────────────────────────────────────
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// ── geo helpers ───────────────────────────────────────────────────────────────
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371000,φ1=lat1*Math.PI/180,φ2=lat2*Math.PI/180;
+  const dφ=(lat2-lat1)*Math.PI/180,dλ=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(dλ/2)**2;
+  return 2*R*Math.asin(Math.sqrt(a));
+}
+function bearing(lat1,lon1,lat2,lon2){
+  const φ1=lat1*Math.PI/180,φ2=lat2*Math.PI/180,dλ=(lon2-lon1)*Math.PI/180;
+  const x=Math.sin(dλ)*Math.cos(φ2),y=Math.cos(φ1)*Math.sin(φ2)-Math.sin(φ1)*Math.cos(φ2)*Math.cos(dλ);
+  return((Math.atan2(x,y)*180/Math.PI)+360)%360;
+}
+function smooth(arr,w=5){
+  return arr.map((_,i)=>{
+    const lo=Math.max(0,i-Math.floor(w/2)),hi=Math.min(arr.length,i+Math.floor(w/2)+1);
+    return arr.slice(lo,hi).reduce((a,b)=>a+b,0)/(hi-lo);
+  });
+}
+function median3(arr,i){
+  const sl=arr.slice(Math.max(0,i-1),i+2).sort((a,b)=>a-b);
+  return sl[Math.floor(sl.length/2)];
+}
+function circMean(angles){
+  const s=angles.reduce((a,b)=>a+Math.sin(b*Math.PI/180),0);
+  const c=angles.reduce((a,b)=>a+Math.cos(b*Math.PI/180),0);
+  return((Math.atan2(s,c)*180/Math.PI)+360)%360;
+}
+function calcDist(buf,pts){
+  let d=0;
+  for(let j=1;j<buf.length;j++)
+    d+=haversine(pts[buf[j-1]].lat,pts[buf[j-1]].lon,pts[buf[j]].lat,pts[buf[j]].lon);
+  return d;
+}
+function fmtTime(d,tz){
+  return d.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false,timeZone:tz||"UTC"});
+}
+function guessTZ(lat,lon){
+  if(lon>=-125&&lon<=-66&&lat>=24&&lat<=50){
+    if(lon<=-114) return "America/Los_Angeles";
+    if(lon<=-100) return "America/Denver";
+    if(lon<=-84)  return "America/Chicago";
+    return "America/New_York";
+  }
+  if(lon>=113&&lon<=154&&lat>=-44&&lat<=-10) return "Australia/Sydney";
+  if(lon>=114&&lon<=130&&lat>=-36&&lat<=-14) return "Australia/Perth";
+  return "UTC";
+}
+
+// ── GPX parser ────────────────────────────────────────────────────────────────
+function parseGPX(text){
+  const doc=new DOMParser().parseFromString(text,"application/xml");
+  if(doc.querySelector("parsererror")) throw new Error("Invalid GPX file.");
+  const pts=[];
+  doc.querySelectorAll("trkpt").forEach(tp=>{
+    const lat=parseFloat(tp.getAttribute("lat"));
+    const lon=parseFloat(tp.getAttribute("lon"));
+    const tEl=tp.querySelector("time");
+    if(!tEl||isNaN(lat)||isNaN(lon)) return;
+    const ts=new Date(tEl.textContent.trim());
+    if(isNaN(ts)) return;
+    pts.push({lat,lon,ts});
+  });
+  return pts;
+}
+
+// ── analysis ──────────────────────────────────────────────────────────────────
+function getParams(){
+  return{
+    sustain:parseFloat(document.getElementById("s-sustain").value)/3.6,
+    peak:parseFloat(document.getElementById("s-peak").value)/3.6,
+    minDur:parseFloat(document.getElementById("s-dur").value),
+    minDist:parseFloat(document.getElementById("s-dist").value),
+    gap:parseFloat(document.getElementById("s-gap").value),
+  };
+}
+
+function analyse(pts,params){
+  for(let i=0;i<pts.length;i++){
+    if(i===0){pts[i].spd=0;pts[i].brg=0;continue;}
+    const dt=(pts[i].ts-pts[i-1].ts)/1000;
+    if(dt<=0){pts[i].spd=pts[i-1].spd;pts[i].brg=pts[i-1].brg;continue;}
+    pts[i].spd=haversine(pts[i-1].lat,pts[i-1].lon,pts[i].lat,pts[i].lon)/dt;
+    pts[i].brg=bearing(pts[i-1].lat,pts[i-1].lon,pts[i].lat,pts[i].lon);
+  }
+  for(let i=1;i<pts.length-1;i++)
+    if(pts[i].spd>8.3&&pts[i-1].spd<5&&pts[i+1].spd<5)
+      pts[i].spd=Math.max(pts[i-1].spd,pts[i+1].spd);
+  const raw=pts.map(p=>p.spd);
+  smooth(raw.map((_,i)=>median3(raw,i)),5).forEach((v,i)=>pts[i].spdS=v);
+
+  const SUSTAIN=params.sustain, PEAK=params.peak, MIN_DUR=params.minDur, MIN_DIST=params.minDist, GAP=params.gap;
+  let inWave=false,buf=[],lastRide=-1,wavesRaw=[];
+  for(let i=0;i<pts.length;i++){
+    if(pts[i].spdS>=SUSTAIN){
+      if(!inWave){inWave=true;buf=[i];}else buf.push(i);
+      lastRide=i;
+    } else if(inWave){
+      const gap=lastRide>=0?(pts[i].ts-pts[lastRide].ts)/1000:99;
+      if(gap<=GAP){buf.push(i);}
+      else{
+        inWave=false;
+        const dur=(pts[buf[buf.length-1]].ts-pts[buf[0]].ts)/1000;
+        const peak=Math.max(...buf.map(j=>pts[j].spdS));
+        const dist=calcDist(buf,pts);
+        if(dur>=MIN_DUR&&peak>=PEAK&&dist>=MIN_DIST) wavesRaw.push([...buf]);
+        buf=[];lastRide=-1;
+      }
+    }
+  }
+  if(inWave&&buf.length){
+    const dur=(pts[buf[buf.length-1]].ts-pts[buf[0]].ts)/1000;
+    if(Math.max(...buf.map(j=>pts[j].spdS))>=PEAK&&calcDist(buf,pts)>=MIN_DIST&&dur>=MIN_DUR)
+      wavesRaw.push([...buf]);
+  }
+
+  return wavesRaw.map((buf,idx)=>{
+    const lats=buf.map(i=>pts[i].lat),lons=buf.map(i=>pts[i].lon),spds=buf.map(i=>pts[i].spdS);
+    const dur=(pts[buf[buf.length-1]].ts-pts[buf[0]].ts)/1000;
+    const dist=calcDist(buf,pts);
+    const latDelta=lats[lats.length-1]-lats[0];
+    return{
+      num:idx+1,startTime:pts[buf[0]].ts,durS:dur,distM:dist,
+      maxSpdKmh:Math.max(...spds)*3.6,avgSpdKmh:(spds.reduce((a,b)=>a+b,0)/spds.length)*3.6,
+      direction:Math.abs(latDelta)<0.0001?"Straight":latDelta>0?"Right":"Left",
+      startLat:lats[0],startLon:lons[0],trackLats:lats,trackLons:lons,
+    };
+  });
+}
+
+// ── render ────────────────────────────────────────────────────────────────────
+let leafletMap=null;
+
+function renderReport(pts,waves,fileName){
+  const start=pts[0].ts,totalSec=(pts[pts.length-1].ts-start)/1000;
+  const tz=guessTZ(pts[0].lat,pts[0].lon);
+  const longest=waves.reduce((a,b)=>b.distM>a.distM?b:a,waves[0]);
+  const fastest=waves.reduce((a,b)=>b.maxSpdKmh>a.maxSpdKmh?b:a,waves[0]);
+  const nR=waves.filter(w=>w.direction==="Right").length;
+  const nL=waves.filter(w=>w.direction==="Left").length;
+  const dateStr=start.toLocaleDateString("en-AU",{day:"2-digit",month:"long",year:"numeric",timeZone:tz});
+  const tzLabel=tz.split("/")[1]?.replace(/_/g," ")||"UTC";
+
+  document.getElementById("r-title").textContent=`Surf Session — ${dateStr}`;
+  document.getElementById("r-sub").textContent=
+    `${pts[0].lat.toFixed(4)}°N ${Math.abs(pts[0].lon).toFixed(4)}°W · ${fmtTime(start,tz)} ${tzLabel} · ${fileName}`;
+  document.getElementById("r-waves").textContent=waves.length;
+  document.getElementById("r-rl").textContent=`Rights: ${nR}  ·  Lefts: ${nL}`;
+  const dm=Math.floor(totalSec/60),ds=Math.floor(totalSec%60);
+  document.getElementById("r-dur").innerHTML=`${dm}:${String(ds).padStart(2,"0")} <span>min:sec</span>`;
+  document.getElementById("r-long").innerHTML=`${longest.distM.toFixed(0)} <span>m</span>`;
+  document.getElementById("r-long-sub").textContent=`Wave #${longest.num} · ${longest.durS.toFixed(0)}s · ${longest.direction}`;
+  document.getElementById("r-spd").innerHTML=`${fastest.maxSpdKmh.toFixed(1)} <span>km/h</span>`;
+  document.getElementById("r-spd-sub").textContent=`Wave #${fastest.num}`;
+
+  // ── session summary ──
+  const avgDur=(waves.reduce((s,w)=>s+w.durS,0)/waves.length).toFixed(0);
+  const avgDist=(waves.reduce((s,w)=>s+w.distM,0)/waves.length).toFixed(0);
+  const totalDist=waves.reduce((s,w)=>s+w.distM,0);
+  const timeOnWave=waves.reduce((s,w)=>s+w.durS,0);
+  const pctRiding=((timeOnWave/totalSec)*100).toFixed(0);
+  const dirBreak=nR>nL?"predominantly right-handers":nL>nR?"predominantly left-handers":"an even mix of rights and lefts";
+  const sessionMin=Math.round(totalSec/60);
+  document.getElementById("session-summary").textContent=
+    `${sessionMin}-minute session with ${waves.length} waves caught — ${dirBreak}. `+
+    `Longest ride was ${longest.distM.toFixed(0)} m over ${longest.durS.toFixed(0)}s (wave #${longest.num}). `+
+    `Top speed reached ${fastest.maxSpdKmh.toFixed(1)} km/h. `+
+    `Average wave covered ${avgDist} m in ${avgDur}s. `+
+    `Total wave-riding distance: ${totalDist.toFixed(0)} m — active riding ${pctRiding}% of the session.`;
+
+  const tbody=document.getElementById("r-tbody");
+  tbody.innerHTML="";
+  waves.forEach(w=>{
+    const cls=w.direction.toLowerCase();
+    const bD=w.num===longest.num?' class="best"':"";
+    const bS=w.num===fastest.num?' class="best"':"";
+    tbody.insertAdjacentHTML("beforeend",`<tr>
+      <td>${w.num}</td><td>${fmtTime(w.startTime,tz)}</td>
+      <td><span class="${cls}">${w.direction}</span></td>
+      <td>${w.durS.toFixed(0)}s</td>
+      <td${bD}>${w.distM.toFixed(0)} m</td>
+      <td${bS}>${w.maxSpdKmh.toFixed(1)} km/h</td>
+      <td>${w.avgSpdKmh.toFixed(1)} km/h</td>
+    </tr>`);
+  });
+
+  // show report FIRST so #map has dimensions, then init map
+  showPage("page-report");
+
+  if(leafletMap){leafletMap.remove();leafletMap=null;}
+  const centreLat=pts.reduce((s,p)=>s+p.lat,0)/pts.length;
+  const centreLon=pts.reduce((s,p)=>s+p.lon,0)/pts.length;
+  leafletMap=L.map("map").setView([centreLat,centreLon],17);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    attribution:"© OpenStreetMap",maxZoom:19}).addTo(leafletMap);
+  L.polyline(pts.filter((_,i)=>i%3===0).map(p=>[p.lat,p.lon]),
+    {color:"#1e3a5f",weight:1.5,opacity:0.6}).addTo(leafletMap);
+  const COL={Right:"#34d399",Left:"#f472b6",Straight:"#fbbf24"};
+  waves.forEach(w=>{
+    const c=COL[w.direction]||"#94a3b8";
+    L.polyline(w.trackLats.map((la,i)=>[la,w.trackLons[i]]),{color:c,weight:5,opacity:.9})
+     .addTo(leafletMap)
+     .bindPopup(`<b>Wave ${w.num}</b><br>${w.direction} · ${w.distM.toFixed(0)}m · ${w.durS.toFixed(0)}s<br>
+       Top: ${w.maxSpdKmh.toFixed(1)} km/h  Avg: ${w.avgSpdKmh.toFixed(1)} km/h`);
+    L.circleMarker([w.startLat,w.startLon],
+      {radius:6,fillColor:c,color:"#0a1628",weight:2,fillOpacity:1})
+     .addTo(leafletMap)
+     .bindTooltip("W"+w.num,{permanent:true,direction:"top",className:"wl"});
+  });
+  leafletMap.invalidateSize();
+}
+
+// ── file handling ─────────────────────────────────────────────────────────────
+function handleFile(file){
+  if(!file) return;
+  if(!file.name.toLowerCase().endsWith(".gpx")){
+    document.getElementById("error-msg").textContent="Please select a .gpx file.";
+    return;
+  }
+  document.getElementById("error-msg").textContent="";
+  showPage("page-loading");
+
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const pts=parseGPX(e.target.result);
+      if(pts.length<20) throw new Error("Too few track points — is this a surf session GPX?");
+      const params=getParams();
+      const waves=analyse(pts,params);
+      if(!waves.length) throw new Error("No wave rides detected. Try adjusting the wave detection settings and re-uploading.");
+      renderReport(pts,waves,file.name);
+    }catch(err){
+      showPage("page-landing");
+      document.getElementById("error-msg").textContent=err.message;
+    }
+  };
+  reader.onerror=function(){
+    showPage("page-landing");
+    document.getElementById("error-msg").textContent="Could not read the file.";
+  };
+  reader.readAsText(file);
+}
+
+// ── events ────────────────────────────────────────────────────────────────────
+document.getElementById("browse-btn").addEventListener("click",function(){
+  document.getElementById("file-input").click();
+});
+
+document.getElementById("file-input").addEventListener("change",function(e){
+  if(e.target.files.length) handleFile(e.target.files[0]);
+  this.value="";
+});
+
+const dz=document.getElementById("dropzone");
+dz.addEventListener("dragover",function(e){e.preventDefault();dz.classList.add("over");});
+dz.addEventListener("dragleave",function(e){
+  if(!dz.contains(e.relatedTarget)) dz.classList.remove("over");
+});
+dz.addEventListener("drop",function(e){
+  e.preventDefault();
+  dz.classList.remove("over");
+  if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+
+document.getElementById("new-session-btn").addEventListener("click",function(){
+  showPage("page-landing");
+  document.getElementById("error-msg").textContent="";
+});
+</script>
+<style>
+.wl{background:transparent!important;border:none!important;box-shadow:none!important;
+    color:#f0f8ff;font-size:.66rem;font-weight:800;padding:0;white-space:nowrap}
+</style>
+</body>
+</html>
