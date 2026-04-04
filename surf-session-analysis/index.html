@@ -51,6 +51,22 @@ header div p{font-size:.82rem;color:#64748b;margin-top:3px}
                  border-radius:8px;color:#7dd3fc;font-size:.82rem;cursor:pointer;
                  transition:background .2s;white-space:nowrap}
 #new-session-btn:hover{background:#1e3a5f}
+#tune-btn{padding:8px 18px;background:#0f2340;border:1px solid #1e3a5f;
+          border-radius:8px;color:#94a3b8;font-size:.82rem;cursor:pointer;
+          transition:background .2s,color .2s;white-space:nowrap}
+#tune-btn:hover,#tune-btn.active{background:#1e3a5f;color:#7dd3fc}
+#tune-panel{display:none;background:#0a1f3d;border-bottom:1px solid #1e3a5f;
+            padding:16px 28px;gap:20px;flex-wrap:wrap;align-items:flex-end}
+#tune-panel.open{display:flex}
+.tune-field{display:flex;flex-direction:column;gap:6px;min-width:140px}
+.tune-field label{font-size:.7rem;color:#7dd3fc;text-transform:uppercase;letter-spacing:.07em}
+.tune-field .tune-row{display:flex;align-items:center;gap:8px}
+.tune-field input[type=range]{width:120px;accent-color:#7dd3fc;cursor:pointer}
+.tune-field .tune-val{font-size:.82rem;color:#e0e8f0;min-width:44px;text-align:right}
+#reanalyse-btn{padding:8px 20px;background:#1e3a5f;border:1px solid #2d4f7c;
+               border-radius:8px;color:#7dd3fc;font-size:.82rem;cursor:pointer;
+               transition:background .2s;white-space:nowrap;align-self:flex-end}
+#reanalyse-btn:hover{background:#2d4f7c}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:18px 28px}
 @media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}}
 .card{background:#0f2340;border:1px solid #1e3a5f;border-radius:12px;padding:16px 20px}
@@ -103,8 +119,56 @@ tr:nth-child(even) td{background:#0c1e38}
 <div id="page-report" class="page">
   <header>
     <div><h1 id="r-title"></h1><p id="r-sub"></p></div>
-    <button id="new-session-btn">+ New session</button>
+    <div style="display:flex;gap:8px">
+      <button id="tune-btn">Tune Detection</button>
+      <button id="new-session-btn">+ New session</button>
+    </div>
   </header>
+  <div id="tune-panel">
+    <div class="tune-field">
+      <label>Min Start Speed</label>
+      <div class="tune-row">
+        <input type="range" id="p-start" min="5" max="25" step="0.5">
+        <span class="tune-val" id="v-start"></span>
+      </div>
+    </div>
+    <div class="tune-field">
+      <label>Min Sustain Speed</label>
+      <div class="tune-row">
+        <input type="range" id="p-sustain" min="4" max="20" step="0.5">
+        <span class="tune-val" id="v-sustain"></span>
+      </div>
+    </div>
+    <div class="tune-field">
+      <label>Min Peak Speed</label>
+      <div class="tune-row">
+        <input type="range" id="p-peak" min="8" max="35" step="0.5">
+        <span class="tune-val" id="v-peak"></span>
+      </div>
+    </div>
+    <div class="tune-field">
+      <label>Min Duration</label>
+      <div class="tune-row">
+        <input type="range" id="p-dur" min="2" max="20" step="1">
+        <span class="tune-val" id="v-dur"></span>
+      </div>
+    </div>
+    <div class="tune-field">
+      <label>Min Distance</label>
+      <div class="tune-row">
+        <input type="range" id="p-dist" min="10" max="150" step="5">
+        <span class="tune-val" id="v-dist"></span>
+      </div>
+    </div>
+    <div class="tune-field">
+      <label>Gap Tolerance</label>
+      <div class="tune-row">
+        <input type="range" id="p-gap" min="1" max="10" step="1">
+        <span class="tune-val" id="v-gap"></span>
+      </div>
+    </div>
+    <button id="reanalyse-btn">Re-analyse</button>
+  </div>
   <div class="cards">
     <div class="card"><div class="lbl">Total Waves</div>
       <div class="val" id="r-waves"></div><div class="sub" id="r-rl"></div></div>
@@ -206,8 +270,13 @@ function parseGPX(text){
   return pts;
 }
 
+// ── detection defaults ────────────────────────────────────────────────────────
+const DEFAULTS={start:12,sustain:10,peak:15,minDur:7,minDist:35,gap:3};
+let params={...DEFAULTS};
+
 // ── analysis ──────────────────────────────────────────────────────────────────
-function analyse(pts){
+function analyse(pts,p){
+  p=p||params;
   for(let i=0;i<pts.length;i++){
     if(i===0){pts[i].spd=0;pts[i].brg=0;continue;}
     const dt=(pts[i].ts-pts[i-1].ts)/1000;
@@ -221,7 +290,8 @@ function analyse(pts){
   const raw=pts.map(p=>p.spd);
   smooth(raw.map((_,i)=>median3(raw,i)),5).forEach((v,i)=>pts[i].spdS=v);
 
-  const START=12/3.6, SUSTAIN=10/3.6, PEAK=15/3.6, MIN_DUR=7, MIN_DIST=35, GAP=3;
+  const START=p.start/3.6, SUSTAIN=p.sustain/3.6, PEAK=p.peak/3.6;
+  const MIN_DUR=p.minDur, MIN_DIST=p.minDist, GAP=p.gap;
   let inWave=false,buf=[],lastRide=-1,wavesRaw=[];
   for(let i=0;i<pts.length;i++){
     if(pts[i].spdS>=SUSTAIN){
@@ -328,6 +398,8 @@ function renderReport(pts,waves,fileName){
 }
 
 // ── file handling ─────────────────────────────────────────────────────────────
+let currentPts=null, currentFileName="";
+
 function handleFile(file){
   if(!file) return;
   if(!file.name.toLowerCase().endsWith(".gpx")){
@@ -342,6 +414,9 @@ function handleFile(file){
     try{
       const pts=parseGPX(e.target.result);
       if(pts.length<20) throw new Error("Too few track points — is this a surf session GPX?");
+      currentPts=pts; currentFileName=file.name;
+      params={...DEFAULTS};
+      syncSliders();
       const waves=analyse(pts);
       if(!waves.length) throw new Error("No wave rides detected. Check the file is a surf session GPX.");
       renderReport(pts,waves,file.name);
@@ -356,6 +431,49 @@ function handleFile(file){
   };
   reader.readAsText(file);
 }
+
+// ── tune panel ────────────────────────────────────────────────────────────────
+const sliderDefs=[
+  {id:"p-start",  val:"v-start",  key:"start",   unit:"km/h"},
+  {id:"p-sustain",val:"v-sustain",key:"sustain",  unit:"km/h"},
+  {id:"p-peak",   val:"v-peak",   key:"peak",     unit:"km/h"},
+  {id:"p-dur",    val:"v-dur",    key:"minDur",   unit:"s"},
+  {id:"p-dist",   val:"v-dist",   key:"minDist",  unit:"m"},
+  {id:"p-gap",    val:"v-gap",    key:"gap",       unit:"s"},
+];
+
+function syncSliders(){
+  sliderDefs.forEach(({id,val,key,unit})=>{
+    const sl=document.getElementById(id);
+    const vl=document.getElementById(val);
+    sl.value=params[key];
+    vl.textContent=params[key]+unit;
+  });
+}
+
+sliderDefs.forEach(({id,val,key,unit})=>{
+  document.getElementById(id).addEventListener("input",function(){
+    params[key]=parseFloat(this.value);
+    document.getElementById(val).textContent=params[key]+unit;
+  });
+});
+
+document.getElementById("tune-btn").addEventListener("click",function(){
+  const panel=document.getElementById("tune-panel");
+  const open=panel.classList.toggle("open");
+  this.classList.toggle("active",open);
+});
+
+document.getElementById("reanalyse-btn").addEventListener("click",function(){
+  if(!currentPts) return;
+  // reset smoothed speeds so analyse() can recompute from scratch
+  currentPts.forEach(p=>{delete p.spd;delete p.spdS;delete p.brg;});
+  try{
+    const waves=analyse(currentPts);
+    if(!waves.length){alert("No waves detected with these settings. Try relaxing the thresholds.");return;}
+    renderReport(currentPts,waves,currentFileName);
+  }catch(e){alert(e.message);}
+});
 
 // ── events ────────────────────────────────────────────────────────────────────
 document.getElementById("browse-btn").addEventListener("click",function(){
