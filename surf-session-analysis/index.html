@@ -167,6 +167,7 @@ tr:nth-child(even) td{background:#0c1e38}
         <span class="tune-val" id="v-gap"></span>
       </div>
     </div>
+    <button id="reset-defaults-btn">Reset to Defaults</button>
     <button id="reanalyse-btn">Re-analyse</button>
   </div>
   <div class="cards">
@@ -462,6 +463,11 @@ document.getElementById("tune-btn").addEventListener("click",function(){
   const panel=document.getElementById("tune-panel");
   const open=panel.classList.toggle("open");
   this.classList.toggle("active",open);
+});
+
+document.getElementById("reset-defaults-btn").addEventListener("click",function(){
+  params={...DEFAULTS};
+  syncSliders();
 });
 
 document.getElementById("reanalyse-btn").addEventListener("click",function(){
