@@ -36,6 +36,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 #file-input{display:none}
 #error-msg{margin-top:14px;color:#f87171;font-size:.82rem;min-height:1.2em}
 
+/* ── saved sessions ── */
+#saved-section{width:100%;max-width:480px;margin-top:28px}
+#saved-section h2{font-size:.72rem;color:#7dd3fc;text-transform:uppercase;letter-spacing:.1em;
+                  font-weight:600;margin-bottom:10px}
+#saved-list{display:flex;flex-direction:column;gap:8px}
+.saved-item{display:flex;align-items:center;gap:10px;background:#0f2340;
+            border:1px solid #1e3a5f;border-radius:10px;padding:10px 14px;
+            cursor:pointer;transition:border-color .2s,background .2s}
+.saved-item:hover{border-color:#2d4f7c;background:#0f2d50}
+.saved-item-info{flex:1;min-width:0}
+.saved-item-name{font-size:.85rem;color:#e0e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved-item-meta{font-size:.72rem;color:#475569;margin-top:2px}
+.saved-delete{padding:4px 8px;background:transparent;border:1px solid #1e3a5f;border-radius:6px;
+              color:#475569;font-size:.72rem;cursor:pointer;transition:border-color .2s,color .2s;
+              flex-shrink:0}
+.saved-delete:hover{border-color:#f87171;color:#f87171}
+
 /* ── loading ── */
 .spinner{width:44px;height:44px;border:3px solid #1e3a5f;border-top-color:#7dd3fc;
          border-radius:50%;animation:spin .8s linear infinite}
@@ -109,6 +126,10 @@ tr:nth-child(even) td{background:#0c1e38}
     <input type="file" id="file-input" accept=".gpx">
   </div>
   <p id="error-msg"></p>
+  <div id="saved-section" style="display:none">
+    <h2>Saved Sessions</h2>
+    <div id="saved-list"></div>
+  </div>
 </div>
 
 <div id="page-loading" class="page">
@@ -420,6 +441,7 @@ function handleFile(file){
       syncSliders();
       const waves=analyse(pts);
       if(!waves.length) throw new Error("No wave rides detected. Check the file is a surf session GPX.");
+      saveSession(file.name,e.target.result,waves.length);
       renderReport(pts,waves,file.name);
     }catch(err){
       showPage("page-landing");
@@ -505,7 +527,90 @@ dz.addEventListener("drop",function(e){
 document.getElementById("new-session-btn").addEventListener("click",function(){
   showPage("page-landing");
   document.getElementById("error-msg").textContent="";
+  renderSavedSessions();
 });
+
+// ── saved sessions ────────────────────────────────────────────────────────────
+const STORAGE_KEY="surf_sessions";
+const MAX_SAVED=10;
+
+function getSaved(){
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");}
+  catch{return[];}
+}
+
+function saveSession(fileName,gpxText,waveCount){
+  const sessions=getSaved();
+  // avoid duplicates by fileName
+  const existing=sessions.findIndex(s=>s.fileName===fileName);
+  if(existing!==-1) sessions.splice(existing,1);
+  sessions.unshift({id:Date.now(),fileName,savedAt:new Date().toISOString(),gpxText,waveCount});
+  if(sessions.length>MAX_SAVED) sessions.length=MAX_SAVED;
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(sessions));
+  }catch(e){
+    // quota exceeded — drop oldest and retry
+    sessions.pop();
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify(sessions));}catch{}
+  }
+}
+
+function deleteSession(id){
+  const sessions=getSaved().filter(s=>s.id!==id);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(sessions));
+  renderSavedSessions();
+}
+
+function renderSavedSessions(){
+  const sessions=getSaved();
+  const section=document.getElementById("saved-section");
+  const list=document.getElementById("saved-list");
+  if(!sessions.length){section.style.display="none";return;}
+  section.style.display="";
+  list.innerHTML="";
+  sessions.forEach(s=>{
+    const d=new Date(s.savedAt);
+    const dateStr=d.toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"});
+    const item=document.createElement("div");
+    item.className="saved-item";
+    item.innerHTML=`
+      <div class="saved-item-info">
+        <div class="saved-item-name">${s.fileName}</div>
+        <div class="saved-item-meta">${dateStr} · ${s.waveCount} wave${s.waveCount!==1?"s":""}</div>
+      </div>
+      <button class="saved-delete" data-id="${s.id}">Delete</button>`;
+    item.querySelector(".saved-item-info").addEventListener("click",()=>loadSavedSession(s));
+    item.querySelector(".saved-delete").addEventListener("click",e=>{
+      e.stopPropagation();
+      deleteSession(s.id);
+    });
+    list.appendChild(item);
+  });
+}
+
+function loadSavedSession(s){
+  document.getElementById("error-msg").textContent="";
+  showPage("page-loading");
+  setTimeout(()=>{
+    try{
+      const pts=parseGPX(s.gpxText);
+      if(pts.length<20) throw new Error("Too few track points.");
+      currentPts=pts; currentFileName=s.fileName;
+      params={...DEFAULTS};
+      syncSliders();
+      const waves=analyse(pts);
+      if(!waves.length) throw new Error("No wave rides detected.");
+      renderReport(pts,waves,s.fileName);
+    }catch(err){
+      showPage("page-landing");
+      renderSavedSessions();
+      document.getElementById("error-msg").textContent=err.message;
+    }
+  },0);
+}
+
+// render saved sessions on startup
+renderSavedSessions();
 </script>
 <style>
 .wl{background:transparent!important;border:none!important;box-shadow:none!important;
