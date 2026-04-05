@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💸 budget.exe — 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon-green:   #00ff87;
+    --hot-pink:     #ff006e;
+    --electric-blue:#3a86ff;
+    --acid-yellow:  #f5ff00;
+    --orange-pop:   #ff6b35;
+    --purple-haze:  #bf5af2;
+    --bg-dark:      #080810;
+    --bg-card:      rgba(255,255,255,0.04);
+    --bg-card-hover:rgba(255,255,255,0.07);
+    --border:       rgba(255,255,255,0.08);
+    --text-primary: #f0f0ff;
+    --text-muted:   rgba(240,240,255,0.45);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── MESH BG ── */
+  .mesh {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 10%,  rgba(0,255,135,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 20%,  rgba(58,134,255,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 55% at 50% 90%,  rgba(255,0,110,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 75%,  rgba(191,90,242,0.09) 0%, transparent 55%);
+    animation: meshPulse 12s ease-in-out infinite alternate;
+  }
+  @keyframes meshPulse {
+    0%   { opacity: 0.7; transform: scale(1); }
+    50%  { opacity: 1;   transform: scale(1.05); }
+    100% { opacity: 0.8; transform: scale(1.02); }
+  }
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: float linear infinite; }
+  .orb-1 { width:340px; height:340px; background:rgba(0,255,135,0.07);  top:-80px;  left:-80px;  animation-duration:25s; }
+  .orb-2 { width:280px; height:280px; background:rgba(58,134,255,0.08); top:30%;    right:-60px; animation-duration:30s; animation-delay:-8s; }
+  .orb-3 { width:240px; height:240px; background:rgba(255,0,110,0.07);  bottom:10%; left:20%;    animation-duration:20s; animation-delay:-4s; }
+  @keyframes float {
+    0%   { transform: translateY(0px)    rotate(0deg); }
+    33%  { transform: translateY(-30px)  rotate(120deg); }
+    66%  { transform: translateY(15px)   rotate(240deg); }
+    100% { transform: translateY(0px)    rotate(360deg); }
+  }
+
+  /* ── LAYOUT ── */
+  .app { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* ── HEADER ── */
+  header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; }
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700; letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--neon-green), var(--electric-blue), var(--hot-pink));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .logo span { font-size: 0.55em; vertical-align: super; }
+  .header-meta { text-align: right; }
+  .header-meta .month-label { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+  .header-meta .month-name { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--acid-yellow); transition: opacity 0.2s; }
+
+  /* ── PERIOD TABS ── */
+  .period-tabs {
+    display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap;
+  }
+  .tab {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 9px 22px; border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+  .tab.active {
+    background: var(--neon-green);
+    color: #080810;
+    border-color: var(--neon-green);
+    box-shadow: 0 0 22px rgba(0,255,135,0.35);
+  }
+
+  /* ── STAT CARDS ── */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 20px 22px; backdrop-filter: blur(16px);
+    transition: transform 0.2s, background 0.2s; position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; inset: 0; border-radius: 20px;
+    background: linear-gradient(135deg, transparent 60%, var(--accent-color, var(--neon-green)) 200%);
+    opacity: 0.06; pointer-events: none;
+  }
+  .stat-card:hover { transform: translateY(-3px); background: var(--bg-card-hover); }
+  .stat-card .label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-card .value { font-family: 'Space Mono', monospace; font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 700; }
+  .stat-card .sub   { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+  .stat-card .dot   { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; background: var(--accent-color, var(--neon-green)); }
+  .stat-green  { --accent-color: var(--neon-green); }
+  .stat-pink   { --accent-color: var(--hot-pink); }
+  .stat-blue   { --accent-color: var(--electric-blue); }
+  .stat-yellow { --accent-color: var(--acid-yellow); }
+  .stat-purple { --accent-color: var(--purple-haze); }
+  .stat-card .value.green  { color: var(--neon-green); }
+  .stat-card .value.pink   { color: var(--hot-pink); }
+  .stat-card .value.blue   { color: var(--electric-blue); }
+  .stat-card .value.yellow { color: var(--acid-yellow); }
+  .stat-card .value.purple { color: var(--purple-haze); }
+
+  /* ── GRID ── */
+  .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } }
+
+  /* ── GLASS CARD ── */
+  .glass-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 24px; padding: 28px; backdrop-filter: blur(20px);
+  }
+  .card-title {
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 22px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .pill {
+    background: rgba(255,255,255,0.07); border-radius: 100px;
+    padding: 2px 10px; font-size: 0.68rem; color: var(--text-muted);
+    transition: all 0.2s;
+  }
+
+  /* ── DONUT ── */
+  .donut-wrap { position: relative; width: 200px; height: 200px; margin: 0 auto 24px; }
+  .donut-center {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); text-align: center; pointer-events: none;
+  }
+  .donut-center .big   { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; line-height: 1; }
+  .donut-center .small { font-size: 0.68rem; color: var(--text-muted); margin-top: 3px; }
+  .legend { display: flex; flex-direction: column; gap: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.84rem; }
+  .legend-dot   { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .legend-label { flex: 1; color: var(--text-primary); }
+  .legend-pct   { font-family: 'Space Mono', monospace; font-size: 0.78rem; color: var(--text-muted); }
+  .legend-amt   { font-family: 'Space Mono', monospace; font-size: 0.84rem; font-weight: 600; }
+
+  /* ── CATEGORY BARS ── */
+  .cat-list { display: flex; flex-direction: column; gap: 18px; }
+  .cat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+  .cat-name   { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 500; }
+  .cat-icon   { font-size: 1.05rem; }
+  .cat-amounts { display: flex; gap: 6px; align-items: baseline; }
+  .cat-spent  { font-family: 'Space Mono', monospace; font-size: 0.86rem; font-weight: 700; }
+  .cat-budget { font-size: 0.72rem; color: var(--text-muted); }
+  .progress-track {
+    height: 6px; border-radius: 100px;
+    background: rgba(255,255,255,0.07); overflow: visible; position: relative;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 100px;
+    background: var(--bar-color, var(--neon-green));
+    box-shadow: 0 0 8px var(--bar-color, var(--neon-green));
+    transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+  }
+  .progress-fill.over {
+    background: var(--hot-pink); box-shadow: 0 0 10px var(--hot-pink);
+    animation: overbudget 1.5s ease-in-out infinite alternate;
+  }
+  @keyframes overbudget { from { opacity: 1; } to { opacity: 0.6; } }
+
+  /* ── TREND ── */
+  .trend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: flex-end; height: 100px; }
+  .trend-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+  .trend-bar {
+    width: 100%; border-radius: 6px 6px 0 0;
+    background: linear-gradient(180deg, rgba(58,134,255,0.5), rgba(58,134,255,0.2));
+    transition: height 0.8s cubic-bezier(0.4,0,0.2,1), background 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+  .trend-bar.highlight {
+    background: linear-gradient(180deg, var(--neon-green), rgba(0,255,135,0.4));
+    box-shadow: 0 0 14px rgba(0,255,135,0.5);
+  }
+  .trend-bar.dim { opacity: 0.35; }
+  .trend-label { font-size: 0.68rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+  .trend-amt   { font-size: 0.62rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+  .trend-months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 10px; }
+  .trend-month-label { text-align: center; font-size: 0.65rem; color: var(--text-muted); font-family: 'Space Mono', monospace; transition: color 0.2s; }
+  .trend-month-label.highlight { color: var(--neon-green); font-weight: 700; }
+
+  /* ── ALERTS ── */
+  .alert-list { display: flex; flex-direction: column; gap: 10px; }
+  .alert-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 16px; border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+    border-left: 3px solid var(--alert-color, var(--neon-green));
+  }
+  .alert-icon  { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .alert-text  { font-size: 0.82rem; line-height: 1.45; }
+  .alert-text strong { color: var(--alert-color, var(--neon-green)); font-weight: 600; }
+
+  /* ── TABLE ── */
+  .full-card { margin-bottom: 24px; }
+  .q-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  .q-table thead tr th {
+    text-align: right; padding: 6px 10px;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted);
+    transition: color 0.2s;
+  }
+  .q-table thead tr th:first-child { text-align: left; }
+  .q-table thead tr th.col-active { color: var(--neon-green); }
+  .q-table tbody tr { border-top: 1px solid rgba(255,255,255,0.06); }
+  .q-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+  .q-table tbody td { padding: 10px 10px; }
+  .q-table tbody td:not(:first-child) { text-align: right; font-family: 'Space Mono', monospace; font-size: 0.82rem; }
+  .q-table tbody td.col-active { color: var(--text-primary); font-weight: 600; }
+  .q-table tfoot tr td {
+    padding: 12px 10px; border-top: 1px solid rgba(255,255,255,0.15);
+    font-family: 'Space Mono', monospace; font-size: 0.84rem; font-weight: 700; text-align: right;
+  }
+  .q-table tfoot tr td:first-child {
+    text-align: left; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem;
+  }
+  .q-table tfoot tr td.col-active { color: var(--acid-yellow); }
+  .cat-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; }
+  .note-tag { font-size: 0.68rem; color: var(--text-muted); }
+  .dim { color: var(--text-muted); }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 100px; }
+
+  /* ── ANIMATION ── */
+  .fade-in { animation: fadeIn 0.6s ease both; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="mesh"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="fade-in">
+    <div>
+      <div class="logo">budget<span>.exe</span></div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">your money, your reality check 💀</div>
+    </div>
+    <div class="header-meta">
+      <div class="month-label">reporting period</div>
+      <div class="month-name" id="periodLabel">Q1 2026</div>
+    </div>
+  </header>
+
+  <!-- PERIOD TABS -->
+  <div class="period-tabs fade-in">
+    <button class="tab active" data-period="ytd" onclick="update('ytd')">Q1 YTD</button>
+    <button class="tab" data-period="jan" onclick="update('jan')">January</button>
+    <button class="tab" data-period="feb" onclick="update('feb')">February</button>
+    <button class="tab" data-period="mar" onclick="update('mar')">March</button>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stat-grid fade-in" id="statGrid"></div>
+
+  <!-- MAIN 2-COL -->
+  <div class="main-grid">
+    <div class="glass-card fade-in">
+      <div class="card-title">spending breakdown <span class="pill" id="donutPill">by category</span></div>
+      <div class="donut-wrap">
+        <canvas id="donutChart" width="200" height="200"></canvas>
+        <div class="donut-center" id="donutCenter">
+          <div class="big" style="color:var(--neon-green)">...</div>
+          <div class="small" id="donutSubLabel">of budget</div>
+        </div>
+      </div>
+      <div class="legend" id="donutLegend"></div>
+    </div>
+
+    <div class="glass-card fade-in">
+      <div class="card-title">category burn rate <span class="pill" id="barPill">vs budget</span></div>
+      <div class="cat-list" id="categoryList"></div>
+    </div>
+  </div>
+
+  <!-- SECOND ROW -->
+  <div class="main-grid">
+    <div class="glass-card fade-in">
+      <div class="card-title">monthly spend <span class="pill">jan – mar</span></div>
+      <div class="trend-grid" id="trendBars"></div>
+      <div class="trend-months" id="trendLabels"></div>
+    </div>
+
+    <div class="glass-card fade-in">
+      <div class="card-title">budget alerts <span class="pill" id="alertPill">q1</span></div>
+      <div class="alert-list" id="alertList"></div>
+    </div>
+  </div>
+
+  <!-- QUARTERLY TABLE -->
+  <div class="glass-card full-card fade-in">
+    <div class="card-title">quarterly summary <span class="pill">jan – mar 2026</span></div>
+    <table class="q-table">
+      <thead id="tableHead"></thead>
+      <tbody id="tableBody"></tbody>
+      <tfoot id="tableFoot"></tfoot>
+    </table>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  SOURCE DATA (from budget.csv)
+// ══════════════════════════════════════════════
+const monthlyDetails = [
+  { cat: 'Dining Out',     icon: '🍽️', color: '#ff006e', jan:  283, feb:  458, mar:   346, budget:  2125 },
+  { cat: 'Discretionary',  icon: '🛍️', color: '#bf5af2', jan:   48, feb: 1000, mar:   957, budget:  1875 },
+  { cat: 'Dog',            icon: '🐕', color: '#f5ff00', jan: 4534, feb:  866, mar:   990, budget:  2750, note: 'Jan includes teeth cleaning' },
+  { cat: 'Drinks',         icon: '🍸', color: '#ff6b35', jan:    0, feb:  160, mar:    70, budget:   250 },
+  { cat: 'Fitness',        icon: '🏋️', color: '#00ff87', jan:    0, feb:   20, mar:    20, budget:   625 },
+  { cat: 'Groceries',      icon: '🛒', color: '#3a86ff', jan:  676, feb:  898, mar:  1007, budget:  2750 },
+  { cat: 'Health',         icon: '💊', color: '#06d6a0', jan:   87, feb:  228, mar:    37, budget:   625 },
+  { cat: 'Household',      icon: '🏠', color: '#ff9f1c', jan:  211, feb:  192, mar:    71, budget:   875 },
+  { cat: 'Insurance',      icon: '🛡️', color: '#ff4444', jan:  568, feb:  541, mar:  2498, budget:  2250 },
+  { cat: 'Transportation', icon: '🚗', color: '#48cae4', jan:   99, feb:   30, mar:    70, budget:   500 },
+  { cat: 'Travel',         icon: '✈️', color: '#a8dadc', jan:  995, feb:    0, mar:     0, budget:  3750 },
+  { cat: 'Utilities',      icon: '⚡', color: '#e9c46a', jan:  183, feb:  314, mar:    95, budget:   625 },
+  { cat: 'Woodworking',    icon: '🪚', color: '#84a98c', jan:  275, feb:    0, mar:     0, budget:   250 },
+  { cat: 'Bank Fees',      icon: '🏦', color: '#8ecae6', jan:    0, feb:    0, mar:     0, budget:    75 },
+  { cat: 'Prof. Fees',     icon: '👔', color: '#9b8ea8', jan:    0, feb:    0, mar:     0, budget:   125 },
+];
+
+const MONTHLY_TOTALS = { jan: 7959, feb: 4707, mar: 6161 };
+
+const PERIOD_LABELS = {
+  ytd: 'Q1 2026',
+  jan: 'January 2026',
+  feb: 'February 2026',
+  mar: 'March 2026',
+};
+
+// ── HELPERS ──
+const $ = id => document.getElementById(id);
+const fmt = n => '$' + Math.abs(Math.round(n)).toLocaleString();
+const fmtCell = n => n > 0 ? '$' + n.toLocaleString() : '<span class="dim">—</span>';
+
+function getSpend(d, period) {
+  if (period === 'jan') return d.jan;
+  if (period === 'feb') return d.feb;
+  if (period === 'mar') return d.mar;
+  return d.jan + d.feb + d.mar;
+}
+
+// For single-month views, budget reference = full Q1 budget
+// Progress bar shows how much of the Q1 budget was consumed in that month
+function getBudgetRef(d) { return d.budget; }
+
+// ══════════════════════════════════════════════
+//  STAT CARDS
+// ══════════════════════════════════════════════
+function buildStats(period) {
+  const grid = $('statGrid');
+  grid.innerHTML = '';
+
+  const active = monthlyDetails.filter(d => d.budget > 0);
+  const totalBudget = active.reduce((s, d) => s + d.budget, 0);
+  const totalSpent  = active.reduce((s, d) => s + getSpend(d, period), 0);
+  const remaining   = totalBudget - totalSpent;
+  const pct         = ((totalSpent / totalBudget) * 100).toFixed(1);
+  const overCats    = active.filter(d => getSpend(d, period) > d.budget);
+
+  // Top spending category for this period
+  const sorted = [...active].sort((a, b) => getSpend(b, period) - getSpend(a, period));
+  const topCat = sorted[0];
+
+  const isYTD = period === 'ytd';
+
+  const stats = [
+    {
+      cls: 'stat-blue', valCls: 'blue',
+      label: isYTD ? 'q1 budget' : 'q1 budget ref',
+      value: fmt(totalBudget),
+      sub: isYTD ? 'quarterly allowance' : 'full quarter budget',
+    },
+    {
+      cls: 'stat-pink', valCls: 'pink',
+      label: isYTD ? 'q1 spent' : 'month spent',
+      value: fmt(totalSpent),
+      sub: pct + '% of q1 budget',
+    },
+    {
+      cls: remaining >= 0 ? 'stat-green' : 'stat-pink',
+      valCls: remaining >= 0 ? 'green' : 'pink',
+      label: isYTD ? 'remaining' : 'vs q1 budget',
+      value: (remaining < 0 ? '-' : '') + fmt(remaining),
+      sub: remaining >= 0 ? 'under q1 budget' : 'over q1 budget',
+    },
+    {
+      cls: 'stat-yellow', valCls: 'yellow',
+      label: 'top category',
+      value: fmt(getSpend(topCat, period)),
+      sub: topCat.icon + ' ' + topCat.cat.toLowerCase(),
+    },
+    {
+      cls: 'stat-purple', valCls: 'purple',
+      label: 'over budget',
+      value: overCats.length,
+      sub: overCats.length > 0
+        ? overCats.map(d => d.cat.toLowerCase()).join(', ')
+        : 'all within budget ✓',
+    },
+  ];
+
+  stats.forEach(s => {
+    const card = document.createElement('div');
+    card.className = `stat-card ${s.cls}`;
+    card.innerHTML = `
+      <div class="label"><span class="dot"></span>${s.label}</div>
+      <div class="value ${s.valCls}">${s.value}</div>
+      <div class="sub">${s.sub}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  DONUT CHART
+// ══════════════════════════════════════════════
+function drawDonut(period) {
+  const canvas = $('donutChart');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 200, 200);
+
+  const cx = 100, cy = 100, r = 80, inner = 54;
+  const active = monthlyDetails.filter(d => getSpend(d, period) > 0);
+  const totalBudget = monthlyDetails.filter(d => d.budget > 0).reduce((s, d) => s + d.budget, 0);
+  const totalSpent  = active.reduce((s, d) => s + getSpend(d, period), 0);
+  const pct = ((totalSpent / totalBudget) * 100).toFixed(1);
+
+  $('donutCenter').querySelector('.big').textContent = pct + '%';
+  $('donutSubLabel').textContent = period === 'ytd' ? 'of q1 budget' : 'of q1 budget';
+  $('donutPill').textContent = period === 'ytd' ? 'q1 by category' : period.toUpperCase() + ' by category';
+
+  let startAngle = -Math.PI / 2;
+  active.forEach(cat => {
+    const slice = (getSpend(cat, period) / totalSpent) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startAngle, startAngle + slice);
+    ctx.closePath();
+    ctx.fillStyle = cat.color;
+    ctx.fill();
+    startAngle += slice;
+  });
+
+  // Divider lines
+  startAngle = -Math.PI / 2;
+  active.forEach(cat => {
+    const slice = (getSpend(cat, period) / totalSpent) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(startAngle), cy + r * Math.sin(startAngle));
+    ctx.strokeStyle = '#080810';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    startAngle += slice;
+  });
+
+  // Donut hole
+  ctx.beginPath();
+  ctx.arc(cx, cy, inner, 0, 2 * Math.PI);
+  ctx.fillStyle = '#080810';
+  ctx.fill();
+
+  // Glow ring
+  const grd = ctx.createRadialGradient(cx, cy, inner - 2, cx, cy, inner + 12);
+  grd.addColorStop(0, 'rgba(0,255,135,0.06)');
+  grd.addColorStop(1, 'transparent');
+  ctx.beginPath();
+  ctx.arc(cx, cy, inner + 10, 0, 2 * Math.PI);
+  ctx.fillStyle = grd;
+  ctx.fill();
+
+  // Legend
+  const legend = $('donutLegend');
+  legend.innerHTML = '';
+  const sortedActive = [...active].sort((a, b) => getSpend(b, period) - getSpend(a, period)).slice(0, 8);
+  sortedActive.forEach(cat => {
+    const sp = getSpend(cat, period);
+    const pctOfSpend = ((sp / totalSpent) * 100).toFixed(1);
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `
+      <div class="legend-dot" style="background:${cat.color}"></div>
+      <span class="legend-label">${cat.icon} ${cat.name || cat.cat}</span>
+      <span class="legend-pct">${pctOfSpend}%</span>
+      <span class="legend-amt" style="color:${cat.color}">$${sp.toLocaleString()}</span>
+    `;
+    legend.appendChild(item);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  CATEGORY BARS
+// ══════════════════════════════════════════════
+function buildCatBars(period) {
+  const list = $('categoryList');
+  list.innerHTML = '';
+  $('barPill').textContent = period === 'ytd' ? 'q1 vs budget' : period.toUpperCase() + ' vs q1 budget';
+
+  const active = monthlyDetails
+    .filter(d => d.budget > 0)
+    .sort((a, b) => (getSpend(b, period) / b.budget) - (getSpend(a, period) / a.budget));
+
+  active.forEach(cat => {
+    const sp   = getSpend(cat, period);
+    const bud  = cat.budget;
+    const pct  = Math.min((sp / bud) * 100, 100);
+    const over = sp > bud;
+
+    const item = document.createElement('div');
+    item.className = 'cat-item';
+    item.innerHTML = `
+      <div class="cat-header">
+        <div class="cat-name">
+          <span class="cat-icon">${cat.icon}</span>
+          <span>${cat.cat}</span>
+        </div>
+        <div class="cat-amounts">
+          <span class="cat-spent" style="color:${over ? 'var(--hot-pink)' : cat.color}">$${sp.toLocaleString()}</span>
+          <span class="cat-budget">/ $${bud.toLocaleString()}</span>
+        </div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill ${over ? 'over' : ''}"
+             style="width:0%; --bar-color:${cat.color};"
+             data-target="${pct}"></div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+
+  // Animate
+  setTimeout(() => {
+    document.querySelectorAll('.progress-fill').forEach(el => {
+      el.style.width = el.dataset.target + '%';
+    });
+  }, 50);
+}
+
+// ══════════════════════════════════════════════
+//  MONTHLY TREND
+// ══════════════════════════════════════════════
+function buildTrend(period) {
+  const barsEl  = $('trendBars');
+  const labsEl  = $('trendLabels');
+
+  // Re-use existing bars if built, otherwise create them
+  if (!barsEl.dataset.built) {
+    const months = [
+      { key: 'jan', label: 'JAN', amount: MONTHLY_TOTALS.jan },
+      { key: 'feb', label: 'FEB', amount: MONTHLY_TOTALS.feb },
+      { key: 'mar', label: 'MAR', amount: MONTHLY_TOTALS.mar },
+    ];
+    const maxAmt = Math.max(...months.map(m => m.amount));
+
+    months.forEach(m => {
+      const heightPct = (m.amount / maxAmt) * 100;
+      const wrap = document.createElement('div');
+      wrap.className = 'trend-bar-wrap';
+      wrap.dataset.key = m.key;
+      wrap.innerHTML = `
+        <div class="trend-amt" id="tamt-${m.key}">$${(m.amount / 1000).toFixed(1)}k</div>
+        <div class="trend-bar" id="tbar-${m.key}" style="height:0%" data-h="${heightPct}"></div>
+      `;
+      barsEl.appendChild(wrap);
+
+      const lbl = document.createElement('div');
+      lbl.className = 'trend-month-label';
+      lbl.id = 'tlbl-' + m.key;
+      lbl.textContent = m.label;
+      labsEl.appendChild(lbl);
+    });
+
+    barsEl.dataset.built = '1';
+    setTimeout(() => {
+      ['jan', 'feb', 'mar'].forEach(k => {
+        const bar = $('tbar-' + k);
+        bar.style.height = bar.dataset.h + '%';
+      });
+    }, 100);
+  }
+
+  // Update highlight states
+  ['jan', 'feb', 'mar'].forEach(k => {
+    const bar = $('tbar-' + k);
+    const lbl = $('tlbl-' + k);
+    if (!bar) return;
+
+    const isSelected = period === k;
+    const isYTD = period === 'ytd';
+
+    bar.classList.toggle('highlight', isSelected || isYTD);
+    bar.classList.toggle('dim', !isSelected && !isYTD);
+    lbl.classList.toggle('highlight', isSelected);
+  });
+
+  // YTD: all highlighted
+  if (period === 'ytd') {
+    ['jan', 'feb', 'mar'].forEach(k => {
+      const bar = $('tbar-' + k);
+      if (bar) { bar.classList.remove('dim'); bar.classList.add('highlight'); }
+    });
+  }
+}
+
+// ══════════════════════════════════════════════
+//  ALERTS
+// ══════════════════════════════════════════════
+function buildAlerts(period) {
+  const list = $('alertList');
+  list.innerHTML = '';
+  $('alertPill').textContent = period === 'ytd' ? 'q1' : period.toUpperCase();
+
+  const active  = monthlyDetails.filter(d => d.budget > 0);
+  const overCats = active.filter(d => getSpend(d, period) > d.budget)
+    .sort((a, b) => (getSpend(b, period) / b.budget) - (getSpend(a, period) / a.budget));
+  const underUsed = active.filter(d => d.budget > 0 && getSpend(d, period) / d.budget < 0.1)
+    .sort((a, b) => b.budget - a.budget);
+
+  const alerts = [];
+
+  // Over-budget alerts
+  overCats.forEach(d => {
+    const sp  = getSpend(d, period);
+    const pct = Math.round((sp / d.budget) * 100);
+    const ovr = sp - d.budget;
+    let text = `<strong>${d.cat}</strong> is ${pct}% of`;
+    text += period === 'ytd' ? ' Q1 budget' : ' quarterly budget';
+    text += ` — $${sp.toLocaleString()} spent vs $${d.budget.toLocaleString()}, over by $${ovr.toLocaleString()}.`;
+    if (d.note && period !== 'ytd') text += ` Note: ${d.note}.`;
+    alerts.push({ icon: pct > 150 ? '🔴' : '🟡', color: pct > 150 ? '#ff4444' : '#f5ff00', text });
+  });
+
+  // Largest unused budget
+  if (underUsed.length > 0) {
+    const d  = underUsed[0];
+    const sp = getSpend(d, period);
+    const rem = d.budget - sp;
+    alerts.push({
+      icon: '✅',
+      color: '#00ff87',
+      text: `<strong>${d.cat}</strong> has $${rem.toLocaleString()} of $${d.budget.toLocaleString()} budget unused${period !== 'ytd' ? ' this month' : ' in Q1'}.`,
+    });
+  }
+
+  // No issues
+  if (overCats.length === 0) {
+    const totalSpent = active.reduce((s, d) => s + getSpend(d, period), 0);
+    const totalBudget = active.reduce((s, d) => s + d.budget, 0);
+    alerts.push({
+      icon: '🎉',
+      color: '#00ff87',
+      text: `<strong>All categories within budget</strong> — $${totalSpent.toLocaleString()} of $${totalBudget.toLocaleString()} spent (${((totalSpent/totalBudget)*100).toFixed(1)}%).`,
+    });
+  }
+
+  // Month-specific observations
+  if (period === 'jan') {
+    alerts.push({ icon: '🦷', color: '#f5ff00', text: '<strong>Dog</strong> — $4,534 spike driven by teeth cleaning. Exclude one-time cost and Jan dog spend normalizes to ~$500.' });
+  }
+  if (period === 'mar') {
+    alerts.push({ icon: '⚠️', color: '#ff6b35', text: '<strong>Insurance</strong> March spike to $2,498 — over 4× the Jan ($568) and Feb ($541) baseline. Investigate whether this is recurring.' });
+  }
+  if (period === 'feb') {
+    const totalFeb = MONTHLY_TOTALS.feb;
+    alerts.push({ icon: '✅', color: '#00ff87', text: `<strong>February</strong> was the lowest-spend month at $${totalFeb.toLocaleString()} — $2,252 less than January.` });
+  }
+
+  alerts.forEach(a => {
+    const item = document.createElement('div');
+    item.className = 'alert-item';
+    item.style.setProperty('--alert-color', a.color);
+    item.innerHTML = `<div class="alert-icon">${a.icon}</div><div class="alert-text">${a.text}</div>`;
+    list.appendChild(item);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  QUARTERLY TABLE
+// ══════════════════════════════════════════════
+function buildTable(period) {
+  const head = $('tableHead');
+  const body = $('tableBody');
+  const foot = $('tableFoot');
+
+  const colActive = (col) => period === col || period === 'ytd' ? 'col-active' : '';
+
+  // Header
+  head.innerHTML = `<tr>
+    <th style="text-align:left;">Category</th>
+    <th class="${colActive('jan')}">Jan</th>
+    <th class="${colActive('feb')}">Feb</th>
+    <th class="${colActive('mar')}">Mar</th>
+    <th class="${period === 'ytd' ? 'col-active' : ''}">Q1 Total</th>
+    <th>Budget</th>
+    <th>vs Budget</th>
+  </tr>`;
+
+  body.innerHTML = '';
+  let janT=0, febT=0, marT=0, budT=0;
+
+  monthlyDetails.forEach(d => {
+    const q1   = d.jan + d.feb + d.mar;
+    if (d.budget === 0 && q1 === 0) return; // skip Miscellaneous $0/$0
+
+    const sp   = getSpend(d, period);
+    const diff = sp - d.budget;
+    const over = diff > 0 && d.budget > 0;
+    const diffStr = d.budget === 0
+      ? '<span class="dim">—</span>'
+      : (over
+          ? `<span style="color:#ff4444;font-weight:600;">+$${diff.toLocaleString()}</span>`
+          : `<span style="color:#00ff87;">-$${Math.abs(diff).toLocaleString()}</span>`);
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <span class="cat-tag">
+          <span>${d.icon}</span>
+          <span style="color:${d.color};font-weight:500;">${d.cat}</span>
+          ${d.note ? `<span class="note-tag">(${d.note})</span>` : ''}
+        </span>
+      </td>
+      <td class="${colActive('jan')}">${fmtCell(d.jan)}</td>
+      <td class="${colActive('feb')}">${fmtCell(d.feb)}</td>
+      <td class="${colActive('mar')}">${fmtCell(d.mar)}</td>
+      <td class="${period === 'ytd' ? 'col-active' : ''}" style="font-weight:700;">${q1 > 0 ? '$' + q1.toLocaleString() : '<span class="dim">—</span>'}</td>
+      <td class="dim">${d.budget > 0 ? '$' + d.budget.toLocaleString() : '<span class="dim">—</span>'}</td>
+      <td>${diffStr}</td>
+    `;
+    body.appendChild(tr);
+
+    janT += d.jan; febT += d.feb; marT += d.mar; budT += d.budget;
+  });
+
+  // Footer totals
+  const q1Grand  = janT + febT + marT;
+  const spGrand  = period === 'jan' ? janT : period === 'feb' ? febT : period === 'mar' ? marT : q1Grand;
+  const diffGrand = spGrand - budT;
+  const overG = diffGrand > 0;
+  const diffGrandStr = overG
+    ? `<span style="color:#ff4444;font-weight:700;">+$${diffGrand.toLocaleString()}</span>`
+    : `<span style="color:#00ff87;font-weight:700;">-$${Math.abs(diffGrand).toLocaleString()}</span>`;
+
+  foot.innerHTML = `<tr>
+    <td>Total</td>
+    <td class="${colActive('jan')}" style="color:var(--text-primary);">$${janT.toLocaleString()}</td>
+    <td class="${colActive('feb')}" style="color:var(--text-primary);">$${febT.toLocaleString()}</td>
+    <td class="${colActive('mar')}" style="color:var(--text-primary);">$${marT.toLocaleString()}</td>
+    <td class="${period === 'ytd' ? 'col-active' : ''}" style="color:var(--acid-yellow);">$${q1Grand.toLocaleString()}</td>
+    <td style="color:var(--text-muted);">$${budT.toLocaleString()}</td>
+    <td>${diffGrandStr}</td>
+  </tr>`;
+}
+
+// ══════════════════════════════════════════════
+//  PERIOD SWITCHER
+// ══════════════════════════════════════════════
+function update(period) {
+  // Update tab active state
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.period === period);
+  });
+
+  // Update header label
+  $('periodLabel').textContent = PERIOD_LABELS[period].toUpperCase();
+
+  // Rebuild all sections
+  buildStats(period);
+  drawDonut(period);
+  buildCatBars(period);
+  buildTrend(period);
+  buildAlerts(period);
+  buildTable(period);
+}
+
+// ── INIT ──
+update('ytd');
+</script>
+</body>
+</html>

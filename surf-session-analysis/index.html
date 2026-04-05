@@ -48,10 +48,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .saved-item-info{flex:1;min-width:0}
 .saved-item-name{font-size:.85rem;color:#e0e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .saved-item-meta{font-size:.72rem;color:#475569;margin-top:2px}
-.saved-delete{padding:4px 8px;background:transparent;border:1px solid #1e3a5f;border-radius:6px;
-              color:#475569;font-size:.72rem;cursor:pointer;transition:border-color .2s,color .2s;
-              flex-shrink:0}
+.saved-actions{display:flex;gap:6px;flex-shrink:0}
+.saved-rename,.saved-delete{padding:4px 8px;background:transparent;border:1px solid #1e3a5f;
+              border-radius:6px;font-size:.72rem;cursor:pointer;transition:border-color .2s,color .2s}
+.saved-rename{color:#7dd3fc}
+.saved-rename:hover{border-color:#7dd3fc;background:#0f2d50}
+.saved-delete{color:#475569}
 .saved-delete:hover{border-color:#f87171;color:#f87171}
+.saved-item-name.editing{display:none}
+.saved-name-input{font-size:.85rem;color:#e0e8f0;background:#0a1628;border:1px solid #7dd3fc;
+                  border-radius:5px;padding:1px 6px;width:100%;outline:none;
+                  font-family:inherit}
 
 /* ── loading ── */
 .spinner{width:44px;height:44px;border:3px solid #1e3a5f;border-top-color:#7dd3fc;
@@ -106,6 +113,61 @@ tr:nth-child(even) td{background:#0c1e38}
 .left{color:#f472b6;font-weight:700}
 .straight{color:#fbbf24;font-weight:700}
 .best{color:#fbbf24;font-weight:700}
+
+/* ── board bar (report page) ── */
+#board-bar{display:flex;align-items:center;gap:10px;padding:10px 28px;
+           background:#0a1f3d;border-bottom:1px solid #1e3a5f;flex-wrap:wrap}
+#board-bar label{font-size:.72rem;color:#7dd3fc;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+#board-select{background:#0f2340;border:1px solid #1e3a5f;border-radius:7px;color:#e0e8f0;
+              font-size:.82rem;padding:5px 10px;cursor:pointer;flex:1;max-width:260px}
+#board-select:focus{outline:none;border-color:#7dd3fc}
+#manage-quiver-btn{padding:5px 12px;background:transparent;border:1px solid #1e3a5f;border-radius:7px;
+                   color:#475569;font-size:.72rem;cursor:pointer;transition:border-color .2s,color .2s;white-space:nowrap}
+#manage-quiver-btn:hover{border-color:#7dd3fc;color:#7dd3fc}
+
+/* ── quiver section (landing) ── */
+#quiver-section{width:100%;max-width:480px;margin-top:20px}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.section-header h2{font-size:.72rem;color:#7dd3fc;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+#add-board-btn{padding:4px 12px;background:#1e3a5f;border:1px solid #2d4f7c;border-radius:6px;
+               color:#7dd3fc;font-size:.72rem;cursor:pointer;transition:background .2s}
+#add-board-btn:hover{background:#2d4f7c}
+#board-form{background:#0f2340;border:1px solid #1e3a5f;border-radius:10px;
+            padding:14px 16px;margin-bottom:10px;display:none}
+#board-form.open{display:block}
+.bf-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.bf-row3{grid-template-columns:1fr 1fr 1fr}
+.bf-span2{grid-column:1/-1}
+.bf-full{margin-bottom:8px}
+.bf-label{font-size:.68rem;color:#7dd3fc;text-transform:uppercase;letter-spacing:.06em;
+          display:block;margin-bottom:3px}
+.bf-input,.bf-select{width:100%;background:#0a1628;border:1px solid #1e3a5f;border-radius:6px;
+                     color:#e0e8f0;font-size:.82rem;padding:5px 8px;font-family:inherit}
+.bf-input:focus,.bf-select:focus{outline:none;border-color:#7dd3fc}
+.bf-actions{display:flex;gap:8px;margin-top:4px}
+.bf-save{padding:6px 16px;background:#1e3a5f;border:1px solid #2d4f7c;border-radius:6px;
+         color:#7dd3fc;font-size:.78rem;cursor:pointer;transition:background .2s}
+.bf-save:hover{background:#2d4f7c}
+.bf-cancel{padding:6px 12px;background:transparent;border:1px solid #1e3a5f;border-radius:6px;
+           color:#475569;font-size:.78rem;cursor:pointer;transition:border-color .2s,color .2s}
+.bf-cancel:hover{border-color:#94a3b8;color:#94a3b8}
+#board-list-items{display:flex;flex-direction:column;gap:8px}
+.board-item{display:flex;align-items:center;gap:10px;background:#0f2340;
+            border:1px solid #1e3a5f;border-radius:10px;padding:10px 14px}
+.board-item-info{flex:1;min-width:0}
+.board-item-name{font-size:.85rem;color:#e0e8f0;font-weight:600}
+.board-item-dims{font-size:.72rem;color:#475569;margin-top:2px}
+.board-type-badge{display:inline-block;font-size:.65rem;padding:1px 7px;border-radius:20px;
+                  background:#0a1f3d;border:1px solid #1e3a5f;color:#94a3b8;margin-left:6px;
+                  vertical-align:middle;text-transform:capitalize}
+.board-actions{display:flex;gap:6px;flex-shrink:0}
+.board-edit,.board-del{padding:4px 8px;background:transparent;border:1px solid #1e3a5f;
+                       border-radius:6px;font-size:.72rem;cursor:pointer;transition:border-color .2s,color .2s}
+.board-edit{color:#7dd3fc}
+.board-edit:hover{border-color:#7dd3fc;background:#0f2d50}
+.board-del{color:#475569}
+.board-del:hover{border-color:#f87171;color:#f87171}
+.saved-item-board{font-size:.68rem;color:#7dd3fc;margin-top:1px}
 </style>
 </head>
 <body>
@@ -130,6 +192,69 @@ tr:nth-child(even) td{background:#0c1e38}
     <h2>Saved Sessions</h2>
     <div id="saved-list"></div>
   </div>
+  <div id="quiver-section">
+    <div class="section-header">
+      <h2>My Quiver</h2>
+      <button id="add-board-btn">+ Add Board</button>
+    </div>
+    <div id="board-form">
+      <div class="bf-row">
+        <div class="bf-span2">
+          <label class="bf-label">Board Name *</label>
+          <input class="bf-input" id="bf-name" placeholder="e.g. Black Beauty">
+        </div>
+      </div>
+      <div class="bf-row">
+        <div>
+          <label class="bf-label">Shaper</label>
+          <input class="bf-input" id="bf-shaper" placeholder="e.g. Channel Islands">
+        </div>
+        <div>
+          <label class="bf-label">Type</label>
+          <select class="bf-select" id="bf-type">
+            <option value="">— select —</option>
+            <option>Shortboard</option>
+            <option>Fish</option>
+            <option>Funboard</option>
+            <option>Mid-length</option>
+            <option>Longboard</option>
+            <option>Gun</option>
+            <option>Hybrid</option>
+            <option>Foamie</option>
+          </select>
+        </div>
+      </div>
+      <div class="bf-row bf-row3">
+        <div>
+          <label class="bf-label">Length</label>
+          <input class="bf-input" id="bf-length" placeholder='e.g. 6&apos;2"'>
+        </div>
+        <div>
+          <label class="bf-label">Width</label>
+          <input class="bf-input" id="bf-width" placeholder='e.g. 19.5"'>
+        </div>
+        <div>
+          <label class="bf-label">Thickness</label>
+          <input class="bf-input" id="bf-thickness" placeholder='e.g. 2.5"'>
+        </div>
+      </div>
+      <div class="bf-row">
+        <div>
+          <label class="bf-label">Volume (L)</label>
+          <input class="bf-input" id="bf-volume" placeholder="e.g. 32.5">
+        </div>
+        <div>
+          <label class="bf-label">Purchase Date</label>
+          <input class="bf-input" type="date" id="bf-purchase">
+        </div>
+      </div>
+      <div class="bf-actions">
+        <button class="bf-save" id="bf-save-btn">Save Board</button>
+        <button class="bf-cancel" id="bf-cancel-btn">Cancel</button>
+      </div>
+    </div>
+    <div id="board-list-items"></div>
+  </div>
 </div>
 
 <div id="page-loading" class="page">
@@ -145,6 +270,13 @@ tr:nth-child(even) td{background:#0c1e38}
       <button id="new-session-btn">+ New session</button>
     </div>
   </header>
+  <div id="board-bar">
+    <label for="board-select">Board ridden</label>
+    <select id="board-select">
+      <option value="">— not specified —</option>
+    </select>
+    <button id="manage-quiver-btn">Manage quiver</button>
+  </div>
   <div id="tune-panel">
     <div class="tune-field">
       <label>Min Start Speed</label>
@@ -395,6 +527,7 @@ function renderReport(pts,waves,fileName){
 
   // show report FIRST so #map has dimensions, then init map
   showPage("page-report");
+  populateBoardBar(currentSessionId);
 
   if(leafletMap){leafletMap.remove();leafletMap=null;}
   const centreLat=pts.reduce((s,p)=>s+p.lat,0)/pts.length;
@@ -441,7 +574,7 @@ function handleFile(file){
       syncSliders();
       const waves=analyse(pts);
       if(!waves.length) throw new Error("No wave rides detected. Check the file is a surf session GPX.");
-      saveSession(file.name,e.target.result,waves.length);
+      currentSessionId=saveSession(file.name,e.target.result,waves.length);
       renderReport(pts,waves,file.name);
     }catch(err){
       showPage("page-landing");
@@ -541,24 +674,34 @@ function getSaved(){
 
 function saveSession(fileName,gpxText,waveCount){
   const sessions=getSaved();
-  // avoid duplicates by fileName
   const existing=sessions.findIndex(s=>s.fileName===fileName);
+  // preserve boardId and displayName if re-saving same file
+  const prev=existing!==-1?sessions[existing]:null;
   if(existing!==-1) sessions.splice(existing,1);
-  sessions.unshift({id:Date.now(),fileName,savedAt:new Date().toISOString(),gpxText,waveCount});
+  const id=prev?.id||Date.now();
+  sessions.unshift({id,fileName,savedAt:new Date().toISOString(),gpxText,waveCount,
+                    boardId:prev?.boardId||null,displayName:prev?.displayName||null});
   if(sessions.length>MAX_SAVED) sessions.length=MAX_SAVED;
   try{
     localStorage.setItem(STORAGE_KEY,JSON.stringify(sessions));
   }catch(e){
-    // quota exceeded — drop oldest and retry
     sessions.pop();
     try{localStorage.setItem(STORAGE_KEY,JSON.stringify(sessions));}catch{}
   }
+  return id;
 }
 
 function deleteSession(id){
   const sessions=getSaved().filter(s=>s.id!==id);
   localStorage.setItem(STORAGE_KEY,JSON.stringify(sessions));
   renderSavedSessions();
+}
+
+function renameSession(id,newName){
+  const sessions=getSaved();
+  const s=sessions.find(s=>s.id===id);
+  if(s) s.displayName=newName.trim()||s.fileName;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(sessions));
 }
 
 function renderSavedSessions(){
@@ -571,15 +714,63 @@ function renderSavedSessions(){
   sessions.forEach(s=>{
     const d=new Date(s.savedAt);
     const dateStr=d.toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"});
+    const label=s.displayName||s.fileName;
+    const board=s.boardId?getQuiver().find(b=>b.id===s.boardId):null;
     const item=document.createElement("div");
     item.className="saved-item";
     item.innerHTML=`
       <div class="saved-item-info">
-        <div class="saved-item-name">${s.fileName}</div>
+        <div class="saved-item-name">${label}</div>
+        <input class="saved-name-input" style="display:none" value="${label}">
         <div class="saved-item-meta">${dateStr} · ${s.waveCount} wave${s.waveCount!==1?"s":""}</div>
+        ${board?`<div class="saved-item-board">${board.name}${board.type?` · ${board.type}`:""}</div>`:""}
       </div>
-      <button class="saved-delete" data-id="${s.id}">Delete</button>`;
-    item.querySelector(".saved-item-info").addEventListener("click",()=>loadSavedSession(s));
+      <div class="saved-actions">
+        <button class="saved-rename">Rename</button>
+        <button class="saved-delete">Delete</button>
+      </div>`;
+
+    const nameEl=item.querySelector(".saved-item-name");
+    const inputEl=item.querySelector(".saved-name-input");
+    const renameBtn=item.querySelector(".saved-rename");
+
+    item.querySelector(".saved-item-info").addEventListener("click",e=>{
+      if(e.target===inputEl||inputEl.style.display!=="none") return;
+      loadSavedSession(s);
+    });
+
+    function startRename(){
+      nameEl.classList.add("editing");
+      inputEl.style.display="";
+      renameBtn.textContent="Save";
+      inputEl.focus();
+      inputEl.select();
+    }
+    function commitRename(){
+      const val=inputEl.value.trim()||s.fileName;
+      renameSession(s.id,val);
+      s.displayName=val;
+      nameEl.textContent=val;
+      nameEl.classList.remove("editing");
+      inputEl.style.display="none";
+      renameBtn.textContent="Rename";
+    }
+
+    renameBtn.addEventListener("click",e=>{
+      e.stopPropagation();
+      if(renameBtn.textContent==="Rename") startRename(); else commitRename();
+    });
+    inputEl.addEventListener("keydown",e=>{
+      if(e.key==="Enter") commitRename();
+      if(e.key==="Escape"){
+        nameEl.classList.remove("editing");
+        inputEl.style.display="none";
+        inputEl.value=label;
+        renameBtn.textContent="Rename";
+      }
+    });
+    inputEl.addEventListener("click",e=>e.stopPropagation());
+
     item.querySelector(".saved-delete").addEventListener("click",e=>{
       e.stopPropagation();
       deleteSession(s.id);
@@ -595,12 +786,13 @@ function loadSavedSession(s){
     try{
       const pts=parseGPX(s.gpxText);
       if(pts.length<20) throw new Error("Too few track points.");
-      currentPts=pts; currentFileName=s.fileName;
+      currentPts=pts; currentFileName=s.displayName||s.fileName;
+      currentSessionId=s.id;
       params={...DEFAULTS};
       syncSliders();
       const waves=analyse(pts);
       if(!waves.length) throw new Error("No wave rides detected.");
-      renderReport(pts,waves,s.fileName);
+      renderReport(pts,waves,s.displayName||s.fileName);
     }catch(err){
       showPage("page-landing");
       renderSavedSessions();
@@ -611,6 +803,140 @@ function loadSavedSession(s){
 
 // render saved sessions on startup
 renderSavedSessions();
+
+// ── quiver ────────────────────────────────────────────────────────────────────
+const QUIVER_KEY="surf_quiver";
+
+function getQuiver(){
+  try{return JSON.parse(localStorage.getItem(QUIVER_KEY)||"[]");}
+  catch{return[];}
+}
+
+function persistQuiver(q){localStorage.setItem(QUIVER_KEY,JSON.stringify(q));}
+
+function renderQuiver(){
+  const q=getQuiver();
+  const el=document.getElementById("board-list-items");
+  el.innerHTML="";
+  q.forEach(b=>{
+    const dimParts=[b.length,b.width,b.thickness].filter(Boolean).join(" x ");
+    const dims=[dimParts||null,b.volume?(b.volume+"L"):null,
+                b.purchase?("Purchased "+new Date(b.purchase).toLocaleDateString("en-AU",{month:"short",year:"numeric"})):null
+               ].filter(Boolean).join(" · ");
+    const item=document.createElement("div");
+    item.className="board-item";
+    item.innerHTML=`
+      <div class="board-item-info">
+        <div class="board-item-name">${b.name}${b.type?`<span class="board-type-badge">${b.type}</span>`:""}</div>
+        ${b.shaper?`<div class="board-item-dims" style="color:#94a3b8">${b.shaper}</div>`:""}
+        ${dims?`<div class="board-item-dims">${dims}</div>`:""}
+      </div>
+      <div class="board-actions">
+        <button class="board-edit">Edit</button>
+        <button class="board-del">Delete</button>
+      </div>`;
+    item.querySelector(".board-edit").addEventListener("click",()=>openBoardForm(b));
+    item.querySelector(".board-del").addEventListener("click",()=>{
+      if(!confirm(`Delete "${b.name}"?`)) return;
+      persistQuiver(getQuiver().filter(x=>x.id!==b.id));
+      renderQuiver();
+      refreshBoardSelector();
+    });
+    el.appendChild(item);
+  });
+}
+
+// ── board form ────────────────────────────────────────────────────────────────
+let editingBoardId=null;
+
+function openBoardForm(board){
+  editingBoardId=board?board.id:null;
+  document.getElementById("bf-name").value=board?.name||"";
+  document.getElementById("bf-shaper").value=board?.shaper||"";
+  document.getElementById("bf-type").value=board?.type||"";
+  document.getElementById("bf-length").value=board?.length||"";
+  document.getElementById("bf-width").value=board?.width||"";
+  document.getElementById("bf-thickness").value=board?.thickness||"";
+  document.getElementById("bf-volume").value=board?.volume||"";
+  document.getElementById("bf-purchase").value=board?.purchase||"";
+  document.getElementById("bf-save-btn").textContent=board?"Update Board":"Save Board";
+  document.getElementById("board-form").classList.add("open");
+  document.getElementById("bf-name").focus();
+}
+
+function closeBoardForm(){
+  document.getElementById("board-form").classList.remove("open");
+  editingBoardId=null;
+}
+
+document.getElementById("add-board-btn").addEventListener("click",()=>openBoardForm(null));
+document.getElementById("bf-cancel-btn").addEventListener("click",closeBoardForm);
+
+document.getElementById("bf-save-btn").addEventListener("click",()=>{
+  const name=document.getElementById("bf-name").value.trim();
+  if(!name){document.getElementById("bf-name").focus();return;}
+  const board={
+    id:editingBoardId||Date.now(),
+    name,
+    shaper:document.getElementById("bf-shaper").value.trim(),
+    type:document.getElementById("bf-type").value,
+    length:document.getElementById("bf-length").value.trim(),
+    width:document.getElementById("bf-width").value.trim(),
+    thickness:document.getElementById("bf-thickness").value.trim(),
+    volume:document.getElementById("bf-volume").value.trim(),
+    purchase:document.getElementById("bf-purchase").value,
+  };
+  const q=getQuiver();
+  const idx=q.findIndex(x=>x.id===board.id);
+  if(idx!==-1) q[idx]=board; else q.push(board);
+  persistQuiver(q);
+  closeBoardForm();
+  renderQuiver();
+  refreshBoardSelector();
+});
+
+// ── board ↔ session linking ───────────────────────────────────────────────────
+let currentSessionId=null;
+
+function setSessionBoard(sessionId,boardId){
+  const sessions=getSaved();
+  const s=sessions.find(x=>x.id===sessionId);
+  if(!s) return;
+  s.boardId=boardId||null;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(sessions));
+}
+
+function refreshBoardSelector(){
+  const sel=document.getElementById("board-select");
+  const prev=sel.value;
+  sel.innerHTML=`<option value="">— not specified —</option>`;
+  getQuiver().forEach(b=>{
+    const opt=document.createElement("option");
+    opt.value=b.id;
+    opt.textContent=b.name+(b.type?` (${b.type})`:"");
+    sel.appendChild(opt);
+  });
+  sel.value=prev;
+}
+
+document.getElementById("board-select").addEventListener("change",function(){
+  if(currentSessionId) setSessionBoard(currentSessionId,this.value?Number(this.value):null);
+});
+
+document.getElementById("manage-quiver-btn").addEventListener("click",()=>{
+  showPage("page-landing");
+  document.getElementById("error-msg").textContent="";
+  renderSavedSessions();
+  document.getElementById("quiver-section").scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+function populateBoardBar(sessionId){
+  refreshBoardSelector();
+  const s=getSaved().find(x=>x.id===sessionId);
+  document.getElementById("board-select").value=s?.boardId||"";
+}
+
+renderQuiver();
 </script>
 <style>
 .wl{background:transparent!important;border:none!important;box-shadow:none!important;
