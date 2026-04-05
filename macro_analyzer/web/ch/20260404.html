@@ -51,6 +51,7 @@
     .meal-kcal { font-size: clamp(18px, 2vw, 28px); font-weight: 800; letter-spacing: -0.02em; flex-shrink: 0; opacity: 0.5; }
     .sub-meal { margin-top: 28px; }
     .sub-meal-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; margin-bottom: 12px; margin-top: 28px; }
+    .meal-photo { width: 88px; height: 88px; object-fit: cover; border-radius: 6px; cursor: zoom-in; margin-bottom: 16px; display: block; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     thead tr { border-bottom: 1.5px solid rgba(0,0,0,0.15); }
     th { padding: 0 12px 10px 0; text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.4; }
@@ -100,7 +101,7 @@
       <div class="header-date">4 April<br>2026</div>
     </div>
     <div class="header-right">
-      <div class="header-kcal">767</div>
+      <div class="header-kcal">1,424</div>
       <div class="header-kcal-label">kcal consumed</div>
     </div>
   </header>
@@ -108,27 +109,27 @@
   <div class="macro-strip">
     <div class="macro-cell">
       <div class="macro-cell-label">Protein</div>
-      <div class="macro-cell-value">28.5g</div>
-      <div class="macro-cell-sub">of 130g (101.5g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:21.9%"></div></div>
+      <div class="macro-cell-value">70.8g</div>
+      <div class="macro-cell-sub">of 130g (59.2g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:54.5%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Carbs</div>
-      <div class="macro-cell-value">79.2g</div>
-      <div class="macro-cell-sub">of 205g (125.8g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:38.6%"></div></div>
+      <div class="macro-cell-value">126.9g</div>
+      <div class="macro-cell-sub">of 205g (78.1g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:61.9%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fat</div>
-      <div class="macro-cell-value">38.9g</div>
-      <div class="macro-cell-sub">of 74g (35.1g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:52.6%"></div></div>
+      <div class="macro-cell-value over">76.5g</div>
+      <div class="macro-cell-sub over">2.5g over target (74g)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill over" style="width:100%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fiber</div>
-      <div class="macro-cell-value">14.4g</div>
-      <div class="macro-cell-sub">of 30g (15.6g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:48.0%"></div></div>
+      <div class="macro-cell-value">24.4g</div>
+      <div class="macro-cell-sub">of 30g (5.6g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:81.3%"></div></div>
     </div>
   </div>
 
@@ -139,14 +140,14 @@
     </div>
     <div class="split-bar-wrap">
       <div class="split-bar">
-        <div class="seg protein" style="flex:15">15%</div>
-        <div class="seg carbs"   style="flex:41">41%</div>
-        <div class="seg fat"     style="flex:46">46%</div>
+        <div class="seg protein" style="flex:20">20%</div>
+        <div class="seg carbs"   style="flex:36">36%</div>
+        <div class="seg fat"     style="flex:48">48%</div>
       </div>
       <div class="split-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 15%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 41%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 46%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 20%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 36%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 48%</div>
       </div>
     </div>
   </div>
@@ -186,6 +187,51 @@
       </div>
     </div>
 
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">Afternoon Snack</div>
+          <div class="meal-name">Popcorn<br>+ Trail Mix</div>
+        </div>
+        <div class="meal-kcal">221 kcal</div>
+      </div>
+      <div class="sub-meal">
+        <table>
+          <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
+          <tbody>
+            <tr><td>Pong Pong Popcorn (15g)</td><td>58.9</td><td>1.6g</td><td>10.2g</td><td>2.1g</td><td>2.7g</td></tr>
+            <tr><td>Trail mix (35g) &#9873;</td><td>161.7</td><td>4.3g</td><td>14.5g</td><td>10.9g</td><td>1.7g</td></tr>
+            <tr><td>Subtotal</td><td>220.6</td><td>5.9g</td><td>24.7g</td><td>13.0g</td><td>4.4g</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">Dinner</div>
+          <div class="meal-name">Salmon Salad Bowl<br>+ Cara Cara Orange</div>
+        </div>
+        <div class="meal-kcal">436 kcal</div>
+      </div>
+      <div class="sub-meal">
+        <img class="meal-photo" src="meal_pics/20260404 - Dinner.jpeg" alt="Dinner — 4 April 2026" onclick="openLightbox(this.src)" />
+        <table>
+          <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
+          <tbody>
+            <tr><td>Salmon, cooked (130g) &#9873;</td><td>267.8</td><td>33.0g</td><td>0.0g</td><td>16.1g</td><td>0g</td></tr>
+            <tr><td>Mixed greens (60g) &#9873;</td><td>13.8</td><td>1.3g</td><td>2.2g</td><td>0.2g</td><td>1.2g</td></tr>
+            <tr><td>Cherry tomatoes (50g) &#9873;</td><td>9.0</td><td>0.5g</td><td>2.0g</td><td>0.1g</td><td>0.6g</td></tr>
+            <tr><td>Cucumber (30g) &#9873;</td><td>4.5</td><td>0.2g</td><td>1.1g</td><td>0.0g</td><td>0.2g</td></tr>
+            <tr><td>Olive oil drizzle (8g) &#9873;</td><td>70.7</td><td>0.0g</td><td>0.0g</td><td>8.0g</td><td>0g</td></tr>
+            <tr><td>Cara cara orange, 1 medium (~150g) &#9873;</td><td>70.5</td><td>1.4g</td><td>17.7g</td><td>0.2g</td><td>3.6g</td></tr>
+            <tr><td>Subtotal</td><td>436.3</td><td>36.4g</td><td>23.0g</td><td>24.6g</td><td>5.6g</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <div class="day-total-section">
@@ -193,35 +239,36 @@
     <div class="day-total-grid">
       <div class="dtc">
         <div class="dtc-label">Calories</div>
-        <div class="dtc-value">767</div>
-        <div class="dtc-rem pos">+1,233 remaining</div>
+        <div class="dtc-value">1,424</div>
+        <div class="dtc-rem pos">+576 remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Protein</div>
-        <div class="dtc-value">28.5g</div>
-        <div class="dtc-rem pos">+101.5g remaining</div>
+        <div class="dtc-value">70.8g</div>
+        <div class="dtc-rem pos">+59.2g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Carbs</div>
-        <div class="dtc-value">79.2g</div>
-        <div class="dtc-rem pos">+125.8g remaining</div>
+        <div class="dtc-value">126.9g</div>
+        <div class="dtc-rem pos">+78.1g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fat</div>
-        <div class="dtc-value">38.9g</div>
-        <div class="dtc-rem pos">+35.1g remaining</div>
+        <div class="dtc-value over">76.5g</div>
+        <div class="dtc-rem neg">2.5g over target</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fiber</div>
-        <div class="dtc-value">14.4g</div>
-        <div class="dtc-rem pos">+15.6g remaining</div>
+        <div class="dtc-value">24.4g</div>
+        <div class="dtc-rem pos">+5.6g remaining</div>
       </div>
     </div>
   </div>
 
   <div class="disclaimer">
-    &#9873; All values USDA estimates. Portions estimated from description.<br>
-    All figures rounded to 1 decimal place. Lunch only &mdash; day in progress.
+    &#9873; All values USDA estimates. Salad composition (greens, tomatoes, cucumber, olive oil drizzle) estimated from description.<br>
+    Pong Pong Popcorn from recipe label. Trail mix USDA estimate (nuts, seeds, dried fruit).<br>
+    All figures rounded to 1 decimal place. Fat slightly over daily target.
   </div>
 
   <script>
