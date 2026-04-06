@@ -63,7 +63,7 @@ body {
 }
 .logo {
   font-family: 'Space Mono', monospace;
-  font-size: 1.25rem; font-weight: 700;
+  font-size: clamp(0.85rem, 3.5vw, 1.1rem); font-weight: 700;
   background: linear-gradient(135deg, var(--green), var(--blue), var(--pink));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   letter-spacing: -0.5px;
@@ -406,7 +406,7 @@ body {
 
   <!-- TOP BAR -->
   <div class="top-bar fade-in">
-    <div class="logo">budget<sup>.exe</sup></div>
+    <div class="logo">TK Expense Dashboard</div>
     <div class="period-badge" id="periodBadge">Q1 2026</div>
   </div>
 
@@ -416,6 +416,7 @@ body {
       <button class="tab"        data-p="jan"  onclick="update('jan')">January</button>
       <button class="tab"        data-p="feb"  onclick="update('feb')">February</button>
       <button class="tab active" data-p="mar"  onclick="update('mar')">March</button>
+      <button class="tab"        data-p="ytd"  onclick="update('ytd')">YTD</button>
     </div>
   </div>
 
