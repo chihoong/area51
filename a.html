@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teardown to Strategy</title>
+<style>
+  :root {
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a6a;
+    --text-muted: #6b7280;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-code: #f3f4f6;
+    --border: #e5e7eb;
+    --accent: #d97706;
+    --accent-light: #fef3c7;
+    --link: #2563eb;
+    --highlight: #1a1a2e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    line-height: 1.7;
+    font-size: 16.5px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 100px 0 80px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #fafaf8 0%, #ffffff 100%);
+  }
+  .hero-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+  .hero-label {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 44px; font-weight: 700; line-height: 1.12;
+    letter-spacing: -0.025em; color: var(--text-primary); margin-bottom: 32px;
+  }
+  .hero .subtitle {
+    font-size: 20px; line-height: 1.6; color: var(--text-secondary); max-width: 620px;
+  }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── Thesis ── */
+  .thesis { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  .thesis p { font-size: 18px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 20px; }
+  .thesis p:last-child { margin-bottom: 0; }
+  .thesis strong { color: var(--text-primary); font-weight: 600; }
+  .thesis .closing {
+    font-size: 17px; font-style: italic; color: var(--text-muted);
+    margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);
+  }
+
+  /* ── Section parts ── */
+  .part { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .part-number {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+  }
+
+  /* ── Soundbite summary card ── */
+  .soundbite {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2b55 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+    display: grid;
+    gap: 0;
+    color: white;
+  }
+  .soundbite-headline {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .soundbite-stats {
+    display: flex;
+    gap: 0;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 20px;
+    margin-top: 4px;
+  }
+  .soundbite-stat {
+    flex: 1;
+    min-width: 120px;
+    padding: 0 16px;
+    border-right: 1px solid rgba(255,255,255,0.12);
+  }
+  .soundbite-stat:first-child { padding-left: 0; }
+  .soundbite-stat:last-child { border-right: none; padding-right: 0; }
+  .soundbite-stat .num {
+    font-size: 28px; font-weight: 700; line-height: 1.1;
+    letter-spacing: -0.02em; color: #fbbf24;
+  }
+  .soundbite-stat .label {
+    font-size: 12px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.06em; color: rgba(255,255,255,0.6); margin-top: 4px;
+  }
+  .soundbite-takeaway {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.75);
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .soundbite-takeaway strong { color: #fbbf24; font-weight: 600; }
+
+  /* ── Typography ── */
+  h2 {
+    font-size: 30px; font-weight: 700; line-height: 1.2;
+    letter-spacing: -0.015em; color: var(--text-primary); margin-bottom: 32px;
+  }
+  h3 {
+    font-size: 21px; font-weight: 650; line-height: 1.3;
+    color: var(--text-primary); margin-top: 48px; margin-bottom: 16px;
+  }
+  h4 {
+    font-size: 17px; font-weight: 650; color: var(--text-primary);
+    margin-top: 32px; margin-bottom: 12px;
+  }
+  p { margin-bottom: 16px; color: var(--text-secondary); }
+  strong { color: var(--text-primary); font-weight: 600; }
+  ul, ol { margin-bottom: 16px; padding-left: 24px; color: var(--text-secondary); }
+  li { margin-bottom: 8px; }
+  li strong { color: var(--text-primary); }
+
+  pre {
+    background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px 24px; overflow-x: auto; margin: 24px 0; font-size: 14px; line-height: 1.6;
+  }
+  code {
+    font-family: 'Söhne Mono', 'SF Mono', 'Fira Code', monospace;
+    font-size: 14.5px; background: var(--bg-code); padding: 2px 6px; border-radius: 4px;
+  }
+  pre code { background: none; padding: 0; font-size: 13.5px; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+  thead th {
+    text-align: left; font-weight: 600; color: var(--text-primary); padding: 12px 16px;
+    border-bottom: 2px solid var(--text-primary); font-size: 13px;
+    letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  tbody td {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    color: var(--text-secondary); vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody td:first-child { font-weight: 500; color: var(--text-primary); }
+
+  /* ── Callout ── */
+  .callout {
+    background: var(--bg-secondary); border-left: 3px solid var(--accent);
+    padding: 20px 24px; margin: 28px 0; border-radius: 0 8px 8px 0;
+  }
+  .callout p { margin-bottom: 8px; color: var(--text-secondary); }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* ── Conversation ── */
+  .conversation {
+    background: var(--bg-secondary); border-radius: 12px;
+    padding: 24px; margin: 24px 0; font-size: 15px;
+  }
+  .conversation .msg { margin-bottom: 16px; }
+  .conversation .msg:last-child { margin-bottom: 0; }
+  .conversation .label {
+    font-weight: 600; font-size: 13px; text-transform: uppercase;
+    letter-spacing: 0.04em; margin-bottom: 4px;
+  }
+  .conversation .customer .label { color: var(--link); }
+  .conversation .agent .label { color: var(--text-primary); }
+  .conversation .body { color: var(--text-secondary); line-height: 1.6; }
+  .conversation .buttons { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .conversation .btn {
+    display: inline-block; background: white; border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 16px; font-size: 13.5px;
+    color: var(--text-primary); font-weight: 500;
+  }
+
+  /* ── Score bars ── */
+  .score-bar { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+  .score-bar .label-text {
+    width: 220px; font-size: 14.5px; font-weight: 500;
+    color: var(--text-primary); flex-shrink: 0;
+  }
+  .score-bar .bar-track {
+    flex: 1; height: 8px; background: var(--bg-code); border-radius: 4px; overflow: hidden;
+  }
+  .score-bar .bar-fill { height: 100%; border-radius: 4px; background: var(--text-primary); }
+  .score-bar .score-num {
+    width: 36px; text-align: right; font-size: 14px; font-weight: 600;
+    color: var(--text-primary); flex-shrink: 0;
+  }
+
+  /* ── Threat tags ── */
+  .threat-tag {
+    display: inline-block; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.03em; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;
+  }
+  .threat-critical { background: #fde2e2; color: #991b1b; }
+  .threat-high { background: #fee2e2; color: #b91c1c; }
+  .threat-medium { background: #fef3c7; color: #92400e; }
+  .threat-low { background: #ecfdf5; color: #065f46; }
+
+  /* ── Competitors ── */
+  .competitor { margin: 28px 0; padding: 20px 0; border-bottom: 1px solid var(--border); }
+  .competitor:last-child { border-bottom: none; }
+  .competitor h4 { margin-top: 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .competitor ul { margin-top: 8px; }
+
+  .divider { width: 40px; height: 2px; background: var(--text-primary); margin: 0 0 48px; }
+
+  /* ── JSON block ── */
+  .json-block {
+    background: #1a1a2e; color: #e2e8f0; border-radius: 8px;
+    padding: 24px; margin: 24px 0; overflow-x: auto; font-size: 13px; line-height: 1.6;
+  }
+  .json-block code { background: none; color: #e2e8f0; }
+  .json-key { color: #93c5fd; }
+  .json-string { color: #86efac; }
+  .json-number { color: #fde68a; }
+  .json-bool { color: #c4b5fd; }
+
+  /* ── Mini donut/ring charts (CSS only) ── */
+  .ring-row { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 8px; }
+  .ring-item { display: flex; align-items: center; gap: 12px; }
+  .ring {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white;
+  }
+  .ring-label { font-size: 13px; color: rgba(255,255,255,0.7); }
+
+  /* ── Final section ── */
+  .final-section {
+    padding: 80px 0 100px;
+    background: linear-gradient(180deg, #ffffff 0%, #fafaf8 100%);
+  }
+  .final-section h2 { font-size: 34px; }
+  .final-section .one-liner {
+    font-size: 18px; line-height: 1.7; color: var(--text-secondary);
+    margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 768px) {
+    .hero { padding: 64px 0 48px; }
+    .hero h1 { font-size: 30px; }
+    .hero .subtitle { font-size: 17px; }
+    h2 { font-size: 24px; }
+    h3 { font-size: 19px; }
+    .part { padding: 48px 0; }
+    table { font-size: 13.5px; }
+    thead th, tbody td { padding: 8px 10px; }
+    .score-bar .label-text { width: 160px; font-size: 13px; }
+    .soundbite { padding: 24px; }
+    .soundbite-headline { font-size: 19px; }
+    .soundbite-stat .num { font-size: 22px; }
+    .soundbite-stats { gap: 12px; }
+    .soundbite-stat { min-width: 90px; padding: 0 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Research &amp; Strategy</div>
+    <h1>Teardown to Strategy</h1>
+    <p class="subtitle">How an examination of Claude Code's architecture reveals a blueprint for building AI application layers that compound &mdash; and why restaurants are the first deployment domain.</p>
+  </div>
+</header>
+
+<section class="thesis">
+  <div class="container">
+    <p>An examination of Claude Code's source code reveals a proven, production-grade architecture for building AI application layers &mdash; memory hierarchies, context management, permission systems, tool orchestration, and implicit feedback collection. The architecture is <strong>70% domain-agnostic</strong> and <strong>30% domain-specific</strong>. The hard problems have been solved. The blueprint is extractable.</p>
+    <p>The opportunity is applying that architecture to a domain where <strong>interaction volume and outcome clarity create a data flywheel</strong>: restaurant ordering via RCS messaging. Every order is simultaneously a customer served, a dollar earned, and a training tuple produced. The business that optimizes for order volume automatically optimizes for the most valuable asset in AI: labeled interaction data with measurable outcomes.</p>
+    <p>The long-term vision is not the product. It is the <strong>feedback environment</strong> &mdash; a system where operator corrections improve customer-facing behavior, customer outcomes refine operator recommendations, and the whole thing generates RLHF-grade training data as a byproduct of generating revenue. No competitor in the restaurant tech landscape is building this feedback loop. They're building features. The compounding customer memory graph and the density of cross-actor feedback signals are what make this defensible.</p>
+    <p class="closing">The repo is the map. The restaurant is the territory. The feedback environment is the treasure.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 1 ═══════════════════ -->
+<section class="part">
+  <div class="container">
+    <div class="part-number">Part 1</div>
+    <h2>What We Learned from Claude Code's Architecture</h2>
+
+    <div class="soundbite">
+      <div class="soundbite-headline">163K lines of TypeScript. Zero model weights. 100% orchestration.</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">70%</div><div class="label">Domain-agnostic</div></div>
+        <div class="soundbite-stat"><div class="num">40+</div><div class="label">Tool implementations</div></div>
+        <div class="soundbite-stat"><div class="num">4</div><div class="label">Memory timescales</div></div>
+        <div class="soundbite-stat"><div class="num">3</div><div class="label">Compaction strategies</div></div>
+      </div>
+      <div class="soundbite-takeaway">The LLM is a black box accessed via API. The product is everything around it: <strong>context assembly, tool orchestration, memory, permissions, and implicit feedback collection.</strong> 70% transfers to any domain.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>The Codebase</h3>
+    <p>Claude Code v2.1.88 is a decompiled TypeScript application (~163,000 lines, 1,884 files) that ships as Anthropic's official CLI tool. The repository also contains a clean-room Python rewrite (~5,000 lines) reimplementing the core architecture.</p>
+
+    <h3>What It Actually Is</h3>
+    <p>This is the <strong>application/orchestration layer</strong> between the user and the Claude LLM. The model itself is a black box accessed via API. None of the model weights or inference code lives here. The entire codebase exists to answer three questions:</p>
+    <ol>
+      <li><strong>What to send</strong> to the model &mdash; context assembly, system prompts, project memory, git state</li>
+      <li><strong>What to do</strong> with the model's responses &mdash; execute tool calls (Bash, FileEdit, Grep, etc.), loop results back</li>
+      <li><strong>How to present</strong> results to the user &mdash; React/Ink terminal UI</li>
+    </ol>
+
+<pre><code>User input
+  &rarr; Context assembly (system prompts, memory, git state, tool list)
+    &rarr; Claude API call (streaming)
+      &rarr; Tool execution
+        &rarr; Loop back with tool results
+          &rarr; Final response to user</code></pre>
+
+    <p>Everything else &mdash; 163,000 lines of it &mdash; is edge case handling, memory management, permission systems, context compression, multi-agent coordination, and UI.</p>
+
+    <h3>The Architecture That Matters</h3>
+    <p><strong>Agent Loop</strong> (<code>query.ts</code>, 785KB): The largest single file. Manages the cycle of user input &rarr; API call &rarr; tool routing &rarr; response.</p>
+    <p><strong>Tool System</strong> (<code>tools/</code>, 45 directories): 40+ tools built via a <code>buildTool()</code> factory. Domain-agnostic abstraction.</p>
+    <p><strong>Memory Hierarchy</strong>: Four timescales &mdash; immediate (transcript), short-term (compaction), medium-term (session/config), long-term (CLAUDE.md, auto-memory with nightly distillation).</p>
+    <p><strong>Permission System</strong>: Ask/allow/deny with per-tool granularity, project scoping, enterprise override. An ACL system, not a chatbot feature.</p>
+    <p><strong>Context Compaction</strong>: Three strategies &mdash; reactive, micro, trimmed. Emerged from a real constraint: naive truncation destroyed critical context.</p>
+    <p><strong>Implicit Feedback Collection</strong>: Approve/deny signals, telemetry, cost tracking, transcripts. The deployment environment is simultaneously a data collection instrument.</p>
+
+    <h3>Generalizable Insights</h3>
+    <ol>
+      <li><strong>The LLM is the easy part.</strong> The moat is the scaffolding.</li>
+      <li><strong>Context engineering &gt; prompt engineering.</strong> What you feed matters more than how you phrase it.</li>
+      <li><strong>Memory needs multiple timescales.</strong></li>
+      <li><strong>Treat agent actions like syscalls.</strong></li>
+      <li><strong>Settings need a governance model.</strong></li>
+      <li><strong>Patterns emerge from real constraints.</strong></li>
+      <li><strong>AI application layers are closer to operating systems</strong> than web apps.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 2 ═══════════════════ -->
+<section class="part">
+  <div class="container">
+    <div class="part-number">Part 2</div>
+    <h2>Claude for Restaurants</h2>
+
+    <div class="soundbite">
+      <div class="soundbite-headline">Swap git root for location ID. Swap Bash for ToastAPI. Keep everything else.</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">$250</div><div class="label">Per loc / month</div></div>
+        <div class="soundbite-stat"><div class="num">91%</div><div class="label">Gross margin</div></div>
+        <div class="soundbite-stat"><div class="num">~$1</div><div class="label">API cost / loc</div></div>
+        <div class="soundbite-stat"><div class="num">3/10</div><div class="label">Flywheel</div></div>
+      </div>
+      <div class="soundbite-takeaway">The operator product is a <strong>wedge, not a destination</strong>. Low friction to sell, earns trust, funds the real product. It sits on top of Toast, DoorDash, OpenTable &mdash; connecting systems that don't talk to each other.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p>An AI orchestration layer for restaurant operations, sitting between the operator and their existing systems. Not a replacement &mdash; a layer that connects them through natural language with persistent context.</p>
+
+    <h3>Architecture Mapping</h3>
+    <table>
+      <thead><tr><th>Claude Code</th><th>Claude for Restaurants</th></tr></thead>
+      <tbody>
+        <tr><td>Git root (project identity)</td><td>Location ID</td></tr>
+        <tr><td>CLAUDE.md (instructions)</td><td>Location playbook &mdash; comp policy, allergy protocols, upsell rules</td></tr>
+        <tr><td>Tools (Bash, FileEdit, Grep)</td><td>ToastAPITool, OpenTableAPITool, DoorDashAPITool</td></tr>
+        <tr><td>Git status in context</td><td>Current shift, open tabs, 86 list, wait time</td></tr>
+        <tr><td>Auto-memory</td><td>"Station 3 can't handle 40+ covers without a second line cook"</td></tr>
+        <tr><td>Permission ACLs</td><td>Staff can order; manager can comp; owner can override</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Year 1 Target</h3>
+    <p>20 operator groups, 150&ndash;300 locations. Exit year 1 with 20 operators who would be upset if you shut down.</p>
+
+    <div class="callout">
+      <p><strong>One-line positioning:</strong> "Connect your restaurant systems. Ask questions in plain English. Get answers that used to take hours."</p>
+    </div>
+
+    <table>
+      <thead><tr><th>Metric</th><th>Year 1</th></tr></thead>
+      <tbody>
+        <tr><td>Locations</td><td>200</td></tr>
+        <tr><td>MRR by month 12</td><td>$50K</td></tr>
+        <tr><td>ARR run rate</td><td>~$600K</td></tr>
+        <tr><td>Total operating cost/month</td><td>~$4,600</td></tr>
+        <tr><td>Gross margin</td><td>91%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 3 ═══════════════════ -->
+<section class="part">
+  <div class="container">
+    <div class="part-number">Part 3</div>
+    <h2>The RCS Ordering Pivot</h2>
+
+    <div class="soundbite">
+      <div class="soundbite-headline">Zero-commission ordering in the phone's native messaging app. No download. Two taps to reorder.</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">10x</div><div class="label">TAM vs operator</div></div>
+        <div class="soundbite-stat"><div class="num">$4.2M</div><div class="label">Y2 ARR target</div></div>
+        <div class="soundbite-stat"><div class="num">7/10</div><div class="label">Flywheel score</div></div>
+        <div class="soundbite-stat"><div class="num">2-5%</div><div class="label">Per-order fee</div></div>
+      </div>
+      <div class="soundbite-takeaway">SMS is dumb pipes. DoorDash takes 30%. RCS sits in the middle: <strong>rich cards, carousels, inline payments, persistent memory.</strong> The customer texts, the agent handles everything. "The usual" becomes a two-tap reorder.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>What the Interaction Looks Like</h3>
+    <div class="conversation">
+      <div class="msg customer"><div class="label">Customer</div><div class="body">"hey do you guys have outdoor seating tonight around 7 for 4"</div></div>
+      <div class="msg agent"><div class="label">Agent</div><div class="body">"We have a patio table at 7:15 for 4. Sun sets at 7:50 so you'll get about 30 min of daylight. Want me to book it?"</div><div class="buttons"><span class="btn">Book 7:15</span><span class="btn">Check 7:30 instead</span><span class="btn">No thanks</span></div></div>
+      <div class="msg customer"><div class="label">Customer</div><div class="body">taps <strong>Book 7:15</strong></div></div>
+      <div class="msg agent"><div class="label">Agent</div><div class="body">"Done. Want to pre-order anything? The short rib is back tonight."</div></div>
+    </div>
+
+    <h3>The Killer Feature: "The Usual"</h3>
+    <div class="conversation">
+      <div class="msg customer"><div class="label">Customer</div><div class="body">"the usual"</div></div>
+      <div class="msg agent"><div class="label">Agent</div><div class="body">"Large pepperoni, extra cheese, diet coke, pickup? Same as last Thursday."</div><div class="buttons"><span class="btn">Yes</span><span class="btn">Change something</span></div></div>
+      <div class="msg customer"><div class="label">Customer</div><div class="body">taps <strong>Yes</strong></div></div>
+      <div class="msg agent"><div class="label">Agent</div><div class="body">"Order confirmed. Ready in 18 min."</div></div>
+    </div>
+
+    <h3>TAM Comparison</h3>
+    <table>
+      <thead><tr><th></th><th>Operator Intelligence</th><th>RCS Ordering</th></tr></thead>
+      <tbody>
+        <tr><td>Addressable locations</td><td>~110,000</td><td>500,000+</td></tr>
+        <tr><td>Revenue model</td><td>$250/loc/month</td><td>2&ndash;5% per order</td></tr>
+        <tr><td>Annual TAM</td><td>~$350M</td><td>$3&ndash;5B+</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Three Interlocking Flywheel Loops</h3>
+    <ul>
+      <li><strong>Customer habit:</strong> More orders &rarr; more memory &rarr; faster experience &rarr; higher reorder rate</li>
+      <li><strong>Restaurant network:</strong> More restaurants &rarr; better data &rarr; better onboarding &rarr; faster adoption</li>
+      <li><strong>Data improvement:</strong> More interactions &rarr; better personalization &rarr; higher conversion &rarr; more revenue</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 4 ═══════════════════ -->
+<section class="part">
+  <div class="container">
+    <div class="part-number">Part 4</div>
+    <h2>Moat Analysis</h2>
+
+    <div class="soundbite">
+      <div class="soundbite-headline">No moat on day one. Every order is a brick.</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">2-3yr</div><div class="label">Memory graph</div></div>
+        <div class="soundbite-stat"><div class="num">12-18mo</div><div class="label">Integration depth</div></div>
+        <div class="soundbite-stat"><div class="num">3yr+</div><div class="label">Network effects</div></div>
+      </div>
+      <div class="soundbite-takeaway">Technology is copyable. Accumulated memory isn't. The only thing that survives the "incumbents add AI" wave is <strong>data no single incumbent can assemble</strong> and network effects that compound independent of the AI layer.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>What's Actually Defensible</h3>
+    <ul>
+      <li><strong>Customer memory graph</strong> (strong, slow) &mdash; switching cost on the consumer side. Takes years.</li>
+      <li><strong>Location knowledge</strong> (medium) &mdash; 18 months of learned behavior per restaurant.</li>
+      <li><strong>Cross-restaurant data</strong> (strong, needs scale) &mdash; each restaurant makes every other better.</li>
+      <li><strong>POS integration depth</strong> (medium) &mdash; 12&ndash;18 month pain-in-the-ass moat.</li>
+      <li><strong>Google distribution</strong> (high leverage, fragile) &mdash; RCS showcase partner.</li>
+    </ul>
+
+    <h3>What's NOT a Moat</h3>
+    <ul>
+      <li>"Our AI is better" &mdash; same foundation models</li>
+      <li>"Our UX is better" &mdash; it's a text conversation</li>
+      <li>"First mover" &mdash; GrubHub was first. DoorDash won.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 5 ═══════════════════ -->
+<section class="part">
+  <div class="container">
+    <div class="part-number">Part 5</div>
+    <h2>Flywheel Enhancement</h2>
+
+    <div class="soundbite">
+      <div class="soundbite-headline">7 features that add loops, not just value. Ceiling: 9.9/10.</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">7.0</div><div class="label">Base score</div></div>
+        <div class="soundbite-stat"><div class="num">9.9</div><div class="label">With all features</div></div>
+        <div class="soundbite-stat"><div class="num">4</div><div class="label">Year roadmap</div></div>
+      </div>
+      <div class="soundbite-takeaway">The two most important: <strong>universal dining identity</strong> (Shop Pay for restaurants) and <strong>staff-facing agent</strong> (operational data feeds customer accuracy). Everything else amplifies these two structural flywheels.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="score-bar"><span class="label-text">Base RCS ordering</span><div class="bar-track"><div class="bar-fill" style="width:70%"></div></div><span class="score-num">7.0</span></div>
+    <div class="score-bar"><span class="label-text">+ Universal dining identity</span><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><span class="score-num">7.5</span></div>
+    <div class="score-bar"><span class="label-text">+ Group ordering</span><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div><span class="score-num">8.0</span></div>
+    <div class="score-bar"><span class="label-text">+ Reorder triggers</span><div class="bar-track"><div class="bar-fill" style="width:83%"></div></div><span class="score-num">8.3</span></div>
+    <div class="score-bar"><span class="label-text">+ Waitlist &amp; pre-order</span><div class="bar-track"><div class="bar-fill" style="width:86%"></div></div><span class="score-num">8.6</span></div>
+    <div class="score-bar"><span class="label-text">+ Cross-referral data</span><div class="bar-track"><div class="bar-fill" style="width:89%"></div></div><span class="score-num">8.9</span></div>
+    <div class="score-bar"><span class="label-text">+ Staff agent</span><div class="bar-track"><div class="bar-fill" style="width:94%"></div></div><span class="score-num">9.4</span></div>
+    <div class="score-bar"><span class="label-text">+ Supplier marketplace</span><div class="bar-track"><div class="bar-fill" style="width:99%"></div></div><span class="score-num">9.9</span></div>
+
+    <h3>Phasing</h3>
+    <ul>
+      <li><strong>Year 1:</strong> Operator intelligence (the wedge)</li>
+      <li><strong>Year 2:</strong> Base RCS + reorder triggers + universal identity &rarr; 7.5</li>
+      <li><strong>Year 3:</strong> Group ordering + waitlist + staff agent &rarr; 8.5</li>
+      <li><strong>Year 4:</strong> Cross-referral + supplier marketplace &rarr; 9+</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 6 ═══════════════════ -->
+<section class="part">
+  <div class="container">
+    <div class="part-number">Part 6</div>
+    <h2>Cross-Niche Comparison</h2>
+
+    <div class="soundbite">
+      <div class="soundbite-headline">6 verticals tested. Restaurants win on volume &times; outcome clarity &times; TAM.</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">8/10</div><div class="label">RLHF value</div></div>
+        <div class="soundbite-stat"><div class="num">$4.2M</div><div class="label">Y2 ARR</div></div>
+        <div class="soundbite-stat"><div class="num">Daily</div><div class="label">Interaction freq</div></div>
+      </div>
+      <div class="soundbite-takeaway">Auto service has highest revenue per location but DMS API is gatekept. Vet/pet care is the sleeper &mdash; emotional engagement and transferable medical signal. <strong>Restaurants are the best first domain; extract the framework, expand year 3+.</strong></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <table>
+      <thead><tr><th>Niche</th><th>Y1 ARR</th><th>Y2 ARR</th><th>Flywheel</th><th>RLHF</th><th>Risk</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Restaurants</strong></td><td>$600K</td><td>$4.2M</td><td>7/10</td><td>8/10</td><td>RCS adoption</td></tr>
+        <tr><td>Auto Service</td><td>$720K</td><td>$6.7M</td><td>6/10</td><td>7/10</td><td>DMS API monopoly</td></tr>
+        <tr><td>Vet / Pet Care</td><td>$360K</td><td>$4.0M</td><td>7/10</td><td>7/10</td><td>Smaller TAM</td></tr>
+        <tr><td>Dental</td><td>$504K</td><td>$5.0M</td><td>6/10</td><td>5/10</td><td>HIPAA, low freq</td></tr>
+        <tr><td>Fitness</td><td>$432K</td><td>$4.8M</td><td>7/10</td><td>4/10</td><td>Studio churn</td></tr>
+        <tr><td>Property Mgmt</td><td>$180K</td><td>$1.5M</td><td>5/10</td><td>3/10</td><td>Slow sales cycle</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 7 ═══════════════════ -->
+<section class="part">
+  <div class="container">
+    <div class="part-number">Part 7</div>
+    <h2>The RLHF Environment</h2>
+
+    <div class="soundbite">
+      <div class="soundbite-headline">4 concurrent feedback sources. 500K labeled interactions daily. Every order is a training tuple.</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">5</div><div class="label">Feedback types</div></div>
+        <div class="soundbite-stat"><div class="num">4</div><div class="label">Concurrent sources</div></div>
+        <div class="soundbite-stat"><div class="num">500K</div><div class="label">Daily interactions</div></div>
+      </div>
+      <div class="soundbite-takeaway">Most RLHF environments have one feedback source. This has four &mdash; customer taps, customer behavior, operator overrides, and outcome data &mdash; <strong>all labeling the same interaction from different angles.</strong> The cross-actor signal (operator correcting customer-facing behavior) is unique.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>The Full Loop</h3>
+<pre><code>Operator Console
+  &darr; Playbook + permissions + corrections
+Agent Layer
+  &darr; Context assembly &rarr; Claude API &rarr; Tool execution &rarr; Feedback capture
+RCS Client
+  &darr; Customer interactions (orders, questions, corrections)
+Feedback Aggregation
+  &darr; (context, action, multi-source reward) tuples
+Offline Training
+  Reward model &rarr; Policy refinement &rarr; Personalization &rarr; Domain knowledge</code></pre>
+
+    <h3>Five Feedback Types</h3>
+    <ol>
+      <li><strong>Explicit Correction</strong> (strongest) &mdash; "No I said NO mushrooms."</li>
+      <li><strong>Accept/Reject</strong> (preference) &mdash; Upsell tapped Yes/No/ignored.</li>
+      <li><strong>Outcome</strong> (delayed reward) &mdash; Completed? Reordered? Tipped?</li>
+      <li><strong>Behavioral</strong> (implicit) &mdash; Response time, typed vs tapped, "?" signals.</li>
+      <li><strong>Cross-Actor</strong> (unique) &mdash; Operator overrides agent's customer-facing behavior.</li>
+    </ol>
+
+    <h3>Four Concurrent Sources</h3>
+    <table>
+      <thead><tr><th>Source</th><th>Signal</th><th>Latency</th></tr></thead>
+      <tbody>
+        <tr><td>Customer taps/text</td><td>Accept/reject/correct</td><td>Seconds</td></tr>
+        <tr><td>Customer behavior</td><td>Response time, confusion</td><td>Seconds</td></tr>
+        <tr><td>Operator override</td><td>Judgment correction</td><td>Minutes to hours</td></tr>
+        <tr><td>Outcome data</td><td>Completion, reorder, tip</td><td>Hours to weeks</td></tr>
+      </tbody>
+    </table>
+
+    <h3>The Training Tuple</h3>
+    <div class="json-block"><code>{
+  <span class="json-key">"location_id"</span>: <span class="json-string">"loc_brooklyn_01"</span>,
+  <span class="json-key">"customer_id"</span>: <span class="json-string">"phone_hash_abc123"</span>,
+  <span class="json-key">"action_sequence"</span>: [
+    {<span class="json-key">"tool"</span>: <span class="json-string">"MenuTool"</span>, <span class="json-key">"params"</span>: {<span class="json-key">"item"</span>: <span class="json-string">"short_rib"</span>}},
+    {<span class="json-key">"tool"</span>: <span class="json-string">"OrderTool"</span>, <span class="json-key">"params"</span>: {<span class="json-key">"item"</span>: <span class="json-string">"short_rib"</span>, <span class="json-key">"modifiers"</span>: [<span class="json-string">"no_onion"</span>]}}
+  ],
+  <span class="json-key">"customer_signals"</span>: {
+    <span class="json-key">"accepts"</span>: [<span class="json-string">"upsell_garlic_knots"</span>],
+    <span class="json-key">"rejects"</span>: [<span class="json-string">"upsell_dessert"</span>],
+    <span class="json-key">"response_times_ms"</span>: [<span class="json-number">1200</span>, <span class="json-number">800</span>, <span class="json-number">450</span>]
+  },
+  <span class="json-key">"outcomes"</span>: {
+    <span class="json-key">"order_completed"</span>: <span class="json-bool">true</span>,
+    <span class="json-key">"order_value"</span>: <span class="json-number">28.50</span>,
+    <span class="json-key">"tip_amount"</span>: <span class="json-number">5.00</span>,
+    <span class="json-key">"reorder_within_7d"</span>: <span class="json-bool">true</span>
+  }
+}</code></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 8 ═══════════════════ -->
+<section class="part">
+  <div class="container">
+    <div class="part-number">Part 8</div>
+    <h2>How We Got Here</h2>
+
+    <div class="soundbite">
+      <div class="soundbite-headline">Source code &rarr; architecture &rarr; domain &rarr; product &rarr; flywheel &rarr; feedback environment</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">7</div><div class="label">Steps in the chain</div></div>
+        <div class="soundbite-stat"><div class="num">1</div><div class="label">Core insight</div></div>
+      </div>
+      <div class="soundbite-takeaway"><strong>Revenue and training data are the same flywheel.</strong> The application layer that generates the most orders also generates the most valuable AI training data.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <ol>
+      <li><strong>Source code analysis &rarr; architectural understanding.</strong> We read 163K lines of production agent code.</li>
+      <li><strong>Architecture &rarr; reusable framework.</strong> 70% domain-agnostic. The hard problems are solved.</li>
+      <li><strong>Framework &rarr; domain selection.</strong> Highest frequency, clearest outcomes, richest feedback? Restaurants.</li>
+      <li><strong>Operator intelligence &rarr; channel insight.</strong> The wedge product leads to RCS ordering &mdash; 10x TAM.</li>
+      <li><strong>Business model &rarr; competitive stress test.</strong> The intersection is unoccupied.</li>
+      <li><strong>Flywheel design &rarr; defensibility.</strong> Features that add loops, not just value.</li>
+      <li><strong>Feedback environment &rarr; long-term value.</strong> Every order is a training tuple.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 9 ═══════════════════ -->
+<section class="part">
+  <div class="container">
+    <div class="part-number">Part 9</div>
+    <h2>Competitive Landscape</h2>
+
+    <div class="soundbite">
+      <div class="soundbite-headline">$30B market. Massive M&amp;A consolidation. The intersection is empty.</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">$1.2B+</div><div class="label">Funding tracked</div></div>
+        <div class="soundbite-stat"><div class="num">5</div><div class="label">Categories mapped</div></div>
+        <div class="soundbite-stat"><div class="num">0</div><div class="label">In the intersection</div></div>
+      </div>
+      <div class="soundbite-takeaway">Toast will own single-POS analytics (ToastIQ). Delivery platforms can't build zero-commission channels. Voice AI is a different channel. <strong>RCS-native + cross-system intelligence + customer memory = unoccupied.</strong></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>Category 1: AI Ordering / Conversational</h3>
+    <div class="competitor"><h4>SoundHound AI <span class="threat-tag threat-medium">Medium</span></h4><ul><li>$169M revenue (100% YoY). 10,000+ locations. Voice/drive-thru focus.</li><li>Different channel, different target. Could expand.</li></ul></div>
+    <div class="competitor"><h4>Kea AI <span class="threat-tag threat-high">High</span></h4><ul><li>Series B ($13.7M). 99.3% accuracy. Voice + Text AI.</li><li>Closest to vision. But SMS-based, no cross-restaurant memory.</li></ul></div>
+    <div class="competitor"><h4>ConverseNow + Valyant <span class="threat-tag threat-medium">Medium</span></h4><ul><li>$35.2M funding. Domino's, Wingstop. Phone + drive-thru.</li></ul></div>
+    <div class="competitor"><h4>HungerRush <span class="threat-tag threat-medium">Medium</span></h4><ul><li>$250M+ SMS sales for Jet's Pizza. Proven but rules-based.</li></ul></div>
+    <div class="callout"><p><strong>Gap:</strong> No RCS-native conversational ordering with persistent cross-restaurant customer memory.</p></div>
+
+    <h3>Category 2: Operator Intelligence</h3>
+    <div class="competitor"><h4>Toast (ToastIQ) <span class="threat-tag threat-critical">Critical for Y1</span></h4><ul><li>148,000 locations. LLM assistant shipping free. The Y1 threat.</li><li>For Y2: medium. POS company, not messaging company.</li></ul></div>
+    <div class="competitor"><h4>Restaurant365 <span class="threat-tag threat-high">High for Y1</span></h4><ul><li>$464M funding. $1B+ valuation. 40,000+ locations.</li></ul></div>
+    <div class="competitor"><h4>MarginEdge <span class="threat-tag threat-medium">Medium</span></h4><ul><li>$83.2M funding. Strong on food cost. Not cross-system.</li></ul></div>
+    <div class="callout"><p><strong>Response:</strong> Don't compete on Toast data. Compete on cross-system intelligence that Toast can never provide.</p></div>
+
+    <h3>Category 3: RCS Infrastructure</h3>
+    <div class="competitor"><h4>Gupshup / Dotgo <span class="threat-tag threat-medium">Partner or Competitor</span></h4><ul><li>$546M funding. 120B+ messages/year. Restaurant AI agents exist but horizontal.</li></ul></div>
+    <div class="competitor"><h4>Infobip <span class="threat-tag threat-low">Infrastructure Partner</span></h4><ul><li>$10B valuation. First US carrier-wide RCS. Not building restaurant products.</li></ul></div>
+
+    <h3>Category 4: Delivery Platforms</h3>
+    <div class="competitor"><h4>DoorDash / Uber Eats / Grubhub <span class="threat-tag threat-low">Low</span></h4><ul><li>Structurally can't build zero-commission channels &mdash; destroys their model.</li></ul></div>
+
+    <h3>Funding Landscape</h3>
+    <table>
+      <thead><tr><th>Company</th><th>Funding</th><th>Valuation</th><th>Relevance</th></tr></thead>
+      <tbody>
+        <tr><td>Restaurant365</td><td>$464M</td><td>$1B+</td><td>Operator analytics</td></tr>
+        <tr><td>Gupshup</td><td>$546M</td><td>~$280&ndash;300M</td><td>RCS infra</td></tr>
+        <tr><td>Infobip</td><td>$414M+</td><td>$10B</td><td>RCS rails</td></tr>
+        <tr><td>SoundHound</td><td>Public</td><td>~$5B</td><td>Voice AI</td></tr>
+        <tr><td>MarginEdge</td><td>$83.2M</td><td>Undisclosed</td><td>Food cost</td></tr>
+        <tr><td>ConverseNow</td><td>$35.2M</td><td>Undisclosed</td><td>Voice ordering</td></tr>
+        <tr><td>Kea</td><td>$27&ndash;33M</td><td>Undisclosed</td><td>Text + voice</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════ PART 10 ═══════════════════ -->
+<section class="final-section">
+  <div class="container">
+    <div class="part-number">Part 10</div>
+    <h2>Why This Matters</h2>
+
+    <div class="soundbite" style="background: linear-gradient(135deg, #92400e 0%, #d97706 100%);">
+      <div class="soundbite-headline">Everyone is building features. We're building a feedback environment.</div>
+      <div class="soundbite-stats">
+        <div class="soundbite-stat"><div class="num">Y1-2</div><div class="label">Build + revenue</div></div>
+        <div class="soundbite-stat"><div class="num">Y2-3</div><div class="label">Flywheel engages</div></div>
+        <div class="soundbite-stat"><div class="num">Y3+</div><div class="label">Data = primary asset</div></div>
+      </div>
+      <div class="soundbite-takeaway">The Claude Code source code showed us how to build an AI application layer that compounds. Restaurants are the deployment domain. <strong>The product is the ordering platform. The moat is the memory graph. The long-term value is the feedback environment no one else is building.</strong></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p>Everyone in the competitive landscape is building AI features &mdash; voice ordering, kiosk upsells, dashboard chatbots. These are features bolted onto existing products. They are commoditized the moment a POS company adds the same API call.</p>
+
+    <p>The opportunity is building an <strong>application layer that creates a direct feedback loop between AI and human behavior at scale</strong> &mdash; and happens to generate revenue while doing it.</p>
+
+    <h3>What the Repo Taught Us</h3>
+    <p>The Claude Code source code is not interesting because it's Claude Code. It's interesting because it is a <strong>reference implementation for how to build AI applications that get smarter because they get used.</strong> The architecture was extracted from real production constraints over millions of interactions. It works. And 70% of it transfers directly.</p>
+
+    <h3>The Long-Term Vision</h3>
+    <p><strong>Year 1&ndash;2:</strong> Build the application layer. Operator intelligence as wedge, RCS ordering as platform. Generate revenue.</p>
+    <p><strong>Year 2&ndash;3:</strong> The flywheel engages. Customer memory compounds. Cross-restaurant data enables personalization no single restaurant could achieve alone.</p>
+    <p><strong>Year 3+:</strong> The feedback environment becomes the primary asset. Millions of (context, action, multi-source reward) tuples accumulate daily. The business generates revenue on every order. The feedback environment generates the training data that makes the next order better. <strong>These aren't parallel strategies &mdash; they're the same flywheel.</strong></p>
+
+    <p class="one-liner">The product is the ordering platform. The moat is the customer memory graph. The long-term value is the feedback environment that no one else is building.</p>
+  </div>
+</section>
+
+</body>
+</html>
