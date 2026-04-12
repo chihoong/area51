@@ -49,6 +49,7 @@
     .meal-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.4; margin-bottom: 5px; }
     .meal-name { font-size: clamp(22px, 2.8vw, 36px); font-weight: 800; line-height: 0.95; letter-spacing: -0.025em; }
     .meal-kcal { font-size: clamp(18px, 2vw, 28px); font-weight: 800; letter-spacing: -0.02em; flex-shrink: 0; opacity: 0.5; }
+    .meal-photo { width: 88px; height: 88px; object-fit: cover; border-radius: 6px; cursor: zoom-in; margin: 20px 0 0; display: block; }
     .sub-meal { margin-top: 28px; }
     .sub-meal-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.4; margin: 24px 0 10px; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
@@ -69,6 +70,11 @@
     .dtc-rem.pos { color: #1a7a40; opacity: 1; }
     .dtc-rem.neg { color: #c0392b; opacity: 1; }
     .disclaimer { padding: 0 32px 48px; font-size: 11px; font-weight: 500; opacity: 0.4; letter-spacing: 0.02em; line-height: 1.7; }
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1000; align-items: center; justify-content: center; cursor: zoom-out; }
+    .lightbox.active { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
+    .lightbox-close { position: absolute; top: 20px; right: 28px; font-size: 36px; color: #fff; cursor: pointer; font-weight: 300; line-height: 1; opacity: 0.8; }
+    .lightbox-close:hover { opacity: 1; }
     @media (max-width: 768px) {
       header { flex-direction: column; align-items: flex-start; }
       .header-right { text-align: left; }
@@ -91,7 +97,7 @@
       <div class="header-date">11 April<br>2026</div>
     </div>
     <div class="header-right">
-      <div class="header-kcal">926.0</div>
+      <div class="header-kcal">1,782.0</div>
       <div class="header-kcal-label">kcal consumed</div>
     </div>
   </header>
@@ -99,27 +105,27 @@
   <div class="macro-strip">
     <div class="macro-cell">
       <div class="macro-cell-label">Protein</div>
-      <div class="macro-cell-value">34.3g</div>
-      <div class="macro-cell-sub">of 130g (95.7g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:26.4%"></div></div>
+      <div class="macro-cell-value">88.3g</div>
+      <div class="macro-cell-sub">of 130g (41.7g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:67.9%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Carbs</div>
-      <div class="macro-cell-value">97.4g</div>
-      <div class="macro-cell-sub">of 205g (107.6g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:47.5%"></div></div>
+      <div class="macro-cell-value">190.3g</div>
+      <div class="macro-cell-sub">of 205g (14.7g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:92.8%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fat</div>
-      <div class="macro-cell-value">44.3g</div>
-      <div class="macro-cell-sub">of 74g (29.7g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:59.9%"></div></div>
+      <div class="macro-cell-value over">75.0g</div>
+      <div class="macro-cell-sub over">of 74g (1.0g over &#9888;)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill over" style="width:100%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fiber</div>
-      <div class="macro-cell-value">6.8g</div>
-      <div class="macro-cell-sub">of 30g (23.2g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:22.7%"></div></div>
+      <div class="macro-cell-value">13.1g</div>
+      <div class="macro-cell-sub">of 30g (16.9g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:43.7%"></div></div>
     </div>
   </div>
 
@@ -130,14 +136,14 @@
     </div>
     <div class="split-bar-wrap">
       <div class="split-bar">
-        <div class="seg protein" style="flex:15">15%</div>
-        <div class="seg carbs"   style="flex:42">42%</div>
-        <div class="seg fat"     style="flex:43">43%</div>
+        <div class="seg protein" style="flex:20">20%</div>
+        <div class="seg carbs"   style="flex:43">43%</div>
+        <div class="seg fat"     style="flex:38">38%</div>
       </div>
       <div class="split-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 14.8%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 42.1%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 43.1%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 19.8%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 42.7%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 37.9%</div>
       </div>
     </div>
   </div>
@@ -187,6 +193,51 @@
       </div>
     </div>
 
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">Dinner</div>
+          <div class="meal-name">Ground Turkey Rice Bowl<br>+ Fried Egg</div>
+        </div>
+        <div class="meal-kcal">541.0 kcal</div>
+      </div>
+      <img class="meal-photo" src="../web/ch/meal_pics/20260411%20-%20Dinner.jpeg" alt="Dinner — Ground Turkey Rice Bowl" onclick="openLightbox(this.src)" />
+      <div class="sub-meal">
+        <table>
+          <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
+          <tbody>
+            <tr><td>Rice, cooked (125g) &#9873;</td><td>163.0</td><td>3.0g</td><td>35.5g</td><td>0.3g</td><td>0.6g</td></tr>
+            <tr><td>Ground turkey, 93% lean, cooked (~150g) &#9873;</td><td>245.0</td><td>37.5g</td><td>0.0g</td><td>10.5g</td><td>0.0g</td></tr>
+            <tr><td>Mushrooms (~60g) &#9873;</td><td>13.0</td><td>1.8g</td><td>2.0g</td><td>0.1g</td><td>0.6g</td></tr>
+            <tr><td>Broccoli (~60g) &#9873;</td><td>20.0</td><td>1.7g</td><td>3.7g</td><td>0.2g</td><td>1.4g</td></tr>
+            <tr><td>Zucchini (~60g) &#9873;</td><td>10.0</td><td>0.7g</td><td>2.2g</td><td>0.1g</td><td>0.7g</td></tr>
+            <tr><td>Fried egg, large (1 egg) &#9873;</td><td>90.0</td><td>6.3g</td><td>0.5g</td><td>7.0g</td><td>0.0g</td></tr>
+            <tr><td>Dinner Total</td><td>541.0</td><td>51.0g</td><td>43.9g</td><td>18.2g</td><td>3.3g</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">Dessert</div>
+          <div class="meal-name">Homemade Apple Crumble</div>
+        </div>
+        <div class="meal-kcal">315.0 kcal</div>
+      </div>
+      <img class="meal-photo" src="../web/ch/meal_pics/20260411%20-%20Dinner%202.jpeg" alt="Dessert — Apple Crumble" onclick="openLightbox(this.src)" />
+      <div class="sub-meal">
+        <table>
+          <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
+          <tbody>
+            <tr><td>Homemade apple crumble (~200g) &#9873;</td><td>315.0</td><td>3.0g</td><td>49.0g</td><td>12.5g</td><td>3.0g</td></tr>
+            <tr><td>Dessert Total</td><td>315.0</td><td>3.0g</td><td>49.0g</td><td>12.5g</td><td>3.0g</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <div class="day-total-section">
@@ -194,36 +245,52 @@
     <div class="day-total-grid">
       <div class="dtc">
         <div class="dtc-label">Calories</div>
-        <div class="dtc-value">926.0</div>
-        <div class="dtc-rem pos">+1,074.0 remaining</div>
+        <div class="dtc-value">1,782.0</div>
+        <div class="dtc-rem pos">+218.0 remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Protein</div>
-        <div class="dtc-value">34.3g</div>
-        <div class="dtc-rem pos">+95.7g remaining</div>
+        <div class="dtc-value">88.3g</div>
+        <div class="dtc-rem pos">+41.7g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Carbs</div>
-        <div class="dtc-value">97.4g</div>
-        <div class="dtc-rem pos">+107.6g remaining</div>
+        <div class="dtc-value">190.3g</div>
+        <div class="dtc-rem pos">+14.7g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fat</div>
-        <div class="dtc-value">44.3g</div>
-        <div class="dtc-rem pos">+29.7g remaining</div>
+        <div class="dtc-value over">75.0g</div>
+        <div class="dtc-rem neg">&#9888; 1.0g over</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fiber</div>
-        <div class="dtc-value">6.8g</div>
-        <div class="dtc-rem pos">+23.2g remaining</div>
+        <div class="dtc-value">13.1g</div>
+        <div class="dtc-rem pos">+16.9g remaining</div>
       </div>
     </div>
   </div>
 
   <div class="disclaimer">
-    &#9873; All values are USDA estimates. Cracker type unspecified — estimated as butter/wheat crackers (~16g). All figures rounded to 1 decimal place.<br>
-    Light day so far — prioritise a protein-heavy dinner to close the 95.7g protein gap.
+    &#9873; All values are USDA estimates. Turkey, mushroom, broccoli, and zucchini quantities estimated from photo (~150g / ~60g each). Apple crumble is a homemade estimate (~200g serving). All values rounded to 1 decimal place.<br>
+    Fat marginally over target by 1.0g. Strong dinner protein (51.0g) — good recovery day overall.
   </div>
+
+  <div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
+    <span class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('active')">&times;</span>
+    <img src="" alt="Full size meal photo" onclick="event.stopPropagation()" />
+  </div>
+
+  <script>
+    function openLightbox(src) {
+      var lb = document.getElementById('lightbox');
+      lb.querySelector('img').src = src;
+      lb.classList.add('active');
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('active');
+    });
+  </script>
 
 </body>
 </html>
