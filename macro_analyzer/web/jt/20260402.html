@@ -23,6 +23,10 @@
     .macro-cell-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.4; margin-bottom: 8px; }
     .macro-cell-value { font-size: clamp(24px, 2.8vw, 40px); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
     .macro-cell-value.over { color: #c0392b; }
+    .macro-cell-value.good { color: #1a7a40; }
+    .macro-cell-sub.good { color: #1a7a40; opacity: 1; font-weight: 600; }
+    .macro-bar-fill.good { background: #1a7a40; }
+    .dtc-value.good { color: #1a7a40; }
     .macro-cell-sub { font-size: 12px; font-weight: 500; opacity: 0.45; margin-top: 4px; }
     .macro-cell-sub.over { color: #c0392b; opacity: 1; font-weight: 600; }
     .macro-bar-track { height: 3px; background: rgba(0,0,0,0.1); border-radius: 99px; margin-top: 14px; overflow: hidden; }
@@ -111,9 +115,9 @@
   <div class="macro-strip">
     <div class="macro-cell">
       <div class="macro-cell-label">Protein</div>
-      <div class="macro-cell-value over">119g</div>
-      <div class="macro-cell-sub over">&#8593; 39g over target</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill over" style="width:100%"></div></div>
+      <div class="macro-cell-value good">119g</div>
+      <div class="macro-cell-sub good">&#8593; 39g over target</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:100%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Carbs</div>
@@ -129,9 +133,9 @@
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fiber</div>
-      <div class="macro-cell-value">21.5g</div>
-      <div class="macro-cell-sub">of 25g (3.5g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:86%"></div></div>
+      <div class="macro-cell-value good">21.5g</div>
+      <div class="macro-cell-sub good">of 25g (3.5g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:86%"></div></div>
     </div>
   </div>
 
@@ -278,7 +282,7 @@
       </div>
       <div class="dtc">
         <div class="dtc-label">Protein</div>
-        <div class="dtc-value over">119g</div>
+        <div class="dtc-value good">119g</div>
         <div class="dtc-rem neg">&#8593; 39g over target</div>
       </div>
       <div class="dtc">
@@ -293,7 +297,7 @@
       </div>
       <div class="dtc">
         <div class="dtc-label">Fiber</div>
-        <div class="dtc-value">21.5g</div>
+        <div class="dtc-value good">21.5g</div>
         <div class="dtc-rem pos">+3.5g remaining</div>
       </div>
     </div>

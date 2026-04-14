@@ -25,6 +25,10 @@
     .macro-cell-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.4; margin-bottom: 8px; }
     .macro-cell-value { font-size: clamp(24px, 2.8vw, 40px); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
     .macro-cell-value.over { color: #c0392b; }
+    .macro-cell-value.good { color: #1a7a40; }
+    .macro-cell-sub.good { color: #1a7a40; opacity: 1; font-weight: 600; }
+    .macro-bar-fill.good { background: #1a7a40; }
+    .dtc-value.good { color: #1a7a40; }
     .macro-cell-sub { font-size: 12px; font-weight: 500; opacity: 0.45; margin-top: 4px; }
     .macro-cell-sub.over { color: #c0392b; opacity: 1; font-weight: 600; }
     .macro-bar-track { height: 3px; background: rgba(0,0,0,0.1); border-radius: 99px; margin-top: 14px; overflow: hidden; }
@@ -105,15 +109,15 @@
   <div class="macro-strip">
     <div class="macro-cell">
       <div class="macro-cell-label">Protein</div>
-      <div class="macro-cell-value">88.3g</div>
-      <div class="macro-cell-sub">of 130g (41.7g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:67.9%"></div></div>
+      <div class="macro-cell-value over">88.3g</div>
+      <div class="macro-cell-sub over">of 130g (41.7g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill over" style="width:67.9%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Carbs</div>
-      <div class="macro-cell-value">190.3g</div>
-      <div class="macro-cell-sub">of 205g (14.7g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:92.8%"></div></div>
+      <div class="macro-cell-value good">190.3g</div>
+      <div class="macro-cell-sub good">of 205g (14.7g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:92.8%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fat</div>
@@ -123,9 +127,9 @@
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fiber</div>
-      <div class="macro-cell-value">13.1g</div>
-      <div class="macro-cell-sub">of 30g (16.9g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:43.7%"></div></div>
+      <div class="macro-cell-value over">13.1g</div>
+      <div class="macro-cell-sub over">of 30g (16.9g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill over" style="width:43.7%"></div></div>
     </div>
   </div>
 
@@ -250,12 +254,12 @@
       </div>
       <div class="dtc">
         <div class="dtc-label">Protein</div>
-        <div class="dtc-value">88.3g</div>
+        <div class="dtc-value over">88.3g</div>
         <div class="dtc-rem pos">+41.7g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Carbs</div>
-        <div class="dtc-value">190.3g</div>
+        <div class="dtc-value good">190.3g</div>
         <div class="dtc-rem pos">+14.7g remaining</div>
       </div>
       <div class="dtc">
@@ -265,7 +269,7 @@
       </div>
       <div class="dtc">
         <div class="dtc-label">Fiber</div>
-        <div class="dtc-value">13.1g</div>
+        <div class="dtc-value over">13.1g</div>
         <div class="dtc-rem pos">+16.9g remaining</div>
       </div>
     </div>
