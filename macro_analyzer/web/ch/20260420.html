@@ -26,14 +26,13 @@
     .macro-cell-value { font-size: clamp(24px, 2.8vw, 40px); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
     .macro-cell-value.over { color: #c0392b; }
     .macro-cell-value.good { color: #1a7a40; }
-    .macro-cell-sub.good { color: #1a7a40; opacity: 1; font-weight: 600; }
-    .macro-bar-fill.good { background: #1a7a40; }
-    .dtc-value.good { color: #1a7a40; }
     .macro-cell-sub { font-size: 12px; font-weight: 500; opacity: 0.45; margin-top: 4px; }
+    .macro-cell-sub.good { color: #1a7a40; opacity: 1; font-weight: 600; }
     .macro-cell-sub.over { color: #c0392b; opacity: 1; font-weight: 600; }
     .macro-bar-track { height: 3px; background: rgba(0,0,0,0.1); border-radius: 99px; margin-top: 14px; overflow: hidden; }
     .macro-bar-fill { height: 100%; border-radius: 99px; background: #000; }
     .macro-bar-fill.over { background: #c0392b; }
+    .macro-bar-fill.good { background: #1a7a40; }
     .split-row { display: flex; align-items: center; gap: 40px; padding: 32px; border-bottom: 1.5px solid #000; }
     .split-label { flex-shrink: 0; }
     .split-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.4; margin-bottom: 4px; }
@@ -68,6 +67,7 @@
     .dtc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.4; margin-bottom: 10px; }
     .dtc-value { font-size: clamp(20px, 2vw, 30px); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
     .dtc-value.over { color: #c0392b; }
+    .dtc-value.good { color: #1a7a40; }
     .dtc-rem { font-size: 12px; font-weight: 600; margin-top: 5px; opacity: 0.45; }
     .dtc-rem.pos { color: #1a7a40; opacity: 1; }
     .dtc-rem.neg { color: #c0392b; opacity: 1; }
@@ -104,7 +104,7 @@
       <div class="header-date">20 April<br>2026</div>
     </div>
     <div class="header-right">
-      <div class="header-kcal">481.8</div>
+      <div class="header-kcal">1,199.1</div>
       <div class="header-kcal-label">kcal so far</div>
     </div>
   </header>
@@ -112,27 +112,27 @@
   <div class="macro-strip">
     <div class="macro-cell">
       <div class="macro-cell-label">Protein</div>
-      <div class="macro-cell-value good">15.9g</div>
-      <div class="macro-cell-sub good">of 130g (114.1g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:12.2%"></div></div>
+      <div class="macro-cell-value good">52.2g</div>
+      <div class="macro-cell-sub good">of 130g (77.8g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:40.2%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Carbs</div>
-      <div class="macro-cell-value good">57.3g</div>
-      <div class="macro-cell-sub good">of 205g (147.7g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:27.9%"></div></div>
+      <div class="macro-cell-value good">113.8g</div>
+      <div class="macro-cell-sub good">of 205g (91.2g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:55.5%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fat</div>
-      <div class="macro-cell-value good">23.9g</div>
-      <div class="macro-cell-sub good">of 74g (50.1g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:32.3%"></div></div>
+      <div class="macro-cell-value good">64.3g</div>
+      <div class="macro-cell-sub good">of 74g (9.7g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:86.9%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fiber</div>
-      <div class="macro-cell-value good">9.6g</div>
-      <div class="macro-cell-sub good">of 30g (20.4g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:32.0%"></div></div>
+      <div class="macro-cell-value good">23.2g</div>
+      <div class="macro-cell-sub good">of 30g (6.8g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:77.3%"></div></div>
     </div>
   </div>
 
@@ -143,19 +143,19 @@
     </div>
     <div class="split-bar-wrap">
       <div class="split-bar">
-        <div class="seg protein" style="flex:13">13%</div>
-        <div class="seg carbs"   style="flex:45">45%</div>
-        <div class="seg fat"     style="flex:42">42%</div>
+        <div class="seg protein" style="flex:17">17%</div>
+        <div class="seg carbs"   style="flex:38">38%</div>
+        <div class="seg fat"     style="flex:47">47%</div>
       </div>
       <div class="split-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 13%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 45%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 42%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 17%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 38%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 47%</div>
       </div>
     </div>
   </div>
 
-  <div class="partial-note">&#9432; Partial day — breakfast only logged so far.</div>
+  <div class="partial-note">&#9432; Partial day — breakfast &amp; lunch logged so far.</div>
 
   <div class="meals-wrap">
 
@@ -178,7 +178,36 @@
             <tr><td>8g hemp seeds</td><td>44.2</td><td>2.5g</td><td>0.7g</td><td>3.9g</td><td>0.3g</td></tr>
             <tr><td>8g ground black sesame</td><td>45.8</td><td>1.4g</td><td>1.9g</td><td>4.0g</td><td>0.9g</td></tr>
             <tr><td>25g nut butter (almond/hazelnut)</td><td>150.0</td><td>4.3g</td><td>4.5g</td><td>13.5g</td><td>1.5g</td></tr>
-            <tr><td>Subtotal</td><td>481.8</td><td>15.9g</td><td>57.3g</td><td>23.9g</td><td>9.6g</td></tr>
+            <tr><td><strong>Subtotal</strong></td><td><strong>481.8</strong></td><td><strong>15.9g</strong></td><td><strong>57.3g</strong></td><td><strong>23.9g</strong></td><td><strong>9.6g</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">Lunch</div>
+          <div class="meal-name">Grilled Opah,<br>Guac &amp; Salad</div>
+        </div>
+        <div class="meal-kcal">717.3 kcal</div>
+      </div>
+      <div class="sub-meal">
+        <table>
+          <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
+          <tbody>
+            <tr><td>Grilled opah 85g (3 oz) &#9873;</td><td>128.0</td><td>19.6g</td><td>0.0g</td><td>5.1g</td><td>0.0g</td></tr>
+            <tr><td>Guacamole 115g (½ cup) &#9873;</td><td>172.5</td><td>2.3g</td><td>10.4g</td><td>15.5g</td><td>7.7g</td></tr>
+            <tr><td>Homemade bread, 1 slice ✦</td><td>136.5</td><td>4.5g</td><td>27.4g</td><td>0.4g</td><td>0.9g</td></tr>
+            <tr><td>Lettuce 50g &#9873;</td><td>7.5</td><td>0.7g</td><td>1.5g</td><td>0.1g</td><td>0.7g</td></tr>
+            <tr><td>Carrot 60g &#9873;</td><td>24.6</td><td>0.5g</td><td>5.8g</td><td>0.1g</td><td>1.7g</td></tr>
+            <tr><td>Tomato 100g &#9873;</td><td>18.0</td><td>0.9g</td><td>3.9g</td><td>0.2g</td><td>1.2g</td></tr>
+            <tr><td>Sugar snap peas 50g &#9873;</td><td>21.0</td><td>1.4g</td><td>3.8g</td><td>0.1g</td><td>1.3g</td></tr>
+            <tr><td>Olive oil 13.5g (1 tbsp)</td><td>119.3</td><td>0.0g</td><td>0.0g</td><td>13.5g</td><td>0.0g</td></tr>
+            <tr><td>Honey 3.5g (½ tsp) &#9873;</td><td>10.6</td><td>0.0g</td><td>2.9g</td><td>0.0g</td><td>0.0g</td></tr>
+            <tr><td>Mustard 2.5g (½ tsp) &#9873;</td><td>1.8</td><td>0.1g</td><td>0.2g</td><td>0.1g</td><td>0.1g</td></tr>
+            <tr><td>Hard boiled egg 50g</td><td>77.5</td><td>6.3g</td><td>0.6g</td><td>5.3g</td><td>0.0g</td></tr>
+            <tr><td><strong>Subtotal</strong></td><td><strong>717.3</strong></td><td><strong>36.3g</strong></td><td><strong>56.5g</strong></td><td><strong>40.4g</strong></td><td><strong>13.6g</strong></td></tr>
           </tbody>
         </table>
       </div>
@@ -191,34 +220,34 @@
     <div class="day-total-grid">
       <div class="dtc">
         <div class="dtc-label">Calories</div>
-        <div class="dtc-value good">481.8</div>
-        <div class="dtc-rem pos">+1,518.2 remaining</div>
+        <div class="dtc-value good">1,199.1</div>
+        <div class="dtc-rem pos">+800.9 remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Protein</div>
-        <div class="dtc-value good">15.9g</div>
-        <div class="dtc-rem pos">+114.1g remaining</div>
+        <div class="dtc-value good">52.2g</div>
+        <div class="dtc-rem pos">+77.8g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Carbs</div>
-        <div class="dtc-value good">57.3g</div>
-        <div class="dtc-rem pos">+147.7g remaining</div>
+        <div class="dtc-value good">113.8g</div>
+        <div class="dtc-rem pos">+91.2g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fat</div>
-        <div class="dtc-value good">23.9g</div>
-        <div class="dtc-rem pos">+50.1g remaining</div>
+        <div class="dtc-value good">64.3g</div>
+        <div class="dtc-rem pos">+9.7g remaining</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fiber</div>
-        <div class="dtc-value good">9.6g</div>
-        <div class="dtc-rem pos">+20.4g remaining</div>
+        <div class="dtc-value good">23.2g</div>
+        <div class="dtc-rem pos">+6.8g remaining</div>
       </div>
     </div>
   </div>
 
   <div class="disclaimer">
-    &#9873; USDA estimates. Breakfast oats derived from recipe file. All values rounded to 1 decimal place.
+    &#9873; USDA estimates. ✦ Derived from recipe file. All values rounded to 1 decimal place.
   </div>
 
   <script>
