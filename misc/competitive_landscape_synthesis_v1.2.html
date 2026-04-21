@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitive Landscape Synthesis — Q2 2026 · v1.2 (webpage)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+  /* ─── WSJ Style Blueprint palette + typography ─── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:      #1A1A1A;
+    --ink-2:    #3D3D3A;
+    --ink-3:    #5C5C5C;
+    --ink-4:    #8A8A82;
+    --rule:     rgba(26,26,26,0.10);
+    --rule-md:  rgba(26,26,26,0.18);
+    --paper:    #E0E0D8;
+    --paper-2:  #EAEAE2;
+    --paper-3:  #D6D6CE;
+    --white:    #FFFFFF;
+    --red:      #CC0001;
+    --red-bg:   #F5D6D6;
+    --blue:     #0060A0;
+    --blue-bg:  #D8E4EF;
+    --green:    #0B6B3A;
+    --green-bg: #D8E8DC;
+    --amber:    #8A5A10;
+    --amber-bg: #EFE2C2;
+    --serif: 'Playfair Display', Georgia, serif;
+    --body:  'Source Serif 4', Georgia, serif;
+    --ui:    'Libre Franklin', Helvetica, sans-serif;
+  }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body { padding: 0; }
+
+  /* ─── Back nav ─── */
+  .back-home {
+    position: fixed; top: 16px; left: 16px; z-index: 100;
+    font-family: var(--ui); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink); background: rgba(224,224,216,0.9);
+    backdrop-filter: blur(6px); border: 0.5px solid var(--rule-md);
+    border-radius: 999px; padding: 9px 16px; text-decoration: none;
+  }
+  .back-home:hover { background: var(--white); }
+  @media print { .back-home { display: none; } }
+
+  /* ─── Floating Table of Contents ─── */
+  .toc {
+    position: fixed; top: 50%; right: 20px; transform: translateY(-50%);
+    z-index: 90; max-width: 260px;
+    font-family: var(--ui);
+    background: rgba(234,234,226,0.92);
+    backdrop-filter: blur(8px);
+    border: 0.5px solid var(--rule-md);
+    border-radius: 4px;
+    padding: 14px 16px;
+    max-height: 72vh; overflow-y: auto;
+    transition: all 0.25s ease;
+  }
+  .toc-header {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-4);
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 8px; margin-bottom: 8px;
+    border-bottom: 0.5px solid var(--rule-md);
+  }
+  .toc-toggle {
+    background: none; border: none; cursor: pointer;
+    font-family: var(--ui); font-size: 14px; line-height: 1;
+    color: var(--ink-3); padding: 0 4px;
+  }
+  .toc-toggle:hover { color: var(--ink); }
+  .toc-list { list-style: none; padding: 0; margin: 0; }
+  .toc-list li { margin: 0; }
+  .toc-list a {
+    display: flex; gap: 8px; align-items: baseline;
+    padding: 5px 6px; margin: 1px 0;
+    font-size: 12px; line-height: 1.35;
+    color: var(--ink-3);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    border-radius: 0 2px 2px 0;
+    transition: all 0.15s ease;
+  }
+  .toc-list a:hover { color: var(--ink); background: rgba(255,255,255,0.6); }
+  .toc-list a.active {
+    color: var(--ink); font-weight: 500;
+    border-left-color: var(--red);
+    background: rgba(255,255,255,0.7);
+  }
+  .toc-list .toc-num {
+    font-size: 10px; color: var(--ink-4); font-weight: 600;
+    letter-spacing: 0.05em; flex-shrink: 0; min-width: 22px;
+  }
+  .toc-list a.active .toc-num { color: var(--red); }
+  .toc.collapsed { padding: 10px 12px; max-width: 44px; }
+  .toc.collapsed .toc-list,
+  .toc.collapsed .toc-label { display: none; }
+  .toc.collapsed .toc-header { border-bottom: none; margin: 0; padding: 0; }
+
+  /* Offset anchor scrolling so the section-kicker isn't cut off */
+  .section-kicker[id] { scroll-margin-top: 24px; }
+
+  @media (max-width: 1100px) {
+    .toc { display: none; }
+  }
+  @media print { .toc { display: none; } }
+
+  /* ─── Page frame ─── */
+  .page { max-width: 1080px; margin: 0 auto; padding: 72px 56px 120px; }
+
+  /* ─── MASTHEAD ─── */
+  .masthead { border-bottom: 2px solid var(--ink); padding-bottom: 28px; margin-bottom: 40px; }
+  .strip-top,
+  .strip-bot {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--ui); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink);
+    padding: 10px 0; border-bottom: 0.5px solid var(--rule-md);
+  }
+  .strip-top .center { color: var(--ink); }
+  .strip-bot { border-bottom: none; border-top: 0.5px solid var(--rule-md); margin-top: 28px; padding-top: 14px; flex-wrap: wrap; gap: 14px 32px; }
+  .strip-bot .meta { display: flex; gap: 8px; align-items: baseline; }
+  .strip-bot .meta-label { color: var(--ink-4); }
+  .strip-bot .meta-val { font-family: var(--body); font-weight: 400; font-size: 14px; color: var(--ink); letter-spacing: 0; text-transform: none; }
+
+  .kicker {
+    font-family: var(--ui); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+    display: flex; align-items: center; gap: 10px; margin: 28px 0 18px;
+  }
+  .kicker::before { content: ''; width: 9px; height: 9px; background: var(--red); display: inline-block; }
+
+  .wordmark {
+    font-family: var(--serif); font-weight: 900;
+    font-size: clamp(48px, 7.5vw, 84px);
+    line-height: 0.95; letter-spacing: -0.03em; color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .wordmark em { font-style: italic; color: var(--ink-2); font-weight: 700; }
+  .wordmark .period { color: var(--red); }
+
+  .deck {
+    font-family: var(--body); font-weight: 300;
+    font-size: clamp(17px, 1.6vw, 22px); line-height: 1.45;
+    color: var(--ink-3); max-width: 760px;
+  }
+
+  /* ─── SECTION HEADS ─── */
+  section.block { padding: 56px 0; border-top: 0.5px solid var(--rule-md); }
+  section.block:first-of-type { border-top: none; }
+  .section-kicker {
+    font-family: var(--ui); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+    display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  }
+  .section-kicker::before { content: ''; width: 9px; height: 9px; background: var(--ink-3); }
+  .section-kicker .num { color: var(--ink-4); margin-right: 4px; }
+  .section-title {
+    font-family: var(--serif); font-weight: 700;
+    font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1;
+    letter-spacing: -0.01em; color: var(--ink); margin-bottom: 14px;
+  }
+  .section-title em { font-style: italic; font-weight: 400; color: var(--ink-2); }
+  .standfirst {
+    font-family: var(--body); font-weight: 300; font-style: italic;
+    font-size: clamp(16px, 1.4vw, 19px); line-height: 1.5;
+    color: var(--ink-3); max-width: 760px; margin-bottom: 28px;
+  }
+
+  /* ─── BODY PROSE ─── */
+  .prose p { font-family: var(--body); font-size: 17px; line-height: 1.7; color: var(--ink-2); margin-bottom: 14px; max-width: 720px; }
+  .prose strong { color: var(--ink); font-weight: 600; }
+  .prose em { font-style: italic; color: var(--ink-2); }
+
+  /* ─── TAKEAWAY GRID (Executive summary) ─── */
+  .takeaway-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .takeaway {
+    padding: 26px 28px; background: var(--white);
+    border: 0.5px solid var(--rule-md); border-left: 3px solid var(--ink);
+  }
+  .takeaway.severe { border-left-color: var(--red); }
+  .takeaway.amber  { border-left-color: var(--amber); }
+  .takeaway.green  { border-left-color: var(--green); }
+  .takeaway.blue   { border-left-color: var(--blue); }
+  .takeaway-eyebrow {
+    font-family: var(--ui); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3);
+    margin-bottom: 10px;
+  }
+  .takeaway-title {
+    font-family: var(--serif); font-weight: 700; font-size: 22px;
+    line-height: 1.22; color: var(--ink); margin-bottom: 12px;
+  }
+  .takeaway-body { font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+
+  /* ─── TIMELINE ─── */
+  .timeline { margin-top: 8px; }
+  .tl-row {
+    display: grid; grid-template-columns: 150px 1fr; gap: 28px;
+    padding: 18px 0; border-bottom: 0.5px solid var(--rule);
+    align-items: baseline;
+  }
+  .tl-row:last-child { border-bottom: none; }
+  .tl-date {
+    font-family: var(--ui); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4);
+  }
+  .tl-event { font-size: 16px; color: var(--ink); line-height: 1.55; }
+  .tl-event strong { font-weight: 600; }
+  .tl-event em { font-style: italic; color: var(--ink-2); font-family: var(--serif); }
+
+  /* ─── PULL QUOTE ─── */
+  .pull {
+    font-family: var(--serif); font-weight: 400; font-style: italic;
+    font-size: clamp(20px, 2.1vw, 26px); line-height: 1.35; color: var(--ink);
+    padding: 22px 28px; border-left: 2px solid var(--ink);
+    background: var(--white); margin: 28px 0 8px; max-width: 860px;
+  }
+
+  /* ─── THREAT TABLE ─── */
+  .ttable-wrap { overflow-x: auto; }
+  table.ttable { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 4px; }
+  .ttable th {
+    font-family: var(--ui); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-4);
+    text-align: left; padding: 0 12px 12px 12px;
+    border-bottom: 0.5px solid var(--rule-md);
+  }
+  .ttable th:first-child { padding-left: 0; width: 44px; }
+  .ttable th:last-child { padding-right: 0; }
+  .ttable td {
+    padding: 14px 12px; border-bottom: 0.5px solid var(--rule);
+    vertical-align: top; line-height: 1.55; color: var(--ink-2);
+    font-size: 15px;
+  }
+  .ttable td:first-child { padding-left: 0; }
+  .ttable td:last-child { padding-right: 0; }
+  .ttable tr:last-child td { border-bottom: none; }
+  .rank-num { font-family: var(--serif); font-weight: 700; font-size: 22px; color: var(--ink); }
+  .comp-cell { font-size: 16px; color: var(--ink); font-weight: 600; }
+  .tier-cell {
+    font-family: var(--ui); font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.04em; margin-top: 3px;
+  }
+  .threat-pill {
+    display: inline-block; font-family: var(--ui); font-size: 10px;
+    padding: 3px 9px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 600; white-space: nowrap;
+  }
+  .threat-severe   { background: var(--red);     color: var(--white); }
+  .threat-high     { background: var(--ink);     color: var(--white); }
+  .threat-moderate { background: var(--paper-3); color: var(--ink); }
+  .threat-low      { background: var(--paper-2); color: var(--ink-3); border: 0.5px solid var(--rule-md); }
+  .threat-partner  { background: var(--green-bg); color: var(--green); }
+
+  /* ─── PROFILE (Nory) ─── */
+  .profile { display: grid; grid-template-columns: 1.2fr 1fr; gap: 44px; align-items: start; }
+  .profile-left p { font-size: 16px; line-height: 1.7; color: var(--ink-2); margin-bottom: 14px; }
+  .profile-left p strong { color: var(--ink); font-weight: 600; }
+  .profile-left p em { font-style: italic; color: var(--ink-2); }
+  .profile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .stat-card { padding: 20px 22px; background: var(--white); border: 0.5px solid var(--rule-md); }
+  .stat-label {
+    font-family: var(--ui); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4);
+    margin-bottom: 8px;
+  }
+  .stat-val { font-family: var(--serif); font-weight: 700; font-size: 28px; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+  .stat-sub { font-size: 12px; color: var(--ink-3); line-height: 1.5; }
+
+  .callout-red {
+    margin-top: 16px; padding: 16px 20px;
+    background: var(--red-bg); border-left: 3px solid var(--red);
+  }
+  .callout-red .label {
+    font-family: var(--ui); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--red);
+    margin-bottom: 6px;
+  }
+  .callout-red .body { font-size: 14px; color: var(--ink); line-height: 1.55; }
+  .callout-red em { font-style: italic; }
+
+  /* ─── TWO-COL CARDS ─── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .col-card {
+    padding: 26px 30px; background: var(--white);
+    border: 0.5px solid var(--rule-md);
+  }
+  .col-label {
+    font-family: var(--ui); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .col-label.severe { color: var(--red); }
+  .col-card ul { list-style: none; padding: 0; }
+  .col-card li {
+    font-size: 15px; line-height: 1.65; color: var(--ink-2);
+    margin-bottom: 11px; padding-left: 16px; position: relative;
+  }
+  .col-card li::before {
+    content: ''; position: absolute; left: 0; top: 9px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--ink-3);
+  }
+  .col-card li strong { color: var(--ink); font-weight: 600; }
+
+  /* ─── WHITESPACE GRID ─── */
+  .ws-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .ws-card { padding: 22px 24px; background: var(--white); border: 0.5px solid var(--rule-md); }
+  .ws-card.unclaimed { background: var(--green-bg); border-color: rgba(11,107,58,0.22); }
+  .ws-card.narrowing { background: var(--amber-bg); border-color: rgba(138,90,16,0.22); }
+  .ws-status {
+    font-family: var(--ui); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .ws-card.unclaimed .ws-status { color: var(--green); }
+  .ws-card.narrowing .ws-status { color: var(--amber); }
+  .ws-card ul { list-style: none; padding: 0; }
+  .ws-card li { font-size: 14px; line-height: 1.55; color: var(--ink-2); margin-bottom: 12px; }
+  .ws-card li strong { display: block; color: var(--ink); font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+
+  .contested-note {
+    margin-top: 18px; padding: 20px 24px;
+    background: var(--paper-3); font-size: 15px; color: var(--ink-2);
+    line-height: 1.65;
+  }
+  .contested-note strong { color: var(--ink); font-weight: 600; }
+
+  /* ─── MOAT ROW ─── */
+  .moat-row {
+    display: grid; grid-template-columns: 240px 1fr; gap: 32px;
+    padding: 18px 0; border-bottom: 0.5px solid var(--rule);
+    align-items: start;
+  }
+  .moat-row:last-of-type { border-bottom: none; }
+  .moat-label { font-size: 15px; color: var(--ink); font-weight: 600; }
+  .moat-label-sub {
+    font-family: var(--ui); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--ink-4); margin-top: 4px;
+  }
+  .moat-bar { display: flex; gap: 4px; height: 32px; align-items: stretch; }
+  .moat-cell {
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--ui); font-size: 10px; font-weight: 600;
+    padding: 0 6px; color: white; letter-spacing: 0.04em;
+    text-align: center;
+  }
+  .moat-cell.direct  { background: var(--red); }
+  .moat-cell.partial { background: var(--amber); }
+  .moat-cell.future  { background: var(--blue); }
+  .moat-cell.cannot  { background: var(--green); }
+
+  .moat-leg {
+    display: flex; flex-wrap: wrap; gap: 18px 22px;
+    font-family: var(--ui); font-size: 11px; font-weight: 500;
+    color: var(--ink-3); margin-top: 20px; padding-top: 16px;
+    border-top: 0.5px solid var(--rule);
+  }
+  .moat-leg-item { display: flex; align-items: center; gap: 8px; }
+  .moat-leg-dot { width: 11px; height: 11px; }
+  .moat-leg-note { margin-left: auto; font-style: italic; color: var(--ink-3); font-family: var(--body); }
+
+  /* ─── FILTER STAT ─── */
+  .filter-block { display: grid; grid-template-columns: 340px 1fr; gap: 48px; align-items: start; }
+  .big-stat {
+    font-family: var(--serif); font-weight: 700;
+    font-size: clamp(110px, 13vw, 180px); line-height: 0.95;
+    color: var(--ink); letter-spacing: -0.02em;
+  }
+  .big-stat em { font-style: italic; font-weight: 400; color: var(--ink-2); }
+  .big-stat-cap {
+    font-family: var(--serif); font-size: clamp(18px, 2vw, 24px);
+    color: var(--ink-2); font-style: italic; line-height: 1.35;
+    margin-top: 10px;
+  }
+  .filter-intro { font-size: 16px; line-height: 1.7; color: var(--ink-2); margin-bottom: 20px; }
+  .filter-list {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 6px 28px; margin-bottom: 22px;
+  }
+  .filter-line {
+    font-size: 14px; color: var(--ink-2); display: flex; gap: 12px;
+    align-items: baseline; padding: 8px 0; border-bottom: 0.5px solid var(--rule);
+  }
+  .filter-line strong { color: var(--ink); font-weight: 600; min-width: 120px; font-family: var(--body); }
+  .filter-line .fail { color: var(--red); font-family: var(--ui); font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .filter-line .fail-amber { color: var(--amber); font-family: var(--ui); font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .callout-green {
+    padding: 18px 22px; background: var(--green-bg);
+    border-left: 3px solid var(--green);
+    font-size: 15px; color: var(--ink); line-height: 1.6;
+  }
+  .callout-green strong { color: var(--ink); font-weight: 600; }
+  .callout-green em { font-style: italic; color: var(--ink-2); }
+
+  /* ─── TRIGGERS ─── */
+  .trigger {
+    display: grid; grid-template-columns: 56px 1fr; gap: 20px;
+    padding: 24px 28px; background: var(--white);
+    border: 0.5px solid var(--rule-md); border-left: 3px solid var(--ink);
+    margin-bottom: 14px;
+  }
+  .trigger-num { font-family: var(--serif); font-weight: 700; font-size: 44px; line-height: 1; color: var(--ink-3); }
+  .trigger-body h4 { font-family: var(--serif); font-weight: 700; font-size: 20px; line-height: 1.3; color: var(--ink); margin-bottom: 10px; }
+  .trigger-body h4 em { font-style: italic; font-weight: 400; color: var(--ink-2); }
+  .trigger-body p { font-size: 15px; line-height: 1.65; color: var(--ink-2); margin-bottom: 10px; }
+  .trigger-body .force {
+    display: inline-block; font-family: var(--ui); font-size: 10px;
+    font-weight: 600; padding: 4px 10px; background: var(--red-bg);
+    color: var(--red); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  /* ─── CORRECTIONS ─── */
+  .corr-list { display: flex; flex-direction: column; gap: 8px; }
+  .corr {
+    display: grid; grid-template-columns: 180px 1fr 1fr; gap: 22px;
+    padding: 14px 18px; background: var(--white);
+    border-left: 2px solid var(--ink-4); align-items: start; font-size: 14px;
+  }
+  .corr.refuted   { border-left-color: var(--red); }
+  .corr.sharpened { border-left-color: var(--amber); }
+  .corr.confirmed { border-left-color: var(--green); }
+  .corr-target { font-weight: 600; color: var(--ink); font-size: 15px; }
+  .corr-target small {
+    display: block; font-family: var(--ui); font-size: 9px; font-weight: 600;
+    color: var(--ink-4); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .corr-was { color: var(--ink-3); font-size: 14px; line-height: 1.6; }
+  .corr-was::before { content: 'WAS: '; font-family: var(--ui); font-weight: 600; color: var(--red); letter-spacing: 0.1em; font-size: 10px; }
+  .corr-now { color: var(--ink-2); font-size: 14px; line-height: 1.6; }
+  .corr-now::before { content: 'NOW: '; font-family: var(--ui); font-weight: 600; color: var(--green); letter-spacing: 0.1em; font-size: 10px; }
+
+  /* ─── IMPLICATIONS ─── */
+  .imp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .imp {
+    padding: 22px 26px; background: var(--white);
+    border-top: 3px solid var(--ink); border: 0.5px solid var(--rule-md); border-top: 3px solid var(--ink);
+  }
+  .imp h4 {
+    font-family: var(--ui); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .imp p { font-size: 15px; line-height: 1.65; color: var(--ink-2); }
+  .imp p strong { color: var(--ink); font-weight: 600; }
+  .imp p em { font-style: italic; color: var(--ink-2); }
+
+  /* ─── QUESTIONS ─── */
+  .q-list { }
+  .q-item {
+    display: grid; grid-template-columns: 44px 1fr 240px; gap: 20px;
+    padding: 16px 0; border-bottom: 0.5px solid var(--rule); align-items: baseline;
+  }
+  .q-item:last-child { border-bottom: none; }
+  .q-num { font-family: var(--serif); font-weight: 700; font-size: 22px; color: var(--ink-3); }
+  .q-text { font-size: 16px; color: var(--ink); line-height: 1.55; }
+  .q-text strong { font-weight: 600; }
+  .q-text em { font-style: italic; color: var(--ink-3); }
+  .q-method {
+    font-family: var(--ui); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3);
+    text-align: right;
+  }
+
+  /* ─── CLOSING ─── */
+  .closing { padding: 72px 0 0; border-top: 2px solid var(--ink); margin-top: 56px; }
+  .closing-pull {
+    font-family: var(--serif); font-weight: 700;
+    font-size: clamp(28px, 3.4vw, 40px); line-height: 1.22;
+    color: var(--ink); letter-spacing: -0.01em; margin-bottom: 28px;
+    max-width: 900px;
+  }
+  .closing-pull em { font-style: italic; font-weight: 400; color: var(--ink-2); }
+  .closing-foot { font-size: 16px; color: var(--ink-3); line-height: 1.7; max-width: 760px; }
+  .closing-foot strong { color: var(--ink); font-weight: 600; }
+  .closing-meta {
+    display: flex; flex-wrap: wrap; gap: 18px 40px;
+    margin-top: 36px; padding-top: 22px; border-top: 0.5px solid var(--rule-md);
+  }
+  .closing-meta-item {
+    font-family: var(--ui); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4);
+  }
+  .closing-meta-item strong {
+    display: block; font-family: var(--body); font-size: 14px;
+    color: var(--ink); letter-spacing: 0; text-transform: none;
+    margin-top: 5px; font-weight: 500;
+  }
+
+  /* ─── LINKS ─── */
+  a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
+  a:hover { text-decoration: none; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 820px) {
+    .page { padding: 56px 32px 96px; }
+    .takeaway-grid,
+    .two-col,
+    .ws-grid,
+    .imp-grid { grid-template-columns: 1fr; }
+    .profile { grid-template-columns: 1fr; gap: 28px; }
+    .filter-block { grid-template-columns: 1fr; gap: 28px; }
+    .moat-row { grid-template-columns: 1fr; gap: 10px; }
+    .q-item { grid-template-columns: 36px 1fr; }
+    .q-method { grid-column: 2 / 3; text-align: left; }
+    .corr { grid-template-columns: 1fr; gap: 8px; }
+    .tl-row { grid-template-columns: 1fr; gap: 4px; }
+  }
+
+  @media (max-width: 480px) {
+    .page { padding: 48px 18px 72px; }
+    html, body { font-size: 16px; }
+    .ws-grid { gap: 12px; }
+    .filter-list { grid-template-columns: 1fr; }
+    .strip-bot { gap: 10px 20px; }
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    html, body { background: white; color: var(--ink); }
+    .back-home { display: none; }
+    .page { max-width: none; padding: 0.5in; }
+    section.block { page-break-inside: avoid; }
+    .takeaway, .col-card, .ws-card, .stat-card, .trigger, .imp { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-home">← Back to Index</a>
+
+<!-- ─── Floating Table of Contents ─── -->
+<nav class="toc" id="toc" aria-label="Table of contents">
+  <div class="toc-header">
+    <span class="toc-label">Contents</span>
+    <button class="toc-toggle" id="toc-toggle" aria-label="Toggle contents">−</button>
+  </div>
+  <ol class="toc-list">
+    <li><a href="#sec-01"><span class="toc-num">01</span><span>Executive summary</span></a></li>
+    <li><a href="#sec-02"><span class="toc-num">02</span><span>What changed · 8 weeks</span></a></li>
+    <li><a href="#sec-03"><span class="toc-num">03</span><span>Threat-ranked summary</span></a></li>
+    <li><a href="#sec-04"><span class="toc-num">04</span><span>The #1 threat · Nory</span></a></li>
+    <li><a href="#sec-05"><span class="toc-num">05</span><span>Toast + Square reframe</span></a></li>
+    <li><a href="#sec-06"><span class="toc-num">06</span><span>White space map</span></a></li>
+    <li><a href="#sec-07"><span class="toc-num">07</span><span>Moat-by-moat assessment</span></a></li>
+    <li><a href="#sec-08"><span class="toc-num">08</span><span>Right axis of competition</span></a></li>
+    <li><a href="#sec-09"><span class="toc-num">09</span><span>Decision triggers</span></a></li>
+    <li><a href="#sec-10"><span class="toc-num">10</span><span>Corrections to v2 map</span></a></li>
+    <li><a href="#sec-11"><span class="toc-num">11</span><span>Strategic implications</span></a></li>
+    <li><a href="#sec-12"><span class="toc-num">12</span><span>Open questions</span></a></li>
+    <li><a href="#sec-13"><span class="toc-num">13</span><span>90-day posture</span></a></li>
+  </ol>
+</nav>
+
+<div class="page">
+
+  <!-- ─── MASTHEAD ─── -->
+  <header class="masthead">
+    <div class="strip-top">
+      <span>Confidential</span>
+      <span class="center">Q2 2026 · Internal Strategy</span>
+      <span>Vol. I · No. 01</span>
+    </div>
+
+    <div class="kicker">Competitive Landscape · Synthesis</div>
+
+    <h1 class="wordmark">Competitive landscape — <em>synthesis</em><span class="period">.</span></h1>
+
+    <p class="deck">Restaurant forecasting is no longer a point-solution space. In an eight-week window late 2025, six competitors shipped agentic AI features, including the two POS incumbents Kirra had positioned as partners. This report synthesises 14 deep-dives into a directional verdict, ranked threats, and a 90-day strategic posture.</p>
+
+    <div class="strip-bot">
+      <div class="meta"><span class="meta-label">Date</span><span class="meta-val">2026-04-20</span></div>
+      <div class="meta"><span class="meta-label">Scope</span><span class="meta-val">14 competitors · 10 dimensions · 5 moats</span></div>
+      <div class="meta"><span class="meta-label">Source</span><span class="meta-val">research/competitors/</span></div>
+      <div class="meta"><span class="meta-label">Verdict</span><span class="meta-val" style="color:var(--red);font-weight:600;">Reframe required</span></div>
+    </div>
+  </header>
+
+  <!-- ─── 01 EXECUTIVE SUMMARY ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-01"><span class="num">§ 01</span> Executive summary</div>
+    <h2 class="section-title">The headline state.</h2>
+    <p class="standfirst">Forecasting-as-feature is now crowded. Verified outcome is empty. That gap is Kirra's lane.</p>
+
+    <div class="takeaway-grid">
+      <div class="takeaway severe">
+        <div class="takeaway-eyebrow">#1 Threat</div>
+        <div class="takeaway-title">Nory is the single most serious competitor.</div>
+        <div class="takeaway-body">$63M stacked, full-stack AI-native OS, US beachhead live March 2026, founder-operator origin. Matches Kirra on every axis simultaneously. Restructures the fundraising narrative.</div>
+      </div>
+      <div class="takeaway amber">
+        <div class="takeaway-eyebrow">Reframe</div>
+        <div class="takeaway-title">Toast and Square are no longer partners.</div>
+        <div class="takeaway-body">Toast IQ (Oct 2025) and Square AI Managerbot (Oct 2025) ship native conversational forecasting bundled free inside ~148K Toast locations and the Square seller base. The "partner" framing is dead.</div>
+      </div>
+      <div class="takeaway green">
+        <div class="takeaway-eyebrow">Moat that holds</div>
+        <div class="takeaway-title">The 48-hour outcome loop is structurally unclaimed.</div>
+        <div class="takeaway-body">Across all 14 competitors, no vendor has architected or productised a per-forecast verified reward signal. Aggregate audits and marketing claims do not count. This is Kirra's most durable moat.</div>
+      </div>
+      <div class="takeaway blue">
+        <div class="takeaway-eyebrow">White space</div>
+        <div class="takeaway-title">D2C wholesale × food-native signals = empty.</div>
+        <div class="takeaway-body">Every Shopify-native forecaster (Prediko, Cogsy, Fabrikatör) is a generalist with no food vertical depth and no KeHE/UNFI integration. Year 2 D2C wedge intact.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 02 WHAT CHANGED ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-02"><span class="num">§ 02</span> What changed in 8 weeks · Aug–Oct 2025</div>
+    <h2 class="section-title">Six product launches in eight weeks.</h2>
+    <p class="standfirst">Restaurant forecasting hardened from a point-solution category to an AI-native stack war in a single quarter.</p>
+
+    <div class="timeline">
+      <div class="tl-row"><div class="tl-date">Aug 7 2025</div><div class="tl-event"><strong>MarginEdge</strong> ships <em>AI Sales Forecast + AI Recipe Builder.</em> 4,000+ customer distribution. Kirra v2 framing of "back-office bolt-on" is dead.</div></div>
+      <div class="tl-row"><div class="tl-date">Sep 2025</div><div class="tl-event"><strong>Nory</strong> closes <em>$37M Series B</em> led by Kinnevik with Accel + Base10 + Triple Point + Samaipata. $63M stacked. US expansion green-lit.</div></div>
+      <div class="tl-row"><div class="tl-date">Oct 2025</div><div class="tl-event"><strong>Toast IQ</strong> conversational expansion: forecasting, menu intelligence, agentic write-back surface across <em>~148K locations.</em></div></div>
+      <div class="tl-row"><div class="tl-date">Oct 2025</div><div class="tl-event"><strong>Square AI Managerbot</strong> launches with explicit weather + events + news + reviews signals — strongest food-native disclosure in any restaurant competitor.</div></div>
+      <div class="tl-row"><div class="tl-date">Oct 28 2025</div><div class="tl-event"><strong>Fourth iQ 2.1</strong> ships AI-driven daily sales forecasts writing back to inventory alerts and shift adjustments. Kirra v2 "labor-only" framing is dead.</div></div>
+      <div class="tl-row"><div class="tl-date">Nov 2025</div><div class="tl-event"><strong>MarginEdge × Qu POS</strong> integration pulls MarginEdge forecasting into QSR / fast casual — Kirra's primary ICP.</div></div>
+    </div>
+
+    <blockquote class="pull">Six of fourteen competitors added agentic write-back capabilities in a single eight-week window. The category has crossed a phase line.</blockquote>
+  </section>
+
+  <!-- ─── 03 THREAT-RANKED SUMMARY ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-03"><span class="num">§ 03</span> Threat-ranked summary · 18-month horizon</div>
+    <h2 class="section-title">All fourteen competitors, ranked.</h2>
+    <p class="standfirst">Distribution-bundled POS AI sits second and third, displacing the v2 partner framing. Six fail two or more startup filters; one (7shifts) remains the cleanest integration partner.</p>
+
+    <div class="ttable-wrap">
+      <table class="ttable">
+        <thead><tr><th>#</th><th>Competitor</th><th>Tier</th><th>Threat</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rank-num">1</span></td><td><div class="comp-cell">Nory</div><div class="tier-cell">UK · Sep 2025 Series B</div></td><td><div class="tier-cell">Tier 1 — Direct</div></td><td><span class="threat-pill threat-severe">Severe</span></td><td>$63M stacked, full-stack AI-native OS, US customers live Mar 2026, founder-operator (Mad Egg). Only competitor matching Kirra on every axis.</td></tr>
+          <tr><td><span class="rank-num">2</span></td><td><div class="comp-cell">Toast IQ</div><div class="tier-cell">Public (TOST) · Oct 2025</div></td><td><div class="tier-cell">Tier 2 — POS-native</div></td><td><span class="threat-pill threat-severe">Severe</span></td><td>Bundled inside ~148K locations. Conversational + agentic write-back. Zero marginal cost to Toast customers.</td></tr>
+          <tr><td><span class="rank-num">3</span></td><td><div class="comp-cell">Square AI / Managerbot</div><div class="tier-cell">Public (SQ/Block) · Oct 2025</div></td><td><div class="tier-cell">Tier 2 — POS-native</div></td><td><span class="threat-pill threat-severe">Severe</span></td><td>Mirror threat to Toast IQ. Strongest food-native signal disclosure in any restaurant competitor. Proactive agent.</td></tr>
+          <tr><td><span class="rank-num">4</span></td><td><div class="comp-cell">MarginEdge</div><div class="tier-cell">Series C $71M+ · Aug 2025</div></td><td><div class="tier-cell">Tier 2 — Incumbent</div></td><td><span class="threat-pill threat-high">High</span></td><td>$350/loc/mo, 4K+ customers, AI Forecast + Qu integration. Workflow-residency moat.</td></tr>
+          <tr><td><span class="rank-num">5</span></td><td><div class="comp-cell">ClearCOGS</div><div class="tier-cell">Seed $3.8M · Apr 2025</div></td><td><div class="tier-cell">Tier 1 — Direct</div></td><td><span class="threat-pill threat-high">High</span></td><td>13+ POS integrations, named Goop Kitchen. Three-year head start on AI-native restaurant forecasting.</td></tr>
+          <tr><td><span class="rank-num">6</span></td><td><div class="comp-cell">Restaurant365</div><div class="tier-cell">PE-backed · $1B valuation</div></td><td><div class="tier-cell">Tier 2 — Incumbent</div></td><td><span class="threat-pill threat-high">High</span></td><td>$249 entry inside Kirra's $150–250 band. 40K+ locations. GL lock-in is hard to displace.</td></tr>
+          <tr><td><span class="rank-num">7</span></td><td><div class="comp-cell">Fourth / HotSchedules</div><div class="tier-cell">Enterprise · iQ 2.1 Oct 2025</div></td><td><div class="tier-cell">Tier 2 — Incumbent</div></td><td><span class="threat-pill threat-high">High</span></td><td>iQ 2.1 ships AI-driven inventory + labor adjustments with agentic write-back. No longer labor-only.</td></tr>
+          <tr><td><span class="rank-num">8</span></td><td><div class="comp-cell">Crunchtime</div><div class="tier-cell">Battery · 850+ brands</div></td><td><div class="tier-cell">Tier 1 — Direct</div></td><td><span class="threat-pill threat-moderate">Moderate</span></td><td>150K+ locations, QSR Automations merger. Enterprise sales motion structurally excludes Kirra's 3–15 loc ICP today.</td></tr>
+          <tr><td><span class="rank-num">9</span></td><td><div class="comp-cell">Lineup.ai</div><div class="tier-cell">Growth · 2018</div></td><td><div class="tier-cell">Tier 1 — Direct</div></td><td><span class="threat-pill threat-moderate">Moderate</span></td><td>$79–149/loc/mo + money-back guarantee neutralises Kirra's commercial shield. Labor + forecast only.</td></tr>
+          <tr><td><span class="rank-num">10</span></td><td><div class="comp-cell">MarketMan</div><div class="tier-cell">PSG-backed · Meal Ticket</div></td><td><div class="tier-cell">Tier 3 — Adjacent</div></td><td><span class="threat-pill threat-moderate">Moderate</span></td><td>Sysco / US Foods / Gordon distribution access. PO-native, inventory-native; could pivot to food forecasting.</td></tr>
+          <tr><td><span class="rank-num">11</span></td><td><div class="comp-cell">Prediko</div><div class="tier-cell">D2C · Shopify-native</div></td><td><div class="tier-cell">Tier 3 — D2C</div></td><td><span class="threat-pill threat-moderate">Moderate</span></td><td>Default D2C inventory anchor. 25M+ SKU generalist model. No food stack but owns Shopify ops mindshare.</td></tr>
+          <tr><td><span class="rank-num">12</span></td><td><div class="comp-cell">Cogsy</div><div class="tier-cell">Accel-backed · Shopify</div></td><td><div class="tier-cell">Tier 3 — D2C</div></td><td><span class="threat-pill threat-low">Low-Mod</span></td><td>Scenario planner. Generalist D2C — no food signal; thin install base (13 reviews).</td></tr>
+          <tr><td><span class="rank-num">13</span></td><td><div class="comp-cell">WISK.ai</div><div class="tier-cell">Seed-stage</div></td><td><div class="tier-cell">Tier 3 — Adjacent</div></td><td><span class="threat-pill threat-low">Low</span></td><td>Bar/beverage-heavy inventory. No Series A disclosed. AI claims unverified.</td></tr>
+          <tr><td><span class="rank-num">14</span></td><td><div class="comp-cell">Fabrikatör</div><div class="tier-cell">Seed · Europe entity</div></td><td><div class="tier-cell">Tier 3 — D2C</div></td><td><span class="threat-pill threat-low">Low</span></td><td>$79–280/mo Shopify app. No food primitives. Mostly noise in Kirra's competitive band.</td></tr>
+          <tr><td><span class="rank-num">—</span></td><td><div class="comp-cell">7shifts</div><div class="tier-cell">$105M+ · labor-first</div></td><td><div class="tier-cell">Tier 3 — Adjacent</div></td><td><span class="threat-pill threat-partner">Partner</span></td><td>Labor-only feature surface. Forecasting is a scheduling input. Build a Partner API integration.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ─── 04 NORY DEEP DIVE ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-04"><span class="num">§ 04</span> The #1 threat · Tier 1 Severe</div>
+    <h2 class="section-title">Nory.</h2>
+    <p class="standfirst">The threat that should restructure Kirra's fundraising narrative. Capital-stack advantage + founder-operator origin + US beachhead live.</p>
+
+    <div class="profile">
+      <div class="profile-left">
+        <p>Nory is the only competitor in the field that matches Kirra on capital, breadth, founder-market fit, <strong>and</strong> a US restaurant beachhead simultaneously. Their product surface is fundamentally agentic, not dashboard-anchored, and Kinnevik-led capital gives them runway to outspend on US growth through 2027.</p>
+        <p>The directional response is clear: <strong>do not try to match Nory's module count.</strong> Kirra wins on depth and outcome verification, not breadth. Compete on the per-forecast 48-hour reward signal that Nory's 95–98% marketing claim conspicuously avoids architecting.</p>
+        <p><strong>Watch for two events:</strong> a per-forecast accuracy dashboard exposed to operators, or $5M US ARR within six months of the March 2026 launch. Either collapses Kirra's window to lock juice / ramen / breakfast / fast casual reference customers.</p>
+      </div>
+      <div>
+        <div class="profile-stats">
+          <div class="stat-card"><div class="stat-label">Funding</div><div class="stat-val">$63M</div><div class="stat-sub">Stacked total · $37M Series B Sep 2025 led by Kinnevik</div></div>
+          <div class="stat-card"><div class="stat-label">US beachhead</div><div class="stat-val">4 logos</div><div class="stat-sub">Black Sheep Coffee · Roasting Plant · With Love Always · Singas Pizza · live Mar 2026</div></div>
+          <div class="stat-card"><div class="stat-label">Origin</div><div class="stat-val">Operator</div><div class="stat-sub">Founded by Mad Egg restaurant operator. Same founder-proximity advantage Kirra claims.</div></div>
+          <div class="stat-card"><div class="stat-label">Surface</div><div class="stat-val">Full-stack</div><div class="stat-sub">Forecast · rota · procurement · finance · "autonomous AI assistants"</div></div>
+        </div>
+        <div class="callout-red">
+          <div class="label">Decision trigger</div>
+          <div class="body">If Nory ships a per-forecast accuracy dashboard <em>or</em> crosses $5M US ARR within 6 months → accelerate Series A timeline; productise outcome-loop demo in every sales call.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 05 POS REFRAME ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-05"><span class="num">§ 05</span> The reframe · Toast IQ + Square AI · Oct 2025</div>
+    <h2 class="section-title">The "Toast as partner" framing is broken.</h2>
+    <p class="standfirst">Both POS incumbents now ship native conversational forecasting bundled free. The v2 map's partnership posture must be retired this quarter.</p>
+
+    <div class="two-col">
+      <div class="col-card">
+        <div class="col-label severe">Toast IQ — Oct 2025</div>
+        <ul>
+          <li><strong>~148K locations.</strong> Bundled-free conversational AI sitting natively inside the POS — zero marginal cost to existing Toast customers.</li>
+          <li><strong>Forecasting, menu intelligence, agentic write-back.</strong> Workflow surface deeper than any standalone competitor at the same price point ($0).</li>
+          <li><strong>Distribution moat is the threat, not the feature.</strong> Even if Toast IQ accuracy lags Kirra by 10pp, the bundled-free + zero-onboarding posture wins against unsophisticated operators.</li>
+          <li><strong>Mitigation:</strong> reframe Toast as a distribution channel where Kirra <em>beats Toast IQ on outcome</em> for operators with &gt;$1.5M/loc revenue. Interview 5 Toast customers using Toast IQ this quarter.</li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <div class="col-label severe">Square AI / Managerbot — Oct 2025</div>
+        <ul>
+          <li><strong>Mirror threat on the Square half of Kirra's POS split.</strong> Same bundled-free posture, same agentic write-back surface.</li>
+          <li><strong>Strongest food-native signal disclosure in the field.</strong> Explicit weather + events + news + reviews signals — narrows Kirra's signal-stack moat materially.</li>
+          <li><strong>Proactive agent surface.</strong> Pushes recommendations to sellers; not a passive dashboard.</li>
+          <li><strong>Mitigation:</strong> Kirra's Square integration must be architected so calibrated accuracy beats Managerbot on day one of onboarding. If that is not true, the Square half of the ICP is at risk.</li>
+        </ul>
+      </div>
+    </div>
+
+    <blockquote class="pull">Toast IQ accuracy lagging Kirra by 10pp does not save the partnership. Bundled-free + zero-onboarding wins against any operator who has not yet been taught what verified accuracy means.</blockquote>
+  </section>
+
+  <!-- ─── 06 WHITESPACE ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-06"><span class="num">§ 06</span> White space map · 10 dimensions × 2 ICP segments</div>
+    <h2 class="section-title">Where Kirra is structurally unchallenged.</h2>
+    <p class="standfirst">Two zones are completely uncontested across all 14 competitors. Three dimensions are narrowing. Four are contested.</p>
+
+    <div class="ws-grid">
+      <div class="ws-card unclaimed">
+        <div class="ws-status">Totally unclaimed</div>
+        <ul>
+          <li><strong>Verified outcome loop (per-forecast, 48h)</strong>No competitor in any tier has architected, productised or measured this. Aggregate audits and marketing claims do not count.</li>
+          <li><strong>Wholesale × food-native (KeHE / UNFI / Faire)</strong>Zero restaurant competitors. Every D2C forecaster is Shopify-only generalist. Intersection is empty.</li>
+        </ul>
+      </div>
+      <div class="ws-card unclaimed">
+        <div class="ws-status">Unclaimed × D2C food</div>
+        <ul>
+          <li><strong>Food-native signals in D2C</strong>Prediko, Cogsy, Fabrikatör all generalist across 15+ industries. No weather, perishability, event or daypart stack.</li>
+          <li><strong>Agentic autonomy × D2C food</strong>Managerbot is Square-locked. D2C tools are recommend-approve only.</li>
+        </ul>
+      </div>
+      <div class="ws-card narrowing">
+        <div class="ws-status">Narrowing — time-boxed edge</div>
+        <ul>
+          <li><strong>Food-native signals (restaurants)</strong>Square AI's Oct 2025 disclosure narrows Kirra's lead. Kirra still leads on breadth (PredictHQ + Tomorrow.io + closures + perishability + daypart).</li>
+          <li><strong>Push delivery (SMS to GMs)</strong>Fourth iQ App, Toast IQ "For you" feed, Square AI proactive agent all ship push surfaces. Call it a product choice, not a moat.</li>
+          <li><strong>Multi-POS (Square + Toast)</strong>Toast IQ and Square AI are each ecosystem-locked. Kirra's cross-POS posture is defensible but it's a wedge, not a moat.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="contested-note">
+      <strong>Contested — Kirra cannot lead.</strong> Inventory depth (Crunchtime, MarginEdge, R365, Fourth, Nory, MarketMan, WISK), procurement / PO automation (MarginEdge processes $2.5B/yr), multi-location rollup (R365 + Crunchtime are category-defining), and self-improving model claims (Toast IQ, Square AI, Nory all bigger corpora). Kirra's answer is per-customer reward signal, not corpus size.
+    </div>
+  </section>
+
+  <!-- ─── 07 MOAT ASSESSMENT ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-07"><span class="num">§ 07</span> Moat-by-moat threat assessment · 14 competitors × 5 moats</div>
+    <h2 class="section-title">Where each Kirra moat stands today.</h2>
+    <p class="standfirst">Counts of competitors threatening each moat. Moat #1 — verified outcome — has zero direct or partial threats; the entire field could threaten it within 18 months but none have committed architecturally.</p>
+
+    <div class="moat-row">
+      <div><div class="moat-label">1. Verified outcome dataset</div><div class="moat-label-sub">Per-forecast · 48h · time-locked</div></div>
+      <div class="moat-bar">
+        <div class="moat-cell future"  style="flex: 5;">5 could-within-18mo</div>
+        <div class="moat-cell cannot"  style="flex: 9;">9 cannot</div>
+      </div>
+    </div>
+    <div class="moat-row">
+      <div><div class="moat-label">2. Override pattern library</div><div class="moat-label-sub">Human-AI dynamics</div></div>
+      <div class="moat-bar">
+        <div class="moat-cell partial" style="flex: 2;">2 partial</div>
+        <div class="moat-cell future"  style="flex: 9;">9 could-within-18mo</div>
+        <div class="moat-cell cannot"  style="flex: 3;">3 cannot</div>
+      </div>
+    </div>
+    <div class="moat-row">
+      <div><div class="moat-label">3. Recipe-to-ingredient</div><div class="moat-label-sub">Onboarding cold-start barrier</div></div>
+      <div class="moat-bar">
+        <div class="moat-cell direct"  style="flex: 3;">3 direct</div>
+        <div class="moat-cell partial" style="flex: 7;">7 partial</div>
+        <div class="moat-cell cannot"  style="flex: 4;">4 cannot</div>
+      </div>
+    </div>
+    <div class="moat-row">
+      <div><div class="moat-label">4. Cross-operator benchmarking</div><div class="moat-label-sub">Cohort intelligence</div></div>
+      <div class="moat-bar">
+        <div class="moat-cell direct"  style="flex: 5;">5 direct</div>
+        <div class="moat-cell future"  style="flex: 6;">6 could-within-18mo</div>
+        <div class="moat-cell cannot"  style="flex: 3;">3 cannot</div>
+      </div>
+    </div>
+    <div class="moat-row">
+      <div><div class="moat-label">5. Operator trust</div><div class="moat-label-sub">Tenure · references · word-of-mouth</div></div>
+      <div class="moat-bar">
+        <div class="moat-cell direct"  style="flex: 6;">6 direct</div>
+        <div class="moat-cell partial" style="flex: 8;">8 partial</div>
+      </div>
+    </div>
+    <div class="moat-leg">
+      <div class="moat-leg-item"><div class="moat-leg-dot" style="background:var(--red)"></div>Directly threatens</div>
+      <div class="moat-leg-item"><div class="moat-leg-dot" style="background:var(--amber)"></div>Partially threatens</div>
+      <div class="moat-leg-item"><div class="moat-leg-dot" style="background:var(--blue)"></div>Could within 18 months</div>
+      <div class="moat-leg-item"><div class="moat-leg-dot" style="background:var(--green)"></div>Cannot threaten</div>
+      <div class="moat-leg-note">Moat #1 is the deepest. Moat #5 is the shallowest — and where Kirra has the longest runway to build.</div>
+    </div>
+  </section>
+
+  <!-- ─── 08 FILTER STAT ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-08"><span class="num">§ 08</span> The right axis of competition · Six-filter assessment</div>
+    <h2 class="section-title">The clearest evidence Kirra has the right lane.</h2>
+
+    <div class="filter-block">
+      <div>
+        <div class="big-stat">9<em>/14</em></div>
+        <div class="big-stat-cap">competitors fail Kirra's<br>"<em>fast outcome signal</em>" filter.</div>
+      </div>
+      <div>
+        <p class="filter-intro">Mapping all 14 competitors against Kirra's six startup filters identifies which are structurally constrained from venture-scale outcomes. The single filter where the field is weakest is the one Kirra's architecture is built around.</p>
+        <div class="filter-list">
+          <div class="filter-line"><strong>Lineup.ai</strong><span class="fail">fail × 2</span></div>
+          <div class="filter-line"><strong>7shifts</strong><span class="fail">fail × 2</span></div>
+          <div class="filter-line"><strong>WISK</strong><span class="fail">fail × 2</span></div>
+          <div class="filter-line"><strong>Cogsy</strong><span class="fail">fail × 2</span></div>
+          <div class="filter-line"><strong>Fabrikatör</strong><span class="fail">fail × 2</span></div>
+          <div class="filter-line"><strong>Prediko</strong><span class="fail">fail × 2</span></div>
+          <div class="filter-line"><strong>ClearCOGS</strong><span class="fail-amber">fail × 1</span></div>
+          <div class="filter-line"><strong>MarginEdge</strong><span class="fail-amber">fail × 1</span></div>
+          <div class="filter-line"><strong>R365</strong><span class="fail-amber">fail × 1</span></div>
+          <div class="filter-line"><strong>Fourth</strong><span class="fail-amber">fail × 1</span></div>
+          <div class="filter-line"><strong>Crunchtime</strong><span class="fail-amber">fail × 1</span></div>
+          <div class="filter-line"><strong>MarketMan</strong><span class="fail-amber">fail × 1</span></div>
+        </div>
+        <div class="callout-green">
+          <strong>Strategic takeaway.</strong> The 48-hour outcome loop is not just a feature claim — it is the right axis of competition for building a venture-scale business in this category. <em>Pass-through:</em> Nory, Toast IQ, Square AI all rated "partial" on this filter; they have the resources to close it but have not architecturally committed.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 09 DECISION TRIGGERS ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-09"><span class="num">§ 09</span> Decision triggers · Observable events to monitor</div>
+    <h2 class="section-title">Three signals that would force a strategy rework.</h2>
+    <p class="standfirst">Specific, observable, named-competitor events. Each maps to a concrete strategic response — not a vague "watch closely."</p>
+
+    <div class="trigger">
+      <div class="trigger-num">1</div>
+      <div class="trigger-body">
+        <h4>Nory ships a per-forecast accuracy dashboard <em>or</em> crosses $5M US ARR within 6 months of its Mar 2026 US launch.</h4>
+        <p>Either event collapses Kirra's most durable differentiation (outcome loop) or compresses Kirra's window to lock reference customers in juice / ramen / breakfast / fast casual.</p>
+        <span class="force">Forces Series A timeline acceleration · productised outcome-loop demo in every sales call</span>
+      </div>
+    </div>
+    <div class="trigger">
+      <div class="trigger-num">2</div>
+      <div class="trigger-body">
+        <h4>Toast IQ <em>or</em> Square AI publishes an explicit per-location forecast-accuracy benchmark exposed to operators.</h4>
+        <p>With ~148K Toast locations and Block-scale Square seller data, either POS incumbent can close the "no verified outcome loop" gap faster than any other competitor if they decide to.</p>
+        <span class="force">Forces moat narrative shift from "we measure, they don't" to multi-POS + D2C wholesale + override pattern library</span>
+      </div>
+    </div>
+    <div class="trigger">
+      <div class="trigger-num">3</div>
+      <div class="trigger-body">
+        <h4>MarginEdge <em>or</em> R365 prices a forecasting-only SKU below $200/loc/mo.</h4>
+        <p>Either would collapse Kirra's $150–250/loc/mo price floor against a bundled-back-office competitor with multi-thousand-customer distribution.</p>
+        <span class="force">Forces earlier shift to performance-tier pricing (currently Year 2) · pilot reframed as food-cost-savings-guaranteed not SaaS-priced</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 10 CORRECTIONS ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-10"><span class="num">§ 10</span> Corrections to v2 map · 7 of 8 entries refuted or sharpened</div>
+    <h2 class="section-title">The v2 competitive map needs rework.</h2>
+    <p class="standfirst">Seven of the eight original v2 entries have a refutation or material sharpening. The next map version (v3) should encode these before any external use.</p>
+
+    <div class="corr-list">
+      <div class="corr refuted"><div class="corr-target">MarginEdge<small>refuted</small></div><div class="corr-was">"Back-office bolt-on, not a forecaster."</div><div class="corr-now">Active forecasting encroacher: AI Sales Forecast Aug 2025 + AI Recipe Builder + Qu POS integration Nov 2025.</div></div>
+      <div class="corr refuted"><div class="corr-target">Toast (as partner)<small>refuted</small></div><div class="corr-was">"Friendly integration partner."</div><div class="corr-now">Toast IQ is a direct forecasting competitor bundled inside the POS. Reframe as distribution channel where Kirra must out-perform.</div></div>
+      <div class="corr refuted"><div class="corr-target">Fourth<small>refuted</small></div><div class="corr-was">"Labor-only competitor."</div><div class="corr-now">iQ 2.1 (Oct 2025) ships AI-driven daily sales forecasts writing back to inventory + shift adjustments. No longer labor-only.</div></div>
+      <div class="corr refuted"><div class="corr-target">Prediko pricing<small>refuted</small></div><div class="corr-was">"$49/mo entry tier."</div><div class="corr-now">Revenue-banded: $49 / $119 / $199 / Enterprise. Kirra's D2C ICP ($3M–$15M) lands at $299–$799/mo, not $49.</div></div>
+      <div class="corr refuted"><div class="corr-target">MarginEdge accuracy<small>refuted</small></div><div class="corr-was">"≥96% accuracy / within 4% of actuals."</div><div class="corr-now">Help docs describe accuracy as "within ~15% of actual sales on average." v2 number was likely misattributed.</div></div>
+      <div class="corr sharpened"><div class="corr-target">ClearCOGS<small>sharpened</small></div><div class="corr-was">"No outcome loop."</div><div class="corr-now">"No per-forecast 48h outcome loop — their EDF/ReFED audit is a one-time aggregate sustainability study, not a reward signal."</div></div>
+      <div class="corr sharpened"><div class="corr-target">Restaurant365<small>sharpened</small></div><div class="corr-was">"Over-scoped for 3–15 loc ICP."</div><div class="corr-now">Over-scoped on functionality but $249 Core tier is competitively priced inside Kirra's band. Compete on demand-anchored vs budget-anchored forecast.</div></div>
+      <div class="corr confirmed"><div class="corr-target">7shifts<small>confirmed</small></div><div class="corr-was">"Integration partner, not competitor."</div><div class="corr-now">Confirmed. Labor-only feature surface. Build a 7shifts Partner API integration this year.</div></div>
+    </div>
+  </section>
+
+  <!-- ─── 11 STRATEGIC IMPLICATIONS ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-11"><span class="num">§ 11</span> Strategic implications · Positioning, pricing, sequencing, partnerships</div>
+    <h2 class="section-title">What this landscape changes.</h2>
+    <p class="standfirst">Eight shifts to make this quarter. Each is anchored in a specific competitive movement, not a general posture change.</p>
+
+    <div class="imp-grid">
+      <div class="imp">
+        <h4>Positioning</h4>
+        <p>Stop leading with "AI demand forecasting" — every competitor claims this now. Lead with <strong>"the only forecasting platform that logs every prediction against POS actuals within 48 hours and publishes per-customer accuracy."</strong> That sentence is Kirra's only durable claim in the current market.</p>
+      </div>
+      <div class="imp">
+        <h4>Pricing</h4>
+        <p>The $150–250/loc/mo base is now a pincer (Toast IQ + Square AI free; Lineup at $79; R365 Core at $249 bundles accounting). <strong>Move the performance tier (originally Year 2) forward.</strong> Pilot priced low-base + high-performance-fee monetises the outcome loop directly and inverts the bundled-free threat.</p>
+      </div>
+      <div class="imp">
+        <h4>Sequencing</h4>
+        <p>Build the outcome-loop visibility surface <strong>before</strong> expanding breadth. An operator-visible "forecast vs actual" dashboard exposing per-location MAPE, calibration drift, and override acceptance is the demo every sales call needs. Inventory and procurement depth should wait until reference customers exist. <em>Depth earns the right to width.</em></p>
+      </div>
+      <div class="imp">
+        <h4>Fundraising narrative</h4>
+        <p>Nory's $37M Series B sets the ceiling for what AI-native restaurant forecasting raises look like in 2026. Frame Kirra's moat as <strong>time-locked data infrastructure that is impossible to replicate from a standing start</strong> — explicitly name the 48h loop, override pattern library, and recipe-to-ingredient mapping as three compounding assets activating in sequence. Do not pitch breadth.</p>
+      </div>
+      <div class="imp">
+        <h4>Toast partnership posture</h4>
+        <p>Toast IQ is getting better fast. Question: <em>can Kirra be a premium layer above Toast IQ for operators who have outgrown its accuracy, or is Toast IQ a substitute?</em> Interview 5 Toast customers using Toast IQ this quarter. Until then: assume <strong>substitute for unsophisticated operators, complement for &gt;$1.5M/loc operators</strong> who care about 2% food cost.</p>
+      </div>
+      <div class="imp">
+        <h4>Square partnership posture</h4>
+        <p>Square AI Managerbot is a bigger near-term threat than Toast IQ — stronger explicit food-native signal stack. Kirra's Square integration must be architected so <strong>calibrated accuracy beats Managerbot on day one of onboarding.</strong> If that is not true, the Square half of the ICP is at risk.</p>
+      </div>
+      <div class="imp">
+        <h4>Year 1 customer choice</h4>
+        <p>Select reference customers where the outcome loop is most visible: <strong>high-perishability concepts (juice, ramen, breakfast, fast casual) at 3–15 locations on Square or Toast.</strong> Avoid customers currently on MarginEdge, R365 or Crunchtime — displacement sales cycle is longer than verification cycle. Zero undetected accuracy degradations is the right Year 1 goal.</p>
+      </div>
+      <div class="imp">
+        <h4>D2C posture</h4>
+        <p>D2C forecaster stack (Prediko, Cogsy, Fabrikatör) is crowded, cheap, generalist. Kirra's $1,000–$2,000/brand/mo is 2–4× the competitive band. <strong>Do not enter D2C until restaurant outcome loop has produced verified case studies.</strong> Then enter with food-native + KeHE/UNFI + verified outcome as a single premium pitch. Year 2 timing is correct.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 12 OPEN QUESTIONS ─── -->
+  <section class="block">
+    <div class="section-kicker" id="sec-12"><span class="num">§ 12</span> Open questions for primary research · Top 7 of 17</div>
+    <h2 class="section-title">Questions desk research could not answer.</h2>
+    <p class="standfirst">Scoped tightly enough to decide which interviews and mystery-shops to run next. Full list of 17 in the synthesis doc.</p>
+
+    <div class="q-list">
+      <div class="q-item"><div class="q-num">1</div><div class="q-text"><strong>Is Toast IQ shipping per-forecast accuracy to operators?</strong> If yes, Kirra's moat narrative needs immediate reframing. <em>"Does Toast IQ show you how accurate its forecasts were yesterday?"</em></div><div class="q-method">Operator interviews · 5 customers</div></div>
+      <div class="q-item"><div class="q-num">2</div><div class="q-text"><strong>Toast IQ real accuracy on a Kirra-ICP customer's data.</strong> Compare 14-day sample against Kirra's calibrated accuracy on the same data.</div><div class="q-method">Mystery-shop · Toast operator network</div></div>
+      <div class="q-item"><div class="q-num">3</div><div class="q-text"><strong>Nory's current US customer count and pricing.</strong> Mar 2026 launch named 4 logos — how many signed contracts vs pilots? What is the price?</div><div class="q-method">Mystery-shop · Nory US sales</div></div>
+      <div class="q-item"><div class="q-num">4</div><div class="q-text"><strong>MarginEdge forecasting-only SKU plans.</strong> Is forecasting unbundled from $350/loc/mo back office? Triggers price-floor compression.</div><div class="q-method">Sales call · MarginEdge</div></div>
+      <div class="q-item"><div class="q-num">5</div><div class="q-text"><strong>Does ClearCOGS have a 48h outcome loop in development?</strong> Inspect job postings, product roadmap webinars, Closed Loop Partners updates.</div><div class="q-method">Desk + investor signals</div></div>
+      <div class="q-item"><div class="q-num">6</div><div class="q-text"><strong>POS dominance by concept type at 3–15 locations.</strong> Which POS (Square vs Toast) dominates juice / ramen / breakfast / fast casual? Determines integration sequencing.</div><div class="q-method">10-operator survey · founder-led</div></div>
+      <div class="q-item"><div class="q-num">7</div><div class="q-text"><strong>Has any restaurant competitor begun KeHE/UNFI/Faire integration?</strong> Wide-canvas across sales calls. This is the D2C moat defense.</div><div class="q-method">Sales calls · all incumbents</div></div>
+    </div>
+  </section>
+
+  <!-- ─── CLOSING ─── -->
+  <section class="closing">
+    <div class="section-kicker" id="sec-13"><span class="num">§ 13</span> 90-day posture</div>
+    <p class="closing-pull">The category crossed a phase line in October 2025. Kirra's response is not to add features. It's to <em>productise and name</em> the 48-hour verified outcome loop as a first-class operator-visible artifact — before any competitor decides to build it.</p>
+    <p class="closing-foot"><strong>What this means in 90 days:</strong> ship the operator-visible outcome dashboard · move the performance tier forward · interview 5 Toast IQ customers · do not enter D2C · run the 7 open questions · update the v2 map.</p>
+    <div class="closing-meta">
+      <div class="closing-meta-item">Synthesis<strong>research/competitors/2026-04-20-landscape-synthesis.md</strong></div>
+      <div class="closing-meta-item">Inputs<strong>14 per-competitor deep-dives</strong></div>
+      <div class="closing-meta-item">Date<strong>2026-04-20</strong></div>
+      <div class="closing-meta-item">Confidence<strong>Desk research only · 17 open questions</strong></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  (function() {
+    var toc = document.getElementById('toc');
+    var toggle = document.getElementById('toc-toggle');
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc-list a'));
+    var targets = links.map(function(a) {
+      return document.querySelector(a.getAttribute('href'));
+    }).filter(Boolean);
+
+    toggle.addEventListener('click', function() {
+      var collapsed = toc.classList.toggle('collapsed');
+      toggle.textContent = collapsed ? '+' : '−';
+    });
+
+    function setActive(id) {
+      links.forEach(function(a) {
+        if (a.getAttribute('href') === '#' + id) a.classList.add('active');
+        else a.classList.remove('active');
+      });
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+      var visible = entries
+        .filter(function(e) { return e.isIntersecting; })
+        .sort(function(a, b) { return a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top; });
+      if (visible.length) {
+        setActive(visible[0].target.id);
+      }
+    }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+
+    targets.forEach(function(t) { observer.observe(t); });
+  })();
+</script>
+
+</body>
+</html>
