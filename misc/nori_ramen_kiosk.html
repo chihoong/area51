@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Nori Ramen House — Kiosk</title>
+  <link rel="stylesheet" href="lumina/colors_and_type.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0">
+  <style>
+    html, body { margin: 0; padding: 0; background: #0E0F11; overflow: hidden; }
+    body { font-family: var(--font-text); color: var(--fg-1); }
+    * { box-sizing: border-box; }
+
+    #stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+    #root {
+      width: 1366px; height: 1024px;
+      transform-origin: center center;
+      background: #fff;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* Kiosk-scale type bumps — per design system note (kiosk bumps 1-2 steps). */
+    .k-h1 { font-family: var(--font-display); font-weight: 700; font-size: 56px; line-height: 64px; letter-spacing: -0.5px; color: var(--fg-1); }
+    .k-h2 { font-family: var(--font-display); font-weight: 700; font-size: 44px; line-height: 52px; color: var(--fg-1); }
+    .k-h3 { font-family: var(--font-display); font-weight: 700; font-size: 32px; line-height: 40px; color: var(--fg-1); }
+
+    /* Screen-switch toggle */
+    .switcher { position: fixed; top: 16px; left: 16px; z-index: 100; display: flex; gap: 4px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 4px; border-radius: 100px; backdrop-filter: blur(8px); }
+    .switcher button { background: transparent; color: #ddd; border: none; border-radius: 100px; padding: 8px 14px; font-family: var(--font-text); font-size: 12px; font-weight: 500; letter-spacing: 0.3px; cursor: pointer; }
+    .switcher button.on { background: #E2FB96; color: #0E2110; }
+
+    /* Tweaks panel */
+    .tweaks { position: fixed; bottom: 16px; right: 16px; z-index: 100; background: #161618; color: #fff; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 16px; width: 280px; font-family: var(--font-text); font-size: 13px; display: none; }
+    .tweaks.show { display: block; }
+    .tweaks h4 { font-family: var(--font-display); font-weight: 700; font-size: 14px; margin: 0 0 12px; letter-spacing: 0.5px; text-transform: uppercase; color: #E2FB96; }
+    .tweaks .row { margin-bottom: 10px; }
+    .tweaks label { display: block; color: #999; font-size: 11px; margin-bottom: 4px; letter-spacing: 0.4px; text-transform: uppercase; }
+    .tweaks .opts { display: flex; gap: 4px; flex-wrap: wrap; }
+    .tweaks .opts button { background: #222; color: #ddd; border: 1px solid #333; border-radius: 100px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-family: inherit; }
+    .tweaks .opts button.on { background: #E2FB96; color: #0E2110; border-color: #E2FB96; }
+
+    /* hide when in tweaks-off mode */
+    body.no-tweaks .tweaks { display: none !important; }
+
+    /* Steam / noodle ornament styles */
+    @keyframes steam {
+      0%   { transform: translateY(0)      scale(1);   opacity: 0; }
+      20%  { opacity: 0.55; }
+      100% { transform: translateY(-120px) scale(1.6); opacity: 0; }
+    }
+    .steam { position: absolute; bottom: 0; width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.35), rgba(255,255,255,0)); animation: steam 4.8s ease-out infinite; }
+
+    @keyframes marquee { to { transform: translateX(-50%); } }
+  </style>
+</head>
+<body class="lumina">
+  <div id="stage"><div id="root"></div></div>
+
+  <div class="switcher" id="switcher">
+    <button data-screen="welcome" class="on">Welcome</button>
+    <button data-screen="menu">Menu</button>
+    <button data-screen="detail">Item detail</button>
+    <button data-screen="cart">Cart</button>
+    <button data-screen="payment">Payment</button>
+    <button data-screen="done">Confirm</button>
+  </div>
+
+  <div class="tweaks" id="tweaks">
+    <h4>Tweaks</h4>
+    <div class="row">
+      <label>Welcome style</label>
+      <div class="opts" data-key="welcomeStyle">
+        <button data-v="photo" class="on">Photo hero</button>
+        <button data-v="dark">Dark attract</button>
+        <button data-v="tatami">Tatami grid</button>
+      </div>
+    </div>
+    <div class="row">
+      <label>Menu layout</label>
+      <div class="opts" data-key="menuLayout">
+        <button data-v="grid" class="on">Card grid</button>
+        <button data-v="editorial">Editorial</button>
+      </div>
+    </div>
+    <div class="row">
+      <label>Brand accent</label>
+      <div class="opts" data-key="accent">
+        <button data-v="nori" class="on">Nori green</button>
+        <button data-v="tonkotsu">Tonkotsu cream</button>
+        <button data-v="shoyu">Shoyu red</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Scale canvas
+    function fit() {
+      const el = document.getElementById('root');
+      if (!el) return;
+      const sx = window.innerWidth / 1366;
+      const sy = window.innerHeight / 1024;
+      el.style.transform = `scale(${Math.min(sx, sy)})`;
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('load', fit);
+
+    // Persist navigation
+    window.__initialScreen = localStorage.getItem('noriScreen') || 'welcome';
+  </script>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script src="src/menuData.js"></script>
+  <script type="text/babel" src="src/primitives.jsx"></script>
+  <script type="text/babel" src="src/Welcome.jsx"></script>
+  <script type="text/babel" src="src/Menu.jsx"></script>
+  <script type="text/babel" src="src/Detail.jsx"></script>
+  <script type="text/babel" src="src/Checkout.jsx"></script>
+  <script type="text/babel" src="src/app.jsx"></script>
+
+  <script>
+    // Tweaks protocol
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "welcomeStyle": "photo",
+      "menuLayout": "grid",
+      "accent": "nori"
+    }/*EDITMODE-END*/;
+
+    window.__tweaks = { ...TWEAK_DEFAULTS };
+
+    function applyTweaksUi() {
+      document.querySelectorAll('#tweaks .opts').forEach(row => {
+        const key = row.dataset.key;
+        row.querySelectorAll('button').forEach(b => {
+          b.classList.toggle('on', b.dataset.v === window.__tweaks[key]);
+        });
+      });
+      window.dispatchEvent(new CustomEvent('tweaks-updated'));
+    }
+    applyTweaksUi();
+
+    document.querySelectorAll('#tweaks .opts').forEach(row => {
+      row.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const key = row.dataset.key;
+        window.__tweaks[key] = btn.dataset.v;
+        applyTweaksUi();
+        window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: btn.dataset.v } }, '*');
+      });
+    });
+
+    window.addEventListener('message', (e) => {
+      const d = e.data;
+      if (!d || !d.type) return;
+      if (d.type === '__activate_edit_mode') document.getElementById('tweaks').classList.add('show');
+      if (d.type === '__deactivate_edit_mode') document.getElementById('tweaks').classList.remove('show');
+    });
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+    // Screen switching via top-left toggle
+    document.getElementById('switcher').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-screen]');
+      if (!b) return;
+      document.querySelectorAll('#switcher button').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      localStorage.setItem('noriScreen', b.dataset.screen);
+      window.dispatchEvent(new CustomEvent('screen-change', { detail: b.dataset.screen }));
+    });
+    // Init toggle
+    document.querySelectorAll('#switcher button').forEach(b => {
+      b.classList.toggle('on', b.dataset.screen === window.__initialScreen);
+    });
+  </script>
+</body>
+</html>

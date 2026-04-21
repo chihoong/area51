@@ -72,7 +72,6 @@
     .dtc-rem.pos { color: #1a7a40; opacity: 1; }
     .dtc-rem.neg { color: #c0392b; opacity: 1; }
     .disclaimer { padding: 0 32px 48px; font-size: 11px; font-weight: 500; opacity: 0.4; letter-spacing: 0.02em; line-height: 1.7; }
-    .partial-note { margin: 0 32px 0; padding: 12px 18px; background: rgba(0,0,0,0.04); border-left: 3px solid rgba(0,0,0,0.2); font-size: 12px; font-weight: 600; opacity: 0.6; }
     .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 999; align-items: center; justify-content: center; cursor: zoom-out; }
     .lightbox.active { display: flex; }
     .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 4px; }
@@ -104,35 +103,35 @@
       <div class="header-date">20 April<br>2026</div>
     </div>
     <div class="header-right">
-      <div class="header-kcal">1,112.9</div>
-      <div class="header-kcal-label">kcal so far</div>
+      <div class="header-kcal">1,568.3</div>
+      <div class="header-kcal-label">kcal total</div>
     </div>
   </header>
 
   <div class="macro-strip">
     <div class="macro-cell">
       <div class="macro-cell-label">Protein</div>
-      <div class="macro-cell-value good">51.1g</div>
-      <div class="macro-cell-sub good">of 80g (28.9g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:63.9%"></div></div>
+      <div class="macro-cell-value over">83.1g</div>
+      <div class="macro-cell-sub over">of 80g (3.1g OVER)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill over" style="width:100%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Carbs</div>
-      <div class="macro-cell-value good">108.6g</div>
-      <div class="macro-cell-sub good">of 231g (122.4g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:47.0%"></div></div>
+      <div class="macro-cell-value good">149.2g</div>
+      <div class="macro-cell-sub good">of 231g (81.8g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:64.6%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fat</div>
-      <div class="macro-cell-value good">56.6g</div>
-      <div class="macro-cell-sub good">of 59g (2.4g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:95.9%"></div></div>
+      <div class="macro-cell-value over">75.0g</div>
+      <div class="macro-cell-sub over">of 59g (16.0g OVER)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill over" style="width:100%"></div></div>
     </div>
     <div class="macro-cell">
       <div class="macro-cell-label">Fiber</div>
-      <div class="macro-cell-value good">19.4g</div>
-      <div class="macro-cell-sub good">of 25g (5.6g left)</div>
-      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:77.6%"></div></div>
+      <div class="macro-cell-value good">22.3g</div>
+      <div class="macro-cell-sub good">of 25g (2.7g left)</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill good" style="width:89.2%"></div></div>
     </div>
   </div>
 
@@ -143,19 +142,17 @@
     </div>
     <div class="split-bar-wrap">
       <div class="split-bar">
-        <div class="seg protein" style="flex:18">18%</div>
-        <div class="seg carbs"   style="flex:38">38%</div>
-        <div class="seg fat"     style="flex:44">44%</div>
+        <div class="seg protein" style="flex:21">21%</div>
+        <div class="seg carbs"   style="flex:37">37%</div>
+        <div class="seg fat"     style="flex:42">42%</div>
       </div>
       <div class="split-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 18%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 38%</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 44%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2c3e9e"></div>Protein 21%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6c4f9e"></div>Carbs 37%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0672b"></div>Fat 42%</div>
       </div>
     </div>
   </div>
-
-  <div class="partial-note">&#9432; Partial day — breakfast &amp; lunch logged so far.</div>
 
   <div class="meals-wrap">
 
@@ -213,35 +210,58 @@
       </div>
     </div>
 
+    <div class="meal-block">
+      <div class="meal-header">
+        <div>
+          <div class="meal-eyebrow">Dinner</div>
+          <div class="meal-name">Salmon, Rice,<br>Tofu &amp; Pomelo</div>
+        </div>
+        <div class="meal-kcal">455.4 kcal</div>
+      </div>
+      <div class="sub-meal">
+        <table>
+          <thead><tr><th>Item</th><th>Cal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr></thead>
+          <tbody>
+            <tr><td>Grilled salmon 113g (4 oz) &#9873;</td><td>233.6</td><td>23.1g</td><td>0.0g</td><td>15.2g</td><td>0.0g</td></tr>
+            <tr><td>Mixed rice 100g, cooked &#9873;</td><td>127.0</td><td>2.7g</td><td>26.9g</td><td>0.6g</td><td>1.0g</td></tr>
+            <tr><td>Bok choy 35g (¼ cup) &#9873;</td><td>4.2</td><td>0.6g</td><td>0.6g</td><td>0.1g</td><td>0.4g</td></tr>
+            <tr><td>Firm tofu 57g (2 oz) &#9873;</td><td>43.1</td><td>4.6g</td><td>1.1g</td><td>2.4g</td><td>0.2g</td></tr>
+            <tr><td>Pomelo 125g (½ fruit) &#9873;</td><td>47.5</td><td>1.0g</td><td>12.0g</td><td>0.1g</td><td>1.3g</td></tr>
+            <tr><td><strong>Subtotal</strong></td><td><strong>455.4</strong></td><td><strong>32.0g</strong></td><td><strong>40.6g</strong></td><td><strong>18.4g</strong></td><td><strong>2.9g</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <div class="day-total-section">
-    <div class="day-total-eyebrow">Day Total (Partial)</div>
+    <div class="day-total-eyebrow">Day Total</div>
     <div class="day-total-grid">
       <div class="dtc">
         <div class="dtc-label">Calories</div>
-        <div class="dtc-value good">1,112.9</div>
-        <div class="dtc-rem pos">+660.1 remaining</div>
+        <div class="dtc-value good">1,568.3</div>
+        <div class="dtc-rem pos">204.7 under target</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Protein</div>
-        <div class="dtc-value good">51.1g</div>
-        <div class="dtc-rem pos">+28.9g remaining</div>
+        <div class="dtc-value over">83.1g</div>
+        <div class="dtc-rem neg">&#9888; 3.1g over target</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Carbs</div>
-        <div class="dtc-value good">108.6g</div>
-        <div class="dtc-rem pos">+122.4g remaining</div>
+        <div class="dtc-value good">149.2g</div>
+        <div class="dtc-rem pos">81.8g under target</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fat</div>
-        <div class="dtc-value good">56.6g</div>
-        <div class="dtc-rem pos">+2.4g remaining</div>
+        <div class="dtc-value over">75.0g</div>
+        <div class="dtc-rem neg">&#9888; 16.0g over target</div>
       </div>
       <div class="dtc">
         <div class="dtc-label">Fiber</div>
-        <div class="dtc-value good">19.4g</div>
-        <div class="dtc-rem pos">+5.6g remaining</div>
+        <div class="dtc-value good">22.3g</div>
+        <div class="dtc-rem pos">2.7g under target</div>
       </div>
     </div>
   </div>
