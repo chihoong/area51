@@ -345,9 +345,9 @@ body {
 .tbl tfoot td:first-child { text-align: left; font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 .tbl tfoot td.hi { color: var(--yellow); }
 .dim { color: var(--muted); }
-/* Hide Jan/Feb/Mar columns on mobile; show only selected + Q1 + budget + diff */
-.col-jan, .col-feb, .col-mar { display: none; }
-@media (min-width: 560px) { .col-jan, .col-feb, .col-mar { display: table-cell; } }
+/* Hide Jan/Feb/Mar/Apr columns on mobile; show only selected + YTD + budget + diff */
+.col-jan, .col-feb, .col-mar, .col-apr { display: none; }
+@media (min-width: 560px) { .col-jan, .col-feb, .col-mar, .col-apr { display: table-cell; } }
 .cat-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; font-weight: 500; }
 .note-tag { font-size: 0.67rem; color: var(--muted); display: none; }
 @media (min-width: 560px) { .note-tag { display: inline; } }
@@ -407,7 +407,7 @@ body {
   <!-- TOP BAR -->
   <div class="top-bar fade-in">
     <div class="logo">TK Expense Dashboard</div>
-    <div class="period-badge" id="periodBadge">Q1 2026</div>
+    <div class="period-badge" id="periodBadge">YTD 2026</div>
   </div>
 
   <!-- STICKY TABS -->
@@ -415,14 +415,15 @@ body {
     <div class="tabs-inner">
       <button class="tab"        data-p="jan"  onclick="update('jan')">January</button>
       <button class="tab"        data-p="feb"  onclick="update('feb')">February</button>
-      <button class="tab active" data-p="mar"  onclick="update('mar')">March</button>
+      <button class="tab"        data-p="mar"  onclick="update('mar')">March</button>
+      <button class="tab active" data-p="apr"  onclick="update('apr')">April</button>
       <button class="tab"        data-p="ytd"  onclick="update('ytd')">YTD</button>
     </div>
   </div>
 
   <!-- HERO CARD -->
   <div class="hero fade-in">
-    <div class="hero-label" id="heroLabel">Q1 2026 total spent</div>
+    <div class="hero-label" id="heroLabel">YTD 2026 total spent</div>
     <div class="hero-spent" id="heroSpent">—</div>
     <div class="hero-of" id="heroOf">of <strong>—</strong> budgeted</div>
     <div class="hero-bar-track">
@@ -451,13 +452,13 @@ body {
 
   <!-- ALERTS -->
   <div class="section" id="alertSection" style="display:none;">
-    <div class="section-title">budget alerts <span class="pill" id="alertPill">q1</span></div>
+    <div class="section-title">budget alerts <span class="pill" id="alertPill">ytd</span></div>
     <div class="alert-strip" id="alertList"></div>
   </div>
 
   <!-- CATEGORY LIST -->
   <div class="section">
-    <div class="section-title">categories <span class="pill" id="catPill">q1 vs budget</span></div>
+    <div class="section-title">categories <span class="pill" id="catPill">ytd vs budget</span></div>
     <div class="cat-list" id="catList"></div>
   </div>
 
@@ -465,14 +466,14 @@ body {
   <div class="section two-col-wrap">
     <!-- trend -->
     <div class="trend-card" style="margin-bottom:12px;" id="trendCard">
-      <div class="section-title" style="margin-bottom:14px;">monthly spend <span class="pill">jan – mar</span></div>
+      <div class="section-title" style="margin-bottom:14px;">monthly spend <span class="pill">jan – apr</span></div>
       <div class="trend-bars" id="trendBars"></div>
       <div class="trend-labels" id="trendLabels"></div>
     </div>
     <!-- donut (desktop only) -->
     <div class="donut-section">
       <div class="donut-card">
-        <div class="section-title" style="margin-bottom:14px;">breakdown <span class="pill" id="donutPill">q1</span></div>
+        <div class="section-title" style="margin-bottom:14px;">breakdown <span class="pill" id="donutPill">ytd</span></div>
         <div class="donut-wrap">
           <canvas id="donutChart" width="180" height="180"></canvas>
           <div class="donut-center">
@@ -487,7 +488,7 @@ body {
 
   <!-- QUARTERLY TABLE -->
   <div class="section">
-    <div class="section-title">monthly breakdown <span class="pill">jan – mar 2026</span></div>
+    <div class="section-title">monthly breakdown <span class="pill">jan – apr 2026</span></div>
     <div class="table-card">
       <table class="tbl">
         <thead id="tblHead"></thead>
@@ -504,24 +505,24 @@ body {
    DATA
 ══════════════════════════════════════════ */
 const D = [
-  { cat:'Dining Out',     icon:'🍽️', color:'#ff006e', jan: 283, feb: 458, mar:  346, budget: 2125 },
-  { cat:'Discretionary',  icon:'🛍️', color:'#bf5af2', jan:  48, feb:1000, mar:  957, budget: 1875 },
-  { cat:'Dog',            icon:'🐕', color:'#f5ff00', jan:4534, feb: 866, mar:  990, budget: 2750, note:'Jan: teeth cleaning' },
-  { cat:'Drinks',         icon:'🍸', color:'#ff6b35', jan:   0, feb: 160, mar:   70, budget:  250 },
-  { cat:'Fitness',        icon:'🏋️', color:'#00ff87', jan:   0, feb:  20, mar:   20, budget:  625 },
-  { cat:'Groceries',      icon:'🛒', color:'#3a86ff', jan: 676, feb: 898, mar: 1007, budget: 2750 },
-  { cat:'Health',         icon:'💊', color:'#06d6a0', jan:  87, feb: 228, mar:   37, budget:  625 },
-  { cat:'Household',      icon:'🏠', color:'#ff9f1c', jan: 211, feb: 192, mar:   71, budget:  875 },
-  { cat:'Insurance',      icon:'🛡️', color:'#ff4444', jan: 568, feb: 541, mar: 2498, budget: 2250 },
-  { cat:'Transportation', icon:'🚗', color:'#48cae4', jan:  99, feb:  30, mar:   70, budget:  500 },
-  { cat:'Travel',         icon:'✈️', color:'#a8dadc', jan: 995, feb:   0, mar:    0, budget: 3750 },
-  { cat:'Utilities',      icon:'⚡', color:'#e9c46a', jan: 183, feb: 314, mar:   95, budget:  625 },
-  { cat:'Woodworking',    icon:'🪚', color:'#84a98c', jan: 275, feb:   0, mar:    0, budget:  250 },
-  { cat:'Bank Fees',      icon:'🏦', color:'#8ecae6', jan:   0, feb:   0, mar:    0, budget:   75 },
-  { cat:'Prof. Fees',     icon:'👔', color:'#9b8ea8', jan:   0, feb:   0, mar:    0, budget:  125 },
+  { cat:'Dining Out',     icon:'🍽️', color:'#ff006e', jan: 283, feb: 458, mar:  346, apr:  507, budget: 2833 },
+  { cat:'Discretionary',  icon:'🛍️', color:'#bf5af2', jan:  48, feb:1000, mar:  957, apr:  351, budget: 2500 },
+  { cat:'Dog',            icon:'🐕', color:'#f5ff00', jan:4534, feb: 866, mar:  990, apr:  223, budget: 3667, note:'Jan: teeth cleaning' },
+  { cat:'Drinks',         icon:'🍸', color:'#ff6b35', jan:   0, feb: 160, mar:   70, apr:   55, budget:  333 },
+  { cat:'Fitness',        icon:'🏋️', color:'#00ff87', jan:   0, feb:  20, mar:   20, apr:  155, budget:  833 },
+  { cat:'Groceries',      icon:'🛒', color:'#3a86ff', jan: 676, feb: 898, mar: 1007, apr: 1139, budget: 3667 },
+  { cat:'Health',         icon:'💊', color:'#06d6a0', jan:  87, feb: 228, mar:   37, apr:   17, budget:  833 },
+  { cat:'Household',      icon:'🏠', color:'#ff9f1c', jan: 211, feb: 192, mar:   71, apr:  258, budget: 1167 },
+  { cat:'Insurance',      icon:'🛡️', color:'#ff4444', jan: 568, feb: 541, mar: 2498, apr:  541, budget: 3000 },
+  { cat:'Transportation', icon:'🚗', color:'#48cae4', jan:  99, feb:  30, mar:   70, apr:    0, budget:  667 },
+  { cat:'Travel',         icon:'✈️', color:'#a8dadc', jan: 995, feb:   0, mar:    0, apr:  187, budget: 5000 },
+  { cat:'Utilities',      icon:'⚡', color:'#e9c46a', jan: 183, feb: 314, mar:   95, apr:  397, budget:  833 },
+  { cat:'Woodworking',    icon:'🪚', color:'#84a98c', jan: 275, feb:   0, mar:    0, apr:    0, budget:  333 },
+  { cat:'Bank Fees',      icon:'🏦', color:'#8ecae6', jan:   0, feb:   0, mar:    0, apr:   95, budget:  100 },
+  { cat:'Prof. Fees',     icon:'👔', color:'#9b8ea8', jan:   0, feb:   0, mar:    0, apr:  106, budget:  167 },
 ];
-const MTH = { jan:7959, feb:4707, mar:6161 };
-const LABELS = { ytd:'Q1 2026', jan:'January 2026', feb:'February 2026', mar:'March 2026' };
+const MTH = { jan:7959, feb:4707, mar:6161, apr:4031 };
+const LABELS = { ytd:'YTD 2026', jan:'January 2026', feb:'February 2026', mar:'March 2026', apr:'April 2026' };
 
 /* ── helpers ── */
 const $   = id => document.getElementById(id);
@@ -529,7 +530,7 @@ const fmt = n  => '$' + Math.abs(Math.round(n)).toLocaleString();
 const fmtC= n  => n > 0 ? '$' + n.toLocaleString() : '<span class="dim">—</span>';
 
 function spend(d, p) {
-  return p==='jan'?d.jan : p==='feb'?d.feb : p==='mar'?d.mar : d.jan+d.feb+d.mar;
+  return p==='jan'?d.jan : p==='feb'?d.feb : p==='mar'?d.mar : p==='apr'?d.apr : d.jan+d.feb+d.mar+d.apr;
 }
 
 /* ══════════════════════════════════════════
@@ -544,17 +545,17 @@ function buildHero(p) {
   const over = active.filter(d => spend(d,p) > d.budget && d.budget > 0).length;
   const isOver = tot > bud;
 
-  const monthlyTarget = Math.round(bud / 3);
+  const monthlyTarget = Math.round(bud / 4);
   const isMonthly     = p !== 'ytd';
 
   $('periodBadge').textContent = LABELS[p].toUpperCase();
-  $('heroLabel').textContent   = (isMonthly ? LABELS[p] : 'Q1 2026') + ' total spent';
+  $('heroLabel').textContent   = (isMonthly ? LABELS[p] : 'YTD 2026') + ' total spent';
   $('heroSpent').textContent   = fmt(tot);
   $('heroOf').innerHTML        = isMonthly
-    ? `of <strong>${fmt(monthlyTarget)}</strong> monthly target <span style="color:var(--muted);font-size:0.8em;">(${fmt(bud)} Q1 budget)</span>`
-    : `of <strong>${fmt(bud)}</strong> Q1 budget`;
+    ? `of <strong>${fmt(monthlyTarget)}</strong> monthly target <span style="color:var(--muted);font-size:0.8em;">(${fmt(bud)} YTD budget)</span>`
+    : `of <strong>${fmt(bud)}</strong> YTD budget`;
 
-  // Hero bar: for monthly view, fill vs monthly target (not full Q1 budget)
+  // Hero bar: for monthly view, fill vs monthly target (not full YTD budget)
   const barPct  = isMonthly ? (tot / monthlyTarget * 100) : parseFloat(pct);
   const barOver = isMonthly ? (tot > monthlyTarget) : isOver;
 
@@ -562,11 +563,11 @@ function buildHero(p) {
   bar.classList.toggle('danger', barOver);
   setTimeout(() => { bar.style.width = Math.min(barPct, 100) + '%'; }, 50);
 
-  // For monthly view, stats reference monthly target; for YTD, reference Q1 budget
+  // For monthly view, stats reference monthly target; for YTD, reference YTD budget
   const displayRem  = isMonthly ? (monthlyTarget - tot) : rem;
   const displayPct  = isMonthly ? (tot / monthlyTarget * 100).toFixed(1) : pct;
   const overTarget  = isMonthly
-    ? active.filter(d => spend(d,p) > Math.round(d.budget/3)).length
+    ? active.filter(d => spend(d,p) > Math.round(d.budget/4)).length
     : over;
 
   $('hs-remaining').textContent = (displayRem < 0 ? '-' : '') + fmt(displayRem);
@@ -618,20 +619,25 @@ function buildAlerts(p) {
   const sec  = $('alertSection');
   const list = $('alertList');
   list.innerHTML = '';
-  $('alertPill').textContent = p==='ytd'?'q1':p.toUpperCase();
+  $('alertPill').textContent = p==='ytd'?'ytd':p.toUpperCase();
+
+  const isMonthly = p !== 'ytd';
+  const tgtFor    = d => isMonthly ? Math.round(d.budget/4) : d.budget;
+  const tgtLabel  = isMonthly ? 'monthly target' : 'YTD budget';
 
   const active   = D.filter(d => d.budget > 0);
-  const overCats = active.filter(d => spend(d,p) > d.budget)
-    .sort((a,b)=>(spend(b,p)/b.budget)-(spend(a,p)/a.budget));
+  const overCats = active.filter(d => spend(d,p) > tgtFor(d))
+    .sort((a,b)=>(spend(b,p)/tgtFor(b))-(spend(a,p)/tgtFor(a)));
 
   if (!overCats.length) { sec.style.display='none'; return; }
   sec.style.display = '';
 
   overCats.forEach(d => {
+    const tgt = tgtFor(d);
     const sp  = spend(d, p);
-    const pct = Math.round(sp/d.budget*100);
-    const ovr = sp - d.budget;
-    let txt = `<strong>${d.cat}</strong> — ${pct}% of budget. Spent $${sp.toLocaleString()} vs $${d.budget.toLocaleString()} (over by $${ovr.toLocaleString()}).`;
+    const pct = Math.round(sp/tgt*100);
+    const ovr = sp - tgt;
+    let txt = `<strong>${d.cat}</strong> — ${pct}% of ${tgtLabel}. Spent $${sp.toLocaleString()} vs $${tgt.toLocaleString()} (over by $${ovr.toLocaleString()}).`;
     if (d.note && p==='jan') txt += ` ${d.note}.`;
     const item = document.createElement('div');
     item.className = 'alert-item';
@@ -645,7 +651,16 @@ function buildAlerts(p) {
     const item = document.createElement('div');
     item.className = 'alert-item';
     item.style.setProperty('--alert-color', '#ff6b35');
-    item.innerHTML = `<div class="alert-icon">⚠️</div><div class="alert-text"><strong>Insurance</strong> — March ($2,498) is 4× the Jan/Feb baseline (~$555). Verify if this recurs.</div>`;
+    item.innerHTML = `<div class="alert-icon">⚠️</div><div class="alert-text"><strong>Insurance</strong> — March ($2,498) is 4× the Jan/Feb/Apr baseline (~$550). Verify if this recurs.</div>`;
+    list.appendChild(item);
+  }
+
+  // Groceries Apr callout — 32% above Q1 average
+  if (p==='apr') {
+    const item = document.createElement('div');
+    item.className = 'alert-item';
+    item.style.setProperty('--alert-color', '#ff6b35');
+    item.innerHTML = `<div class="alert-icon">📈</div><div class="alert-text"><strong>Groceries</strong> — April ($1,139) is 32% above the Jan–Mar average (~$860). Watch for a trend in May.</div>`;
     list.appendChild(item);
   }
 }
@@ -656,7 +671,7 @@ function buildAlerts(p) {
 function buildCats(p) {
   const list = $('catList');
   list.innerHTML = '';
-  $('catPill').textContent = p==='ytd'?'q1 vs budget':p.toUpperCase()+' vs monthly target';
+  $('catPill').textContent = p==='ytd'?'ytd vs budget':p.toUpperCase()+' vs monthly target';
 
   const isMonthly = p !== 'ytd';
   const active = D.filter(d => d.budget > 0)
@@ -665,15 +680,15 @@ function buildCats(p) {
   active.forEach(d => {
     const sp      = spend(d,p);
     const bud     = d.budget;
-    const target  = Math.round(bud / 3);          // pro-rated monthly target
-    const pct     = Math.min(sp/bud*100, 100);    // fill % vs Q1 budget
-    const overBud = sp > bud;                      // over full Q1 budget
+    const target  = Math.round(bud / 4);          // pro-rated monthly target
+    const pct     = Math.min(sp/bud*100, 100);    // fill % vs YTD budget
+    const overBud = sp > bud;                      // over full YTD budget
     const overTgt = isMonthly && sp > target;      // over monthly target
 
     // Sub-label: show target context in monthly view
     const subText = isMonthly
-      ? `${fmt(target)}/mo target · ${(sp/bud*100).toFixed(0)}% of Q1 budget`
-      : `${(sp/bud*100).toFixed(0)}% of $${bud.toLocaleString()} Q1 budget`;
+      ? `${fmt(target)}/mo target · ${(sp/bud*100).toFixed(0)}% of YTD budget`
+      : `${(sp/bud*100).toFixed(0)}% of $${bud.toLocaleString()} YTD budget`;
 
     // Right-side callout
     let rightDetail;
@@ -733,6 +748,7 @@ function buildTrend(p) {
       {key:'jan',lbl:'JAN',amt:MTH.jan},
       {key:'feb',lbl:'FEB',amt:MTH.feb},
       {key:'mar',lbl:'MAR',amt:MTH.mar},
+      {key:'apr',lbl:'APR',amt:MTH.apr},
     ];
     const max = Math.max(...mths.map(m=>m.amt));
     mths.forEach(m => {
@@ -750,10 +766,10 @@ function buildTrend(p) {
       lEl.appendChild(lbl);
     });
     trendBuilt = true;
-    setTimeout(()=>{ ['jan','feb','mar'].forEach(k=>{ const b=$('tb-'+k); if(b) b.style.height=b.dataset.h+'%'; }); }, 100);
+    setTimeout(()=>{ ['jan','feb','mar','apr'].forEach(k=>{ const b=$('tb-'+k); if(b) b.style.height=b.dataset.h+'%'; }); }, 100);
   }
 
-  ['jan','feb','mar'].forEach(k => {
+  ['jan','feb','mar','apr'].forEach(k => {
     const bar = $('tb-'+k);
     const lbl = $('tl-'+k);
     if (!bar) return;
@@ -780,7 +796,7 @@ function buildDonut(p) {
   const pct    = (tot/bud*100).toFixed(1);
 
   $('donutPct').textContent   = pct+'%';
-  $('donutPill').textContent  = p==='ytd'?'q1 by cat':p.toUpperCase()+' by cat';
+  $('donutPill').textContent  = p==='ytd'?'ytd by cat':p.toUpperCase()+' by cat';
 
   let ang = -Math.PI/2;
   active.forEach(d => {
@@ -824,18 +840,19 @@ function buildTable(p) {
     <th class="col-jan ${hi('jan')}">Jan</th>
     <th class="col-feb ${hi('feb')}">Feb</th>
     <th class="col-mar ${hi('mar')}">Mar</th>
-    <th class="${p==='ytd'?'hi':''}">Q1</th>
+    <th class="col-apr ${hi('apr')}">Apr</th>
+    <th class="${p==='ytd'?'hi':''}">YTD</th>
     <th>Budget</th>
     <th>Δ</th>
   </tr>`;
 
   const body = $('tblBody');
   body.innerHTML = '';
-  let jT=0, fT=0, mT=0, bT=0;
+  let jT=0, fT=0, mT=0, aT=0, bT=0;
 
   D.forEach(d => {
-    const q1 = d.jan+d.feb+d.mar;
-    if (d.budget===0 && q1===0) return;
+    const ytd = d.jan+d.feb+d.mar+d.apr;
+    if (d.budget===0 && ytd===0) return;
 
     const sp   = spend(d, p);
     const diff = sp - d.budget;
@@ -852,16 +869,17 @@ function buildTable(p) {
       <td class="col-jan ${hi('jan')}">${fmtC(d.jan)}</td>
       <td class="col-feb ${hi('feb')}">${fmtC(d.feb)}</td>
       <td class="col-mar ${hi('mar')}">${fmtC(d.mar)}</td>
-      <td class="${p==='ytd'?'hi':''}" style="font-weight:700;">${q1>0?'$'+q1.toLocaleString():'<span class="dim">—</span>'}</td>
+      <td class="col-apr ${hi('apr')}">${fmtC(d.apr)}</td>
+      <td class="${p==='ytd'?'hi':''}" style="font-weight:700;">${ytd>0?'$'+ytd.toLocaleString():'<span class="dim">—</span>'}</td>
       <td class="dim">${d.budget>0?'$'+d.budget.toLocaleString():'<span class="dim">—</span>'}</td>
       <td>${dStr}</td>`;
     body.appendChild(tr);
 
-    jT+=d.jan; fT+=d.feb; mT+=d.mar; bT+=d.budget;
+    jT+=d.jan; fT+=d.feb; mT+=d.mar; aT+=d.apr; bT+=d.budget;
   });
 
-  const q1G  = jT+fT+mT;
-  const spG  = p==='jan'?jT : p==='feb'?fT : p==='mar'?mT : q1G;
+  const ytdG = jT+fT+mT+aT;
+  const spG  = p==='jan'?jT : p==='feb'?fT : p==='mar'?mT : p==='apr'?aT : ytdG;
   const dG   = spG - bT;
   const dStr = dG>0
     ? `<span style="color:#ff4444;font-weight:700;">+$${dG.toLocaleString()}</span>`
@@ -872,7 +890,8 @@ function buildTable(p) {
     <td class="col-jan ${hi('jan')}">${'$'+jT.toLocaleString()}</td>
     <td class="col-feb ${hi('feb')}">${'$'+fT.toLocaleString()}</td>
     <td class="col-mar ${hi('mar')}">${'$'+mT.toLocaleString()}</td>
-    <td class="${p==='ytd'?'hi':''}" style="color:var(--yellow);">$${q1G.toLocaleString()}</td>
+    <td class="col-apr ${hi('apr')}">${'$'+aT.toLocaleString()}</td>
+    <td class="${p==='ytd'?'hi':''}" style="color:var(--yellow);">$${ytdG.toLocaleString()}</td>
     <td class="dim">$${bT.toLocaleString()}</td>
     <td>${dStr}</td>
   </tr>`;
@@ -912,7 +931,7 @@ function update(p) {
 
 window.addEventListener('resize', setupLayout);
 setupLayout();
-update('mar');
+update('apr');
 </script>
 </body>
 </html>
